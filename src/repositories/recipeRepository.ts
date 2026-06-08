@@ -16,10 +16,10 @@ export function getRecipeById(id: string): Recipe | undefined {
 }
 
 /**
- * Placeholder for future recipe creation.
+ * Adds a new recipe to the in-memory mock data.
  */
 export function createRecipe(recipe: Recipe): void {
-  console.log("Create recipe:", recipe);
+  mockRecipes.push(recipe);
 }
 
 /**
