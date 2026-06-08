@@ -1,4 +1,5 @@
 import {
+  IonAlert,
   IonButton,
   IonContent,
   IonHeader,
@@ -6,8 +7,9 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { Link, useParams } from "react-router-dom";
-import { getRecipeById } from "../repositories/recipeRepository";
+import { useState } from "react";
+import { Link, useHistory, useParams } from "react-router-dom";
+import { deleteRecipe, getRecipeById } from "../repositories/recipeRepository";
 
 // Define the route parameters used by /recipes/:id.
 interface RecipeDetailRouteParams {
@@ -15,11 +17,21 @@ interface RecipeDetailRouteParams {
 }
 
 export default function RecipeDetailPage() {
+  const history = useHistory();
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+
   // Read the recipe ID from the current URL.
   const { id } = useParams<RecipeDetailRouteParams>();
 
   // Load the matching recipe from the repository.
   const recipe = getRecipeById(id);
+
+  function handleDeleteRecipe() {
+    if (!recipe) return;
+
+    deleteRecipe(recipe.id); // Remove the recipe from the repository.
+    history.push("/recipes"); // Navigate back to the recipe list after deletion.
+  }
 
   // Show a clear fallback if the URL contains an unknown recipe ID.
   if (!recipe) {
@@ -53,6 +65,27 @@ export default function RecipeDetailPage() {
         <main>
           <Link to="/recipes">Back to recipes</Link>
           <IonButton routerLink={`/recipes/${recipe.id}/edit`}>Edit recipe</IonButton>
+          <IonButton color="danger" onClick={() => setIsDeleteAlertOpen(true)}>
+            Delete recipe
+          </IonButton>
+          <IonAlert
+            isOpen={isDeleteAlertOpen}
+            header="Delete recipe"
+            message={`Do you really want to delete "${recipe.title}"?`}
+            buttons={[
+              {
+                text: "Cancel",
+                role: "cancel",
+                handler: () => setIsDeleteAlertOpen(false),
+              },
+              {
+                text: "Delete",
+                role: "destructive",
+                handler: handleDeleteRecipe,
+              },
+            ]}
+            onDidDismiss={() => setIsDeleteAlertOpen(false)}
+          />
           <h1>{recipe.title}</h1>
           {/* Render the optional recipe image when the form or mock data provides one. */}
           {recipe.imageUrl && <img src={recipe.imageUrl} alt={recipe.title} width="320" />}
