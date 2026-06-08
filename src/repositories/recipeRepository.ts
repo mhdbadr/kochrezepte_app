@@ -23,10 +23,14 @@ export function createRecipe(recipe: Recipe): void {
 }
 
 /**
- * Placeholder for future recipe update.
+ * Replaces an existing recipe in the in-memory mock data.
  */
 export function updateRecipe(recipe: Recipe): void {
-  console.log("Update recipe:", recipe);
+  const recipeIndex = mockRecipes.findIndex((existingRecipe) => existingRecipe.id === recipe.id);
+
+  if (recipeIndex !== -1) {
+    mockRecipes[recipeIndex] = recipe;
+  }
 }
 
 /**
