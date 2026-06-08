@@ -52,6 +52,7 @@ export default function RecipeDetailPage() {
       <IonContent fullscreen>
         <main>
           <Link to="/recipes">Back to recipes</Link>
+          <IonButton routerLink={`/recipes/${recipe.id}/edit`}>Edit recipe</IonButton>
           <h1>{recipe.title}</h1>
           {/* Render the optional recipe image when the form or mock data provides one. */}
           {recipe.imageUrl && <img src={recipe.imageUrl} alt={recipe.title} width="320" />}
