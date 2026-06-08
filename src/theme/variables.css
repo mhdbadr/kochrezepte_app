@@ -1,0 +1,15 @@
+:root {
+  --ion-font-family: 'Poppins', Arial, sans-serif;
+  --ion-color-primary: #6b8e62;
+  --ion-color-primary-rgb: 107, 142, 98;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-shade: #5f7d57;
+  --ion-color-primary-tint: #7a9972;
+
+  --ion-background-color: #ffffff;
+
+  --app-primary: #6b8e62;
+  --app-background: #f8faf5;
+  --app-text: #243025;
+  --app-muted: #6f7c70;
+}
