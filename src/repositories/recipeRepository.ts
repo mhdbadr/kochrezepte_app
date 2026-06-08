@@ -34,8 +34,12 @@ export function updateRecipe(recipe: Recipe): void {
 }
 
 /**
- * Placeholder for future recipe deletion.
+ * Removes a recipe from the in-memory mock data.
  */
 export function deleteRecipe(id: string): void {
-  console.log("Delete recipe:", id);
+  const recipeIndex = mockRecipes.findIndex((recipe) => recipe.id === id);
+
+  if (recipeIndex !== -1) {
+    mockRecipes.splice(recipeIndex, 1);
+  }
 }
