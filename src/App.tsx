@@ -1,16 +1,70 @@
-import { IonApp, IonContent, IonPage, setupIonicReact } from '@ionic/react';
+import {
+    IonApp,
+    IonIcon,
+    IonLabel,
+    IonRouterOutlet,
+    IonTabBar,
+    IonTabButton,
+    IonTabs,
+    setupIonicReact,
+} from '@ionic/react';
+
+import { IonReactRouter } from '@ionic/react-router';
+import { Redirect, Route } from 'react-router-dom';
+
+import {
+    homeOutline,
+    searchOutline,
+    gridOutline,
+    heartOutline,
+} from 'ionicons/icons';
+
 import HomePage from './pages/HomePage';
+import SearchPage from './pages/SearchPage';
+import CategoriesPage from './pages/CategoriesPage';
+import FavoritesPage from './pages/FavoritesPage';
 
 setupIonicReact();
 
 export default function App() {
-  return (
-    <IonApp>
-      <IonPage>
-        <IonContent fullscreen>
-          <HomePage />
-        </IonContent>
-      </IonPage>
-    </IonApp>
-  );
+    return (
+        <IonApp>
+            <IonReactRouter>
+                <IonTabs>
+                    <IonRouterOutlet>
+                        <Route exact path="/home" component={HomePage} />
+                        <Route exact path="/search" component={SearchPage} />
+                        <Route exact path="/categories" component={CategoriesPage} />
+                        <Route exact path="/favorites" component={FavoritesPage} />
+
+                        <Route exact path="/">
+                            <Redirect to="/home" />
+                        </Route>
+                    </IonRouterOutlet>
+
+                    <IonTabBar slot="bottom">
+                        <IonTabButton tab="home" href="/home">
+                            <IonIcon icon={homeOutline} />
+                            <IonLabel>Home</IonLabel>
+                        </IonTabButton>
+
+                        <IonTabButton tab="search" href="/search">
+                            <IonIcon icon={searchOutline} />
+                            <IonLabel>Suche</IonLabel>
+                        </IonTabButton>
+
+                        <IonTabButton tab="categories" href="/categories">
+                            <IonIcon icon={gridOutline} />
+                            <IonLabel>Kategorien</IonLabel>
+                        </IonTabButton>
+
+                        <IonTabButton tab="favorites" href="/favorites">
+                            <IonIcon icon={heartOutline} />
+                            <IonLabel>Merkzettel</IonLabel>
+                        </IonTabButton>
+                    </IonTabBar>
+                </IonTabs>
+            </IonReactRouter>
+        </IonApp>
+    );
 }
