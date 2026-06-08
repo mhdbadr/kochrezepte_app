@@ -5,17 +5,6 @@ import type { Recipe } from "../models/Recipe";
 import type { RecipeCategory } from "../models/RecipeCategory";
 import { createRecipe } from "../repositories/recipeRepository";
 
-// Keep the available categories aligned with the RecipeCategory model.
-const recipeCategories: RecipeCategory[] = [
-  "Vegan",
-  "Vegetarian",
-  "Dessert",
-  "Quick",
-  "Pasta",
-  "Main Dish",
-  "Healthy",
-];
-
 export default function RecipeForm() {
   const history = useHistory();
 
@@ -32,26 +21,22 @@ export default function RecipeForm() {
   const [instructions, setInstructions] = useState([""]);
   const [errorMessage, setErrorMessage] = useState("");
 
-  /* Helper function to update ingredients */
   function updateIngredient(index: number, value: string) {
     const updatedIngredients = [...ingredients];
     updatedIngredients[index] = value;
     setIngredients(updatedIngredients);
   }
 
-  /* Helper function to update instructions */
   function updateInstruction(index: number, value: string) {
     const updatedInstructions = [...instructions];
     updatedInstructions[index] = value;
     setInstructions(updatedInstructions);
   }
 
-  /* Helper function to remove individual ingredients */
   function removeIngredient(index: number) {
     setIngredients(ingredients.filter((_, ingredientIndex) => ingredientIndex !== index));
   }
 
-  /* Helper function to remove individual instructions */
   function removeInstruction(index: number) {
     setInstructions(instructions.filter((_, instructionIndex) => instructionIndex !== index));
   }
@@ -147,11 +132,13 @@ export default function RecipeForm() {
                 value={category}
                 onChange={(event) => setCategory(event.target.value as RecipeCategory)}
               >
-                {recipeCategories.map((recipeCategory) => (
-                  <option key={recipeCategory} value={recipeCategory}>
-                    {recipeCategory}
-                  </option>
-                ))}
+                <option value="Vegan">Vegan</option>
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="Dessert">Dessert</option>
+                <option value="Quick">Quick</option>
+                <option value="Pasta">Pasta</option>
+                <option value="Main Dish">Main Dish</option>
+                <option value="Healthy">Healthy</option>
               </select>
 
               <label htmlFor="preparationTime">Preparation time in minutes</label>
