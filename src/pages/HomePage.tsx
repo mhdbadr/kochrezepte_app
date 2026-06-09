@@ -1,4 +1,5 @@
 import './HomePage.css';
+import FavoriteButton from '../components/FavoriteButton';
 
 export default function HomePage() {
   return (
@@ -9,6 +10,12 @@ export default function HomePage() {
         <p className="home-text">
           This is the initial project foundation. Features will be implemented in separate issues.
         </p>
+
+        <div style={{ marginTop: '24px', textAlign: 'center' }}>
+          <p className="home-label">Dein Favorite Button Test:</p>
+          <FavoriteButton  recipeId="test-rezept-123"/>
+        </div>
+
       </section>
     </main>
   );

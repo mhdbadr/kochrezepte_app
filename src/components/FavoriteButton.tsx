@@ -1,25 +1,24 @@
 import React, { useState } from 'react';
 import { IonButton, IonIcon } from '@ionic/react';
 import { heart, heartOutline } from 'ionicons/icons';
+import { useFavorites } from '../hooks/useFavorites';
 
 interface FavoriteButtonProps {
-  initialIsFavorite?: boolean;
+ recipeId: string;
 }
 
-const FavoriteButton: React.FC<FavoriteButtonProps> = ({ initialIsFavorite = false }) => {
+const FavoriteButton: React.FC<FavoriteButtonProps> = ({ recipeId }) => {
 
-  const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
+  const {isFavorite, toggleFavorite} = useFavorites();
 
+  const isFav = isFavorite(recipeId);
   
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-  };
 
   return (
-    <IonButton fill="clear" onClick={toggleFavorite}>
+    <IonButton fill="clear" onClick={() => toggleFavorite(recipeId)}>
       <IonIcon
-        icon={isFavorite ? heart : heartOutline}
-        color={isFavorite ? 'danger' : 'medium'}
+        icon={isFav ? heart : heartOutline}
+        color={isFav ? 'danger' : 'medium'}
         slot="icon-only"
       />
     </IonButton>
