@@ -20,12 +20,11 @@ export default function HomePage() {
                 </IonToolbar>
             </IonHeader>
 
-            <IonContent fullscreen>
+            <IonContent className="ion-padding">
 
                 <IonSearchbar
                     placeholder="Was möchtest du kochen?"
-                ></IonSearchbar>
-
+                />
 
                 <h2>Kategorien</h2>
 
@@ -36,38 +35,40 @@ export default function HomePage() {
                     <CategoryChip label="Frühstück" />
                 </div>
 
-
                 <h2>Neue Rezepte</h2>
 
-                <RecipeCard
-                    title="Pasta Carbonara"
-                    imageUrl="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800"
-                    duration={25}
-                    difficulty="Einfach"
-                    category="Pasta"
-                    rating={5}
-                />
+                <div className="recipe-grid">
+                    <RecipeCard
+                        title="Pasta Carbonara"
+                        imageUrl="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800"
+                        duration={25}
+                        difficulty="Einfach"
+                        category="Pasta"
+                        rating={5}
+                    />
 
-                <RecipeCard
-                    title="Pizza Margherita"
-                    imageUrl="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800"
-                    duration={30}
-                    difficulty="Mittel"
-                    category="Pizza"
-                    rating={4}
-                />
+                    <RecipeCard
+                        title="Pizza Margherita"
+                        imageUrl="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800"
+                        duration={30}
+                        difficulty="Mittel"
+                        category="Pizza"
+                        rating={4}
+                    />
+                </div>
 
                 <h2>Beliebte Rezepte</h2>
 
-                <RecipeCard
-                    title="Caesar Salat"
-                    imageUrl="https://images.unsplash.com/photo-1546793665-c74683f339c1?w=800"
-                    duration={15}
-                    difficulty="Einfach"
-                    category="Salat"
-                    rating={5}
-                />
-
+                <div className="recipe-grid">
+                    <RecipeCard
+                        title="Caesar Salat"
+                        imageUrl="https://images.unsplash.com/photo-1546793665-c74683f339c1?w=800"
+                        duration={15}
+                        difficulty="Einfach"
+                        category="Salat"
+                        rating={5}
+                    />
+                </div>
 
             </IonContent>
         </IonPage>

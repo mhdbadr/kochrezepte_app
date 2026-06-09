@@ -1,45 +1,3 @@
-.home-page {
-  min-height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: var(--app-background);
-}
-
-.home-card {
-  width: 100%;
-  max-width: 520px;
-  padding: 32px;
-  border-radius: 28px;
-  background: #ffffff;
-  box-shadow: 0 18px 45px rgba(44, 71, 52, 0.12);
-}
-
-.home-label {
-  margin: 0 0 12px;
-  color: var(--app-primary);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.home-card h1 {
-  margin: 0;
-  color: var(--app-text);
-  font-size: clamp(2rem, 6vw, 3rem);
-  line-height: 1.1;
-}
-
-.home-text {
-  margin: 18px 0 0;
-  color: var(--app-muted);
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-
-
 ion-content {
   --padding-start: 16px;
   --padding-end: 16px;
@@ -64,4 +22,3 @@ h2 {
   margin: 24px 0 12px;
   font-size: 1.2rem;
 }
-
