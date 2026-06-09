@@ -7,6 +7,8 @@ import {
 } from '@ionic/react';
 
 import './HomePage.css';
+import RecipeCard from '../components/RecipeCard';
+import CategoryChip from '../components/CategoryChip';
 
 export default function HomePage() {
     return (
@@ -18,15 +20,26 @@ export default function HomePage() {
             </IonHeader>
 
             <IonContent fullscreen>
-                <main className="home-page">
-                    <section className="home-card">
-                        <p className="home-label">Kochrezepte App</p>
-                        <h1>Basic App Structure</h1>
-                        <p className="home-text">
-                            This is the initial project foundation. Features will be implemented in separate issues.
-                        </p>
-                    </section>
-                </main>
+
+
+                <RecipeCard
+                    title="Pasta Carbonara"
+                    imageUrl="https://fivi.gg/cdn/shop/articles/auberginen_pasta_rezeptbild_v1_1200x.jpg?v=1753447615"
+                    duration={25}
+                    difficulty="Einfach"
+                    category="Pasta"
+                    rating={5}
+                />
+
+
+
+                <div className="chips">
+                    <CategoryChip label="Pasta" />
+                    <CategoryChip label="Vegan" />
+                    <CategoryChip label="Dessert" />
+                    <CategoryChip label="Frühstück" />
+                </div>
+
             </IonContent>
         </IonPage>
     );
