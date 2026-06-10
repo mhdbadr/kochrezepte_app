@@ -13,7 +13,7 @@ export default function HomePage() {
 
         <div style={{ marginTop: '24px', textAlign: 'center' }}>
           <p className="home-label">Dein Favorite Button Test:</p>
-          <FavoriteButton  recipeId="test-rezept-123"/>
+          <FavoriteButton  recipeId="1"/>
         </div>
 
       </section>

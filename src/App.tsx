@@ -1,6 +1,6 @@
 import { IonApp, IonContent, IonPage, setupIonicReact } from '@ionic/react';
 import HomePage from './pages/HomePage';
-
+import FavoritesPage from './pages/FavoritesPage';
 setupIonicReact();
 
 export default function App() {
@@ -8,7 +8,8 @@ export default function App() {
     <IonApp>
       <IonPage>
         <IonContent fullscreen>
-          <HomePage />
+          {/*<HomePage />*/}
+          <FavoritesPage />
         </IonContent>
       </IonPage>
     </IonApp>
