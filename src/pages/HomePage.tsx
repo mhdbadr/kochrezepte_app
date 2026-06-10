@@ -9,8 +9,13 @@ import {
 } from '@ionic/react';
 
 import {
+    appsOutline,
     flashOutline,
+    iceCreamOutline,
     leafOutline,
+    nutritionOutline,
+    pizzaOutline,
+    restaurantOutline,
 } from 'ionicons/icons';
 
 import { useState } from 'react';
@@ -115,7 +120,9 @@ export default function HomePage() {
                     </button>
 
                     <button className="category-item" onClick={() => setSelectedCategory('Dessert')}>
-                        <div className="category-icon">Cake</div>
+                        <div className="category-icon">
+                            <IonIcon icon={iceCreamOutline} />
+                        </div>
                         <span>Desserts</span>
                     </button>
 
@@ -127,22 +134,30 @@ export default function HomePage() {
                     </button>
 
                     <button className="category-item" onClick={() => setSelectedCategory('Pasta')}>
-                        <div className="category-icon">Pasta</div>
+                        <div className="category-icon">
+                            <IonIcon icon={pizzaOutline} />
+                        </div>
                         <span>Pasta</span>
                     </button>
 
                     <button className="category-item" onClick={() => setSelectedCategory('Healthy')}>
-                        <div className="category-icon">Salad</div>
+                        <div className="category-icon">
+                            <IonIcon icon={nutritionOutline} />
+                        </div>
                         <span>Gesund</span>
                     </button>
 
                     <button className="category-item" onClick={() => setSelectedCategory('Main Dish')}>
-                        <div className="category-icon">Meal</div>
+                        <div className="category-icon">
+                            <IonIcon icon={restaurantOutline} />
+                        </div>
                         <span>Hauptgericht</span>
                     </button>
 
                     <button className="category-item" onClick={() => setSelectedCategory(null)}>
-                        <div className="category-icon">All</div>
+                        <div className="category-icon">
+                            <IonIcon icon={appsOutline} />
+                        </div>
                         <span>Alle</span>
                     </button>
                 </div>
@@ -161,16 +176,16 @@ export default function HomePage() {
 
                 <div className="recipe-grid">
                     {filteredRecipes.map((recipe) => (
-                        <Link key={recipe.id} to={`/recipes/${recipe.id}`}>
-                            <RecipeCard
-                                title={recipe.title}
-                                imageUrl={recipe.imageUrl ?? ''}
-                                duration={recipe.preparationTime}
-                                difficulty="Einfach"
-                                category={recipe.category}
-                                rating={recipe.rating}
-                            />
-                        </Link>
+                        <RecipeCard
+                            key={recipe.id}
+                            title={recipe.title}
+                            imageUrl={recipe.imageUrl ?? ''}
+                            duration={recipe.preparationTime}
+                            difficulty="Einfach"
+                            category={recipe.category}
+                            rating={recipe.rating}
+                            to={`/recipes/${recipe.id}`}
+                        />
                     ))}
                 </div>
             </IonContent>
