@@ -4,7 +4,10 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import type { Recipe } from "../models/Recipe";
 import type { RecipeCategory } from "../models/RecipeCategory";
 import { getRecipeById, updateRecipe } from "../repositories/recipeRepository";
+// Reuse the create form styles so create and edit flows stay consistent.
+import "./RecipeForm.css";
 
+// Define the route parameters used by /recipes/:id/edit.
 interface EditRecipeRouteParams {
   id: string;
 }
@@ -15,7 +18,9 @@ export default function EditRecipePage() {
 
   // Load the recipe once from the route ID to prefill the edit form.
   const recipe = getRecipeById(id);
+  const canEditRecipe = recipe?.isEditable === true;
 
+  // Prefill the form with existing recipe data so users only change what they need.
   const [title, setTitle] = useState(recipe?.title ?? "");
   const [description, setDescription] = useState(recipe?.description ?? "");
   const [category, setCategory] = useState<RecipeCategory>(recipe?.category ?? "Quick");
@@ -62,7 +67,8 @@ export default function EditRecipePage() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!recipe) {
+    // Guard against editing missing recipes or read-only sample recipes.
+    if (!recipe || !canEditRecipe) {
       return;
     }
 
@@ -97,19 +103,20 @@ export default function EditRecipePage() {
     history.push(`/recipes/${recipe.id}`);
   }
 
-  if (!recipe) {
+  // Show a safe fallback instead of rendering an edit form for invalid or read-only recipes.
+  if (!recipe || !canEditRecipe) {
     return (
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Recipe not found</IonTitle>
+            <IonTitle>Recipe cannot be edited</IonTitle>
           </IonToolbar>
         </IonHeader>
 
         <IonContent fullscreen>
-          <main>
-            <p>No recipe exists for ID "{id}".</p>
-            <IonButton routerLink="/recipes">Back to recipes</IonButton>
+          <main className="recipe-form-page">
+            <p>This recipe does not exist or cannot be edited.</p>
+            <IonButton routerLink="/home">Back to recipes</IonButton>
           </main>
         </IonContent>
       </IonPage>
@@ -125,108 +132,137 @@ export default function EditRecipePage() {
       </IonHeader>
 
       <IonContent fullscreen>
-        <main>
-          <Link to={`/recipes/${recipe.id}`}>Back to recipe</Link>
+        <main className="recipe-form-page">
+          <Link className="recipe-form-back-link" to={`/recipes/${recipe.id}`}>
+            Back to recipe
+          </Link>
 
-          <form onSubmit={handleSubmit}>
-            <h1>Edit Recipe</h1>
+          <section className="recipe-form-hero">
+            <p>Recipe Core</p>
+            <h1>Edit your recipe</h1>
+            <span>Update the image, ingredients, instructions and cooking details.</span>
+          </section>
 
-            {errorMessage && <p>{errorMessage}</p>}
+          <form className="recipe-form" onSubmit={handleSubmit}>
+            {errorMessage && <p className="recipe-form-error">{errorMessage}</p>}
 
-            <fieldset>
+            {/* Keep the edit form structure aligned with the create recipe form. */}
+            <fieldset className="recipe-form-card">
               <legend>Basic information</legend>
 
-              <label htmlFor="title">Title</label>
-              <input
-                id="title"
-                type="text"
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                placeholder="Recipe title"
-              />
+              <div className="recipe-form-grid">
+                <label className="recipe-form-field" htmlFor="title">
+                  <span>Title</span>
+                  <input
+                    id="title"
+                    type="text"
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
+                    placeholder="Recipe title"
+                  />
+                </label>
 
-              <label htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                placeholder="Recipe description"
-              />
+                <label className="recipe-form-field" htmlFor="category">
+                  <span>Category</span>
+                  <select
+                    id="category"
+                    value={category}
+                    onChange={(event) => setCategory(event.target.value as RecipeCategory)}
+                  >
+                    <option value="Vegan">Vegan</option>
+                    <option value="Vegetarian">Vegetarian</option>
+                    <option value="Dessert">Dessert</option>
+                    <option value="Quick">Quick</option>
+                    <option value="Pasta">Pasta</option>
+                    <option value="Main Dish">Main Dish</option>
+                    <option value="Healthy">Healthy</option>
+                  </select>
+                </label>
 
-              <label htmlFor="category">Category</label>
-              <select
-                id="category"
-                value={category}
-                onChange={(event) => setCategory(event.target.value as RecipeCategory)}
-              >
-                <option value="Vegan">Vegan</option>
-                <option value="Vegetarian">Vegetarian</option>
-                <option value="Dessert">Dessert</option>
-                <option value="Quick">Quick</option>
-                <option value="Pasta">Pasta</option>
-                <option value="Main Dish">Main Dish</option>
-                <option value="Healthy">Healthy</option>
-              </select>
+                <label className="recipe-form-field" htmlFor="preparationTime">
+                  <span>Preparation time in minutes</span>
+                  <input
+                    id="preparationTime"
+                    type="number"
+                    min="0"
+                    value={preparationTime}
+                    onChange={(event) => setPreparationTime(Number(event.target.value))}
+                  />
+                </label>
 
-              <label htmlFor="preparationTime">Preparation time in minutes</label>
-              <input
-                id="preparationTime"
-                type="number"
-                min="0"
-                value={preparationTime}
-                onChange={(event) => setPreparationTime(Number(event.target.value))}
-              />
+                <label className="recipe-form-field" htmlFor="rating">
+                  <span>Rating</span>
+                  <input
+                    id="rating"
+                    type="number"
+                    min="0"
+                    max="5"
+                    step="0.1"
+                    value={rating}
+                    onChange={(event) => setRating(Number(event.target.value))}
+                  />
+                </label>
+              </div>
 
-              <label htmlFor="rating">Rating</label>
-              <input
-                id="rating"
-                type="number"
-                min="0"
-                max="5"
-                step="0.1"
-                value={rating}
-                onChange={(event) => setRating(Number(event.target.value))}
-              />
+              <label className="recipe-form-field" htmlFor="description">
+                <span>Description</span>
+                <textarea
+                  id="description"
+                  rows={4}
+                  value={description}
+                  onChange={(event) => setDescription(event.target.value)}
+                  placeholder="Recipe description"
+                />
+              </label>
             </fieldset>
 
-            <fieldset>
+            {/* The image section supports both external URLs and uploaded previews. */}
+            <fieldset className="recipe-form-card">
               <legend>Image</legend>
 
-              <label htmlFor="imageUrl">Image URL</label>
-              <input
-                id="imageUrl"
-                type="url"
-                value={imageUrl.startsWith("data:") ? "" : imageUrl}
-                onChange={(event) => setImageUrl(event.target.value)}
-                placeholder="https://example.com/recipe.jpg"
-              />
+              <label className="recipe-form-field" htmlFor="imageUrl">
+                <span>Image URL</span>
+                <input
+                  id="imageUrl"
+                  type="url"
+                  value={imageUrl.startsWith("data:") ? "" : imageUrl}
+                  onChange={(event) => setImageUrl(event.target.value)}
+                  placeholder="https://example.com/recipe.jpg"
+                />
+              </label>
 
-              <label htmlFor="imageUpload">Upload image</label>
-              <input id="imageUpload" type="file" accept="image/*" onChange={handleImageUpload} />
+              <label className="recipe-form-field" htmlFor="imageUpload">
+                <span>Upload image</span>
+                <input id="imageUpload" type="file" accept="image/*" onChange={handleImageUpload} />
+              </label>
 
               {imageUrl && (
-                <figure>
-                  <img src={imageUrl} alt="Recipe preview" width="240" />
+                <figure className="recipe-form-image-preview">
+                  <img src={imageUrl} alt="Recipe preview" />
                   <figcaption>Image preview</figcaption>
                 </figure>
               )}
             </fieldset>
 
-            <fieldset>
+            {/* Existing ingredients are editable and additional rows can be added. */}
+            <fieldset className="recipe-form-card">
               <legend>Ingredients</legend>
 
               {ingredients.map((ingredient, index) => (
-                <div key={index}>
-                  <label htmlFor={`ingredient-${index}`}>Ingredient {index + 1}</label>
-                  <input
-                    id={`ingredient-${index}`}
-                    type="text"
-                    value={ingredient}
-                    onChange={(event) => updateIngredient(index, event.target.value)}
-                    placeholder="e.g. Tomatoes"
-                  />
+                <div className="recipe-form-row" key={index}>
+                  <label className="recipe-form-field" htmlFor={`ingredient-${index}`}>
+                    <span>Ingredient {index + 1}</span>
+                    <input
+                      id={`ingredient-${index}`}
+                      type="text"
+                      value={ingredient}
+                      onChange={(event) => updateIngredient(index, event.target.value)}
+                      placeholder="e.g. Tomatoes"
+                    />
+                  </label>
 
                   <button
+                    className="recipe-form-secondary-button"
                     type="button"
                     onClick={() => removeIngredient(index)}
                     disabled={ingredients.length === 1}
@@ -236,25 +272,34 @@ export default function EditRecipePage() {
                 </div>
               ))}
 
-              <button type="button" onClick={() => setIngredients([...ingredients, ""])}>
+              <button
+                className="recipe-form-secondary-button"
+                type="button"
+                onClick={() => setIngredients([...ingredients, ""])}
+              >
                 Add ingredient
               </button>
             </fieldset>
 
-            <fieldset>
+            {/* Existing instructions keep their order while users can add or remove steps. */}
+            <fieldset className="recipe-form-card">
               <legend>Instructions</legend>
 
               {instructions.map((instruction, index) => (
-                <div key={index}>
-                  <label htmlFor={`instruction-${index}`}>Step {index + 1}</label>
-                  <textarea
-                    id={`instruction-${index}`}
-                    value={instruction}
-                    onChange={(event) => updateInstruction(index, event.target.value)}
-                    placeholder="Describe this step"
-                  />
+                <div className="recipe-form-row" key={index}>
+                  <label className="recipe-form-field" htmlFor={`instruction-${index}`}>
+                    <span>Step {index + 1}</span>
+                    <textarea
+                      id={`instruction-${index}`}
+                      rows={3}
+                      value={instruction}
+                      onChange={(event) => updateInstruction(index, event.target.value)}
+                      placeholder="Describe this step"
+                    />
+                  </label>
 
                   <button
+                    className="recipe-form-secondary-button"
                     type="button"
                     onClick={() => removeInstruction(index)}
                     disabled={instructions.length === 1}
@@ -264,12 +309,21 @@ export default function EditRecipePage() {
                 </div>
               ))}
 
-              <button type="button" onClick={() => setInstructions([...instructions, ""])}>
+              <button
+                className="recipe-form-secondary-button"
+                type="button"
+                onClick={() => setInstructions([...instructions, ""])}
+              >
                 Add instruction
               </button>
             </fieldset>
 
-            <button type="submit">Save changes</button>
+            <div className="recipe-form-actions">
+              <Link to={`/recipes/${recipe.id}`}>Cancel</Link>
+              <button className="recipe-form-submit-button" type="submit">
+                Save changes
+              </button>
+            </div>
           </form>
         </main>
       </IonContent>
