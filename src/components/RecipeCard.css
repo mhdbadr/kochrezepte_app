@@ -31,3 +31,21 @@
 .recipe-card__rating {
     margin: 8px 0 0;
 }
+
+.recipe-card--compact {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px;
+}
+
+.recipe-card--compact .recipe-card__image {
+    width: 100px;
+    height: 80px;
+    border-radius: 14px;
+    flex-shrink: 0;
+}
+
+.recipe-card--compact .recipe-card__content {
+    padding: 0;
+}

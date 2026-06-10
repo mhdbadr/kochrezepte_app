@@ -13,43 +13,16 @@ import {
 import { useState } from 'react';
 import RecipeCard from '../components/RecipeCard';
 import CategoryChip from '../components/CategoryChip';
+import { mockRecipes } from '../data/mockRecipes';
 
-const recipes = [
-    {
-        title: 'Pasta Carbonara',
-        imageUrl: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800',
-        duration: 25,
-        difficulty: 'Einfach',
-        category: 'Pasta',
-        rating: 5,
-        ingredients: ['nudeln', 'ei', 'käse'],
-    },
-    {
-        title: 'Pizza Margherita',
-        imageUrl: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800',
-        duration: 30,
-        difficulty: 'Mittel',
-        category: 'Pizza',
-        rating: 4,
-        ingredients: ['teig', 'tomaten', 'mozzarella'],
-    },
-    {
-        title: 'Caesar Salat',
-        imageUrl: 'https://images.unsplash.com/photo-1546793665-c74683f339c1?w=800',
-        duration: 15,
-        difficulty: 'Einfach',
-        category: 'Salat',
-        rating: 5,
-        ingredients: ['salat', 'hähnchen', 'parmesan'],
-    },
-];
+
 
 export default function SearchPage() {
     const [query, setQuery] = useState('');
     const [searchMode, setSearchMode] = useState<'recipes' | 'ingredients'>('recipes');
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-    const filteredRecipes = recipes.filter((recipe) => {
+    const filteredRecipes = mockRecipes.filter((recipe) => {
         const matchesSearch =
             query === '' ||
             (searchMode === 'recipes'
@@ -63,6 +36,15 @@ export default function SearchPage() {
 
         return matchesSearch && matchesCategory;
     });
+
+    const ingredientSuggestions = [
+        { label: 'Tomaten', emoji: '🍅' },
+        { label: 'Basilikum', emoji: '☘️' },
+        { label: 'Mozzarella', emoji: '🧀' },
+        { label: 'Hähnchen', emoji: '🍗' },
+        { label: 'Avocado', emoji: '🥑' },
+        { label: 'Zucchini', emoji: '🥒' },
+    ];
 
     return (
         <IonPage>
@@ -98,13 +80,76 @@ export default function SearchPage() {
                     onIonInput={(e) => setQuery(e.detail.value ?? '')}
                 />
 
+                {searchMode === 'ingredients' && (
+                    <>
+                        <h2>Nach Zutaten suchen</h2>
+
+                        <div className="ingredient-grid">
+                            {ingredientSuggestions.map((ingredient) => (
+                                <button
+                                    key={ingredient.label}
+                                    className="ingredient-item"
+                                    onClick={() => setQuery(ingredient.label)}
+                                >
+                                    <div className="ingredient-icon">{ingredient.emoji}</div>
+                                    <span>{ingredient.label}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </>
+                )}
                 <h2>Kategorien</h2>
 
-                <div className="chips">
-                    <CategoryChip label="Alle" onClick={() => setSelectedCategory(null)} />
-                    <CategoryChip label="Pasta" onClick={() => setSelectedCategory('Pasta')} />
-                    <CategoryChip label="Pizza" onClick={() => setSelectedCategory('Pizza')} />
-                    <CategoryChip label="Salat" onClick={() => setSelectedCategory('Salat')} />
+                <div className="category-grid">
+                    <button className="category-item" onClick={() => setSelectedCategory('Vegan')}>
+                        <div className="category-icon">🌿</div>
+                        <span>Vegan</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Vegetarisch')}>
+                        <div className="category-icon">🥬</div>
+                        <span>Vegetarisch</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Dessert')}>
+                        <div className="category-icon">🧁</div>
+                        <span>Desserts</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Schnell')}>
+                        <div className="category-icon">⚡</div>
+                        <span>Schnell</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Pizza')}>
+                        <div className="category-icon">🍕</div>
+                        <span>Pizza</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Salat')}>
+                        <div className="category-icon">🥗</div>
+                        <span>Salat</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Asiatisch')}>
+                        <div className="category-icon">🍜</div>
+                        <span>Asiatisch</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Frühstück')}>
+                        <div className="category-icon">🥐</div>
+                        <span>Frühstück</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Getränke')}>
+                        <div className="category-icon">🥤</div>
+                        <span>Getränke</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory(null)}>
+                        <div className="category-icon">🍽️</div>
+                        <span>Alle</span>
+                    </button>
                 </div>
 
                 <h2>Suchergebnisse</h2>

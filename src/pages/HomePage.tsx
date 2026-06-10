@@ -7,6 +7,14 @@ import {
     IonSearchbar
 } from '@ionic/react';
 
+import {
+    leafOutline,
+    flashOutline,
+} from 'ionicons/icons';
+
+import { IonIcon } from '@ionic/react';
+import { mockRecipes } from '../data/mockRecipes';
+
 import './HomePage.css';
 import RecipeCard from '../components/RecipeCard';
 import CategoryChip from '../components/CategoryChip';
@@ -21,6 +29,10 @@ import { Pagination, Autoplay } from 'swiper/modules';
 export default function HomePage() {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+    const filteredRecipes =
+        selectedCategory === null
+            ? mockRecipes
+            : mockRecipes.filter((recipe) => recipe.category === selectedCategory);
     return (
         <IonPage>
             <IonHeader>
@@ -89,12 +101,77 @@ export default function HomePage() {
 
                 <h2>Kategorien</h2>
 
-                <div className="chips">
-                    <CategoryChip label="Alle" onClick={() => setSelectedCategory(null)} />
-                    <CategoryChip label="Pasta" onClick={() => setSelectedCategory('Pasta')} />
-                    <CategoryChip label="Vegan" onClick={() => setSelectedCategory('Vegan')} />
-                    <CategoryChip label="Dessert" onClick={() => setSelectedCategory('Dessert')} />
-                    <CategoryChip label="Frühstück" onClick={() => setSelectedCategory('Frühstück')} />
+                <div className="category-grid">
+                    <button
+                        className="category-item"
+                        onClick={() => setSelectedCategory('Vegan')}
+                    >
+                        <div className="category-icon">
+                            <IonIcon icon={leafOutline} />
+                        </div>
+                        <span>Vegan</span>
+                    </button>
+
+                    <button
+                        className="category-item"
+                        onClick={() => setSelectedCategory('Vegetarisch')}
+                    >
+                        <div className="category-icon">
+                            <IonIcon icon={leafOutline} />
+                        </div>
+                        <span>Vegetarisch</span>
+                    </button>
+
+                    <button
+                        className="category-item"
+                        onClick={() => setSelectedCategory('Dessert')}
+                    >
+                        <div className="category-icon">
+                            🧁
+                        </div>
+                        <span>Desserts</span>
+                    </button>
+
+                    <button
+                        className="category-item"
+                        onClick={() => setSelectedCategory('Schnell')}
+                    >
+                        <div className="category-icon">
+                            <IonIcon icon={flashOutline} />
+                        </div>
+                        <span>Schnell</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Pizza')}>
+                        <div className="category-icon">🍕</div>
+                        <span>Pizza</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Salat')}>
+                        <div className="category-icon">🥗</div>
+                        <span>Salat</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Asiatisch')}>
+                        <div className="category-icon">🍜</div>
+                        <span>Asiatisch</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Frühstück')}>
+                        <div className="category-icon">🥐</div>
+                        <span>Frühstück</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Getränke')}>
+                        <div className="category-icon">🥤</div>
+                        <span>Getränke</span>
+                    </button>
+                    <button className="category-item" onClick={() => setSelectedCategory(null)}>
+                        <div className="category-icon">🍽️</div>
+                        <span>Alle</span>
+                    </button>
+
+
                 </div>
 
                 {selectedCategory && (
@@ -104,46 +181,21 @@ export default function HomePage() {
                 <h2>Neue Rezepte</h2>
 
                 <div className="recipe-grid">
-                    <RecipeCard
-                        title="Pasta Carbonara"
-                        imageUrl="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800"
-                        duration={25}
-                        difficulty="Einfach"
-                        category="Pasta"
-                        rating={5}
-                    />
-
-                    <RecipeCard
-                        title="Pizza Margherita"
-                        imageUrl="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800"
-                        duration={30}
-                        difficulty="Mittel"
-                        category="Pizza"
-                        rating={4}
-                    />
+                    {filteredRecipes.map((recipe) => (
+                        <RecipeCard
+                            key={recipe.title}
+                            title={recipe.title}
+                            imageUrl={recipe.imageUrl}
+                            duration={recipe.duration}
+                            difficulty={recipe.difficulty}
+                            category={recipe.category}
+                            rating={recipe.rating}
+                        />
+                    ))}
                 </div>
 
-                <h2>Beliebte Rezepte</h2>
 
-                <div className="recipe-grid">
-                    <RecipeCard
-                        title="Caesar Salat"
-                        imageUrl="https://images.unsplash.com/photo-1546793665-c74683f339c1?w=800"
-                        duration={15}
-                        difficulty="Einfach"
-                        category="Salat"
-                        rating={5}
-                    />
 
-                    <RecipeCard
-                        title="Chicken Curry"
-                        imageUrl="https://img.chefkoch-cdn.de/rezepte/1582261265704130/bilder/1573472/crop-960x540/chicken-curry.jpg"
-                        duration={40}
-                        difficulty="Mittel"
-                        category="Asiatisch"
-                        rating={4}
-                    />
-                </div>
 
             </IonContent>
         </IonPage>
