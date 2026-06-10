@@ -4,6 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 import type { Recipe } from "../models/Recipe";
 import type { RecipeCategory } from "../models/RecipeCategory";
 import { createRecipe } from "../repositories/recipeRepository";
+import "./RecipeForm.css";
 
 export default function RecipeForm() {
   const history = useHistory();
@@ -83,6 +84,7 @@ export default function RecipeForm() {
       preparationTime,
       rating: rating || undefined,
       createdAt: new Date().toISOString(),
+      isEditable: true,
     };
 
     createRecipe(newRecipe);
@@ -98,108 +100,137 @@ export default function RecipeForm() {
       </IonHeader>
 
       <IonContent fullscreen>
-        <main>
-          <Link to="/recipes">Back to recipes</Link>
+        <main className="recipe-form-page">
+          <Link className="recipe-form-back-link" to="/home">Back to recipes</Link>
 
-          <form onSubmit={handleSubmit}>
-            <h1>Create Recipe</h1>
+          {/* The form hero keeps the create flow visually aligned with the rest of the app. */}
+          <section className="recipe-form-hero">
+            <p>Recipe Core</p>
+            <h1>Create your own recipe</h1>
+            <span>Add ingredients, instructions, timing and an image.</span>
+          </section>
 
-            {errorMessage && <p>{errorMessage}</p>}
+          <form className="recipe-form" onSubmit={handleSubmit}>
 
-            <fieldset>
+            {errorMessage && <p className="recipe-form-error">{errorMessage}</p>}
+
+            {/* Basic fields are grouped first so the recipe has clear metadata before details. */}
+            <fieldset className="recipe-form-card">
               <legend>Basic information</legend>
 
-              <label htmlFor="title">Title</label>
-              <input
-                id="title"
-                type="text"
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                placeholder="Recipe title"
-              />
+              <div className="recipe-form-grid">
+                <label className="recipe-form-field" htmlFor="title">
+                  <span>Title</span>
+                  <input
+                    id="title"
+                    type="text"
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
+                    placeholder="Recipe title"
+                  />
+                </label>
 
-              <label htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                placeholder="Recipe description"
-              />
+                <label className="recipe-form-field" htmlFor="category">
+                  <span>Category</span>
+                  <select
+                    id="category"
+                    value={category}
+                    onChange={(event) => setCategory(event.target.value as RecipeCategory)}
+                  >
+                    <option value="Vegan">Vegan</option>
+                    <option value="Vegetarian">Vegetarian</option>
+                    <option value="Dessert">Dessert</option>
+                    <option value="Quick">Quick</option>
+                    <option value="Pasta">Pasta</option>
+                    <option value="Main Dish">Main Dish</option>
+                    <option value="Healthy">Healthy</option>
+                  </select>
+                </label>
 
-              <label htmlFor="category">Category</label>
-              <select
-                id="category"
-                value={category}
-                onChange={(event) => setCategory(event.target.value as RecipeCategory)}
-              >
-                <option value="Vegan">Vegan</option>
-                <option value="Vegetarian">Vegetarian</option>
-                <option value="Dessert">Dessert</option>
-                <option value="Quick">Quick</option>
-                <option value="Pasta">Pasta</option>
-                <option value="Main Dish">Main Dish</option>
-                <option value="Healthy">Healthy</option>
-              </select>
+                <label className="recipe-form-field" htmlFor="preparationTime">
+                  <span>Preparation time in minutes</span>
+                  <input
+                    id="preparationTime"
+                    type="number"
+                    min="0"
+                    value={preparationTime}
+                    onChange={(event) => setPreparationTime(Number(event.target.value))}
+                  />
+                </label>
 
-              <label htmlFor="preparationTime">Preparation time in minutes</label>
-              <input
-                id="preparationTime"
-                type="number"
-                min="0"
-                value={preparationTime}
-                onChange={(event) => setPreparationTime(Number(event.target.value))}
-              />
+                <label className="recipe-form-field" htmlFor="rating">
+                  <span>Rating</span>
+                  <input
+                    id="rating"
+                    type="number"
+                    min="0"
+                    max="5"
+                    step="0.1"
+                    value={rating}
+                    onChange={(event) => setRating(Number(event.target.value))}
+                  />
+                </label>
+              </div>
 
-              <label htmlFor="rating">Rating</label>
-              <input
-                id="rating"
-                type="number"
-                min="0"
-                max="5"
-                step="0.1"
-                value={rating}
-                onChange={(event) => setRating(Number(event.target.value))}
-              />
+              <label className="recipe-form-field" htmlFor="description">
+                <span>Description</span>
+                <textarea
+                  id="description"
+                  value={description}
+                  onChange={(event) => setDescription(event.target.value)}
+                  placeholder="Recipe description"
+                  rows={4}
+                />
+              </label>
             </fieldset>
 
-            <fieldset>
+            {/* Users can either paste an image URL or upload a local image for preview. */}
+            <fieldset className="recipe-form-card">
               <legend>Image</legend>
 
-              <label htmlFor="imageUrl">Image URL</label>
-              <input
-                id="imageUrl"
-                type="url"
-                value={imageUrl.startsWith("data:") ? "" : imageUrl}
-                onChange={(event) => setImageUrl(event.target.value)}
-                placeholder="https://example.com/recipe.jpg"
-              />
+              <label className="recipe-form-field" htmlFor="imageUrl">
+                <span>Image URL</span>
+                <input
+                  id="imageUrl"
+                  type="url"
+                  value={imageUrl.startsWith("data:") ? "" : imageUrl}
+                  onChange={(event) => setImageUrl(event.target.value)}
+                  placeholder="https://example.com/recipe.jpg"
+                />
+              </label>
 
-              <label htmlFor="imageUpload">Upload image</label>
-              <input id="imageUpload" type="file" accept="image/*" onChange={handleImageUpload} />
+              <label className="recipe-form-field" htmlFor="imageUpload">
+                <span>Upload image</span>
+                <input id="imageUpload" type="file" accept="image/*" onChange={handleImageUpload} />
+              </label>
 
               {imageUrl && (
-                <figure>
+                <figure className="recipe-form-image-preview">
                   <img src={imageUrl} alt="Recipe preview" width="240" />
                   <figcaption>Image preview</figcaption>
                 </figure>
               )}
             </fieldset>
 
-            <fieldset>
+            {/* Ingredient rows are dynamic so users can add as many entries as needed. */}
+            <fieldset className="recipe-form-card">
               <legend>Ingredients</legend>
 
               {ingredients.map((ingredient, index) => (
-                <div key={index}>
-                  <label htmlFor={`ingredient-${index}`}>Ingredient {index + 1}</label>
-                  <input
-                    id={`ingredient-${index}`}
-                    type="text"
-                    value={ingredient}
-                    onChange={(event) => updateIngredient(index, event.target.value)}
-                    placeholder="e.g. Tomatoes"
-                  />
+                <div className="recipe-form-row" key={index}>
+                  <label className="recipe-form-field" htmlFor={`ingredient-${index}`}>
+                    <span>Ingredient {index + 1}</span>
+                    <input
+                      id={`ingredient-${index}`}
+                      type="text"
+                      value={ingredient}
+                      onChange={(event) => updateIngredient(index, event.target.value)}
+                      placeholder="e.g. Tomatoes"
+                    />
+                  </label>
 
                   <button
+                    className="recipe-form-secondary-button"
                     type="button"
                     onClick={() => removeIngredient(index)}
                     disabled={ingredients.length === 1}
@@ -209,25 +240,30 @@ export default function RecipeForm() {
                 </div>
               ))}
 
-              <button type="button" onClick={() => setIngredients([...ingredients, ""])}>
+              <button className="recipe-form-secondary-button" type="button" onClick={() => setIngredients([...ingredients, ""])}>
                 Add ingredient
               </button>
             </fieldset>
 
-            <fieldset>
+            {/* Instruction rows are dynamic and saved as ordered recipe steps. */}
+            <fieldset className="recipe-form-card">
               <legend>Instructions</legend>
 
               {instructions.map((instruction, index) => (
-                <div key={index}>
-                  <label htmlFor={`instruction-${index}`}>Step {index + 1}</label>
-                  <textarea
-                    id={`instruction-${index}`}
-                    value={instruction}
-                    onChange={(event) => updateInstruction(index, event.target.value)}
-                    placeholder="Describe this step"
-                  />
+                <div className="recipe-form-row" key={index}>
+                  <label className="recipe-form-field" htmlFor={`instruction-${index}`}>
+                    <span>Step {index + 1}</span>
+                    <textarea
+                      id={`instruction-${index}`}
+                      value={instruction}
+                      onChange={(event) => updateInstruction(index, event.target.value)}
+                      placeholder="Describe this step"
+                      rows={3}
+                    />
+                  </label>
 
                   <button
+                    className="recipe-form-secondary-button"
                     type="button"
                     onClick={() => removeInstruction(index)}
                     disabled={instructions.length === 1}
@@ -237,12 +273,16 @@ export default function RecipeForm() {
                 </div>
               ))}
 
-              <button type="button" onClick={() => setInstructions([...instructions, ""])}>
+              <button className="recipe-form-secondary-button" type="button" onClick={() => setInstructions([...instructions, ""])}>
                 Add instruction
               </button>
             </fieldset>
 
-            <button type="submit">Save recipe</button>
+            {/* The action row separates navigation from the final save action. */}
+            <div className="recipe-form-actions">
+              <Link to="/home">Cancel</Link>
+              <button className="recipe-form-submit-button" type="submit">Save recipe</button>
+            </div>
           </form>
         </main>
       </IonContent>
