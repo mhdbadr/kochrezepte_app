@@ -1,13 +1,6 @@
-import {
-    IonContent,
-    IonHeader,
-    IonIcon,
-    IonPage,
-    IonSearchbar,
-    IonTitle,
-    IonToolbar
-} from '@ionic/react';
+import { IonContent, IonHeader, IonIcon, IonPage, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
 
+// Importing icons for the category buttons from Ionicons.
 import {
     appsOutline,
     flashOutline,
@@ -34,6 +27,7 @@ import 'swiper/css/pagination';
 export default function HomePage() {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+    // Filter recipes locally until the search/category logic is connected to the database.
     const filteredRecipes =
         selectedCategory === null
             ? mockRecipes
@@ -104,6 +98,7 @@ export default function HomePage() {
 
                 <h2>Kategorien</h2>
 
+                {/* Category buttons update the local filter without leaving the home page. */}
                 <div className="category-grid">
                     <button className="category-item" onClick={() => setSelectedCategory('Vegan')}>
                         <div className="category-icon">
@@ -162,18 +157,13 @@ export default function HomePage() {
                     </button>
                 </div>
 
-                <div className="chips">
-                    <CategoryChip label="Alle Rezepte" onClick={() => setSelectedCategory(null)} />
-                    <CategoryChip label="Zur Rezeptliste" onClick={() => undefined} />
-                    <Link to="/recipes">Rezepte verwalten</Link>
-                </div>
-
                 {selectedCategory && (
                     <p>Ausgewaehlte Kategorie: {selectedCategory}</p>
                 )}
 
                 <h2>Neue Rezepte</h2>
 
+                {/* Recipe cards link directly to the detail page for the selected recipe. */}
                 <div className="recipe-grid">
                     {filteredRecipes.map((recipe) => (
                         <RecipeCard
