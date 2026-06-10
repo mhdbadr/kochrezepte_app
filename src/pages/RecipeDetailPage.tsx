@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { deleteRecipe, getRecipeById } from "../repositories/recipeRepository";
+import "./RecipeDetailPage.css";
 
 // Define the route parameters used by /recipes/:id.
 interface RecipeDetailRouteParams {
@@ -26,8 +27,11 @@ export default function RecipeDetailPage() {
   // Load the matching recipe from the repository.
   const recipe = getRecipeById(id);
 
+  // Only recipes created through the form should expose edit and delete actions.
+  const canModifyRecipe = recipe?.isEditable === true;
+
   function handleDeleteRecipe() {
-    if (!recipe) return;
+    if (!recipe || !canModifyRecipe) return;
 
     deleteRecipe(recipe.id); // Remove the recipe from the repository.
     history.push("/recipes"); // Navigate back to the recipe list after deletion.
@@ -62,12 +66,41 @@ export default function RecipeDetailPage() {
       </IonHeader>
 
       <IonContent fullscreen>
-        <main>
-          <Link to="/recipes">Back to recipes</Link>
-          <IonButton routerLink={`/recipes/${recipe.id}/edit`}>Edit recipe</IonButton>
-          <IonButton color="danger" onClick={() => setIsDeleteAlertOpen(true)}>
-            Delete recipe
-          </IonButton>
+        <main className="recipe-detail-page">
+          <Link className="recipe-detail-back-link" to="/home">Back to recipes</Link>
+
+          <section className="recipe-detail-hero">
+            {recipe.imageUrl && (
+              <img className="recipe-detail-hero__image" src={recipe.imageUrl} alt={recipe.title} />
+            )}
+
+            <div className="recipe-detail-hero__overlay">
+              <p className="recipe-detail-category">{recipe.category}</p>
+              <h1>{recipe.title}</h1>
+              <p>{recipe.description}</p>
+
+              <div className="recipe-detail-meta">
+                <span>{recipe.preparationTime} Min</span>
+                {recipe.rating && <span>{recipe.rating} / 5</span>}
+              </div>
+            </div>
+          </section>
+
+          {/* Sample recipes stay read-only, while user-created recipes can be managed. */}
+          {canModifyRecipe ? (
+            <div className="recipe-detail-actions">
+              <IonButton routerLink={`/recipes/${recipe.id}/edit`}>Edit recipe</IonButton>
+              <IonButton color="danger" onClick={() => setIsDeleteAlertOpen(true)}>
+                Delete recipe
+              </IonButton>
+            </div>
+          ) : (
+            <p className="recipe-detail-readonly-note">
+              This is a sample recipe. Only recipes you create can be edited or deleted.
+            </p>
+          )}
+
+          {/* Confirm destructive actions before removing a recipe. */}
           <IonAlert
             isOpen={isDeleteAlertOpen}
             header="Delete recipe"
@@ -86,27 +119,27 @@ export default function RecipeDetailPage() {
             ]}
             onDidDismiss={() => setIsDeleteAlertOpen(false)}
           />
-          <h1>{recipe.title}</h1>
-          {/* Render the optional recipe image when the form or mock data provides one. */}
-          {recipe.imageUrl && <img src={recipe.imageUrl} alt={recipe.title} width="320" />}
-          <p>{recipe.description}</p>
-          <p>Category: {recipe.category}</p>
-          <p>Preparation time: {recipe.preparationTime} min</p>
-          {recipe.rating && <p>Rating: {recipe.rating}</p>}
 
-          <h2>Ingredients</h2>
-          <ul>
-            {recipe.ingredients.map((ingredient, index) => (
-              <li key={index}>{ingredient}</li>
-            ))}
-          </ul>
+          {/* Ingredients and instructions are separated for a clearer recipe detail layout. */}
+          <section className="recipe-detail-content">
+            <article className="recipe-detail-card">
+              <h2>Ingredients</h2>
+              <ul className="recipe-detail-list">
+                {recipe.ingredients.map((ingredient, index) => (
+                  <li key={index}>{ingredient}</li>
+                ))}
+              </ul>
+            </article>
 
-          <h2>Instructions</h2>
-          <ol>
-            {recipe.instructions.map((step, index) => (
-              <li key={index}>{step}</li>
-            ))}
-          </ol>
+            <article className="recipe-detail-card">
+              <h2>Instructions</h2>
+              <ol className="recipe-detail-steps">
+                {recipe.instructions.map((step, index) => (
+                  <li key={index}>{step}</li>
+                ))}
+              </ol>
+            </article>
+          </section>
         </main>
       </IonContent>
     </IonPage>
