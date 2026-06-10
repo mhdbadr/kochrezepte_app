@@ -157,13 +157,14 @@ export default function SearchPage() {
                 <div className="recipe-grid">
                     {filteredRecipes.map((recipe) => (
                         <RecipeCard
-                            key={recipe.title}
+                            key={recipe.id}
                             title={recipe.title}
                             imageUrl={recipe.imageUrl ?? ''}
                             duration={recipe.preparationTime}
                             difficulty="Einfach"
                             category={recipe.category}
                             rating={recipe.rating}
+                            to={`/recipes/${recipe.id}`}
                         />
                     ))}
                 </div>
