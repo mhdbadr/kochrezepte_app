@@ -1,5 +1,6 @@
 import './HomePage.css';
 import FavoriteButton from '../components/FavoriteButton';
+import RatingComponent from '../components/RatingComponent';
 
 export default function HomePage() {
   return (
@@ -14,6 +15,13 @@ export default function HomePage() {
         <div style={{ marginTop: '24px', textAlign: 'center' }}>
           <p className="home-label">Dein Favorite Button Test:</p>
           <FavoriteButton  recipeId="1"/>
+        </div>
+        <div style={{ marginTop: '24px', textAlign: 'center' }}>
+          <p className="home-label">Rezept bewerten:</p>
+          <RatingComponent 
+            initialRating={0} 
+            onRatingChange={(newRating) => console.log('Neue Bewertung abgegeben:', newRating)} 
+          />
         </div>
 
       </section>

@@ -8,8 +8,8 @@ export default function App() {
     <IonApp>
       <IonPage>
         <IonContent fullscreen>
-          {/*<HomePage />*/}
-          <FavoritesPage />
+          <HomePage />
+          {/*<FavoritesPage /> */}
         </IonContent>
       </IonPage>
     </IonApp>
