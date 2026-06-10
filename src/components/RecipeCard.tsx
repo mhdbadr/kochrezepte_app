@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './RecipeCard.css';
 
 interface RecipeCardProps {
@@ -8,6 +9,7 @@ interface RecipeCardProps {
     category: string;
     rating?: number;
     compact?: boolean;
+    to?: string;
 }
 
 export default function RecipeCard({
@@ -17,9 +19,10 @@ export default function RecipeCard({
                                        difficulty,
                                        category,
                                        rating = 0,
-                                       compact = false
+                                       compact = false,
+                                       to
                                    }: RecipeCardProps) {
-    return (
+    const card = (
         <article className={`recipe-card ${compact ? 'recipe-card--compact' : ''}`}>
             <img className="recipe-card__image" src={imageUrl} alt={title} />
 
@@ -36,5 +39,15 @@ export default function RecipeCard({
                 </p>
             </div>
         </article>
+    );
+
+    if (!to) {
+        return card;
+    }
+
+    return (
+        <Link className="recipe-card-link" to={to}>
+            {card}
+        </Link>
     );
 }
