@@ -5,6 +5,9 @@ import {
     IonSearchbar,
     IonTitle,
     IonToolbar,
+    IonSegment,
+    IonSegmentButton,
+    IonLabel,
 } from '@ionic/react';
 
 import { useState } from 'react';
@@ -42,23 +45,23 @@ const recipes = [
 ];
 
 export default function SearchPage() {
-    const [nameQuery, setNameQuery] = useState('');
-    const [ingredientQuery, setIngredientQuery] = useState('');
+    const [query, setQuery] = useState('');
+    const [searchMode, setSearchMode] = useState<'recipes' | 'ingredients'>('recipes');
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
     const filteredRecipes = recipes.filter((recipe) => {
-        const matchesName = recipe.title.toLowerCase().includes(nameQuery.toLowerCase());
-
-        const matchesIngredient =
-            ingredientQuery === '' ||
-            recipe.ingredients.some((ingredient) =>
-                ingredient.toLowerCase().includes(ingredientQuery.toLowerCase())
-            );
+        const matchesSearch =
+            query === '' ||
+            (searchMode === 'recipes'
+                ? recipe.title.toLowerCase().includes(query.toLowerCase())
+                : recipe.ingredients.some((ingredient) =>
+                    ingredient.toLowerCase().includes(query.toLowerCase())
+                ));
 
         const matchesCategory =
             selectedCategory === null || recipe.category === selectedCategory;
 
-        return matchesName && matchesIngredient && matchesCategory;
+        return matchesSearch && matchesCategory;
     });
 
     return (
@@ -70,25 +73,38 @@ export default function SearchPage() {
             </IonHeader>
 
             <IonContent className="ion-padding">
-                <IonSearchbar
-                    placeholder="Nach Rezeptname suchen"
-                    value={nameQuery}
-                    onIonInput={(event) => setNameQuery(event.detail.value ?? '')}
-                />
+                <IonSegment
+                    value={searchMode}
+                    onIonChange={(e) =>
+                        setSearchMode(e.detail.value as 'recipes' | 'ingredients')
+                    }
+                >
+                    <IonSegmentButton value="recipes">
+                        <IonLabel>Rezepte</IonLabel>
+                    </IonSegmentButton>
+
+                    <IonSegmentButton value="ingredients">
+                        <IonLabel>Zutaten</IonLabel>
+                    </IonSegmentButton>
+                </IonSegment>
 
                 <IonSearchbar
-                    placeholder="Nach Zutaten suchen"
-                    value={ingredientQuery}
-                    onIonInput={(event) => setIngredientQuery(event.detail.value ?? '')}
+                    placeholder={
+                        searchMode === 'recipes'
+                            ? 'Nach Rezepten suchen'
+                            : 'Nach Zutaten suchen'
+                    }
+                    value={query}
+                    onIonInput={(e) => setQuery(e.detail.value ?? '')}
                 />
 
                 <h2>Kategorien</h2>
 
                 <div className="chips">
+                    <CategoryChip label="Alle" onClick={() => setSelectedCategory(null)} />
                     <CategoryChip label="Pasta" onClick={() => setSelectedCategory('Pasta')} />
                     <CategoryChip label="Pizza" onClick={() => setSelectedCategory('Pizza')} />
                     <CategoryChip label="Salat" onClick={() => setSelectedCategory('Salat')} />
-                    <CategoryChip label="Alle" onClick={() => setSelectedCategory(null)} />
                 </div>
 
                 <h2>Suchergebnisse</h2>
