@@ -14,4 +14,6 @@ export interface Recipe {
   preparationTime: number;
   rating?: number;
   createdAt?: string;
+  // Marks recipes created by the current user so sample recipes stay read-only.
+  isEditable?: boolean;
 }
