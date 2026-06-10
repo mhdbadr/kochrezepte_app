@@ -1,25 +1,35 @@
 import {
-    IonPage,
+    IonContent,
     IonHeader,
-    IonToolbar,
+    IonPage,
     IonTitle,
-    IonContent
+    IonToolbar,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent
 } from '@ionic/react';
 
-const FavoritesPage: React.FC = () => {
+export default function FavoritesPage() {
     return (
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonTitle>Merkzettel</IonTitle>
+                    <IonTitle>Kochbuch</IonTitle>
                 </IonToolbar>
             </IonHeader>
 
             <IonContent className="ion-padding">
-                Favorites Page
+                <IonCard>
+                    <IonCardHeader>
+                        <IonCardTitle>Meine Favoriten</IonCardTitle>
+                    </IonCardHeader>
+
+                    <IonCardContent>
+                        Du hast noch keine Rezepte gespeichert.
+                    </IonCardContent>
+                </IonCard>
             </IonContent>
         </IonPage>
     );
-};
-
-export default FavoritesPage;
+}

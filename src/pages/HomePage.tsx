@@ -10,8 +10,11 @@ import {
 import './HomePage.css';
 import RecipeCard from '../components/RecipeCard';
 import CategoryChip from '../components/CategoryChip';
+import { useState } from 'react';
 
 export default function HomePage() {
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
     return (
         <IonPage>
             <IonHeader>
@@ -29,11 +32,16 @@ export default function HomePage() {
                 <h2>Kategorien</h2>
 
                 <div className="chips">
-                    <CategoryChip label="Pasta" />
-                    <CategoryChip label="Vegan" />
-                    <CategoryChip label="Dessert" />
-                    <CategoryChip label="Frühstück" />
+                    <CategoryChip label="Alle" onClick={() => setSelectedCategory(null)} />
+                    <CategoryChip label="Pasta" onClick={() => setSelectedCategory('Pasta')} />
+                    <CategoryChip label="Vegan" onClick={() => setSelectedCategory('Vegan')} />
+                    <CategoryChip label="Dessert" onClick={() => setSelectedCategory('Dessert')} />
+                    <CategoryChip label="Frühstück" onClick={() => setSelectedCategory('Frühstück')} />
                 </div>
+
+                {selectedCategory && (
+                    <p>Ausgewählte Kategorie: {selectedCategory}</p>
+                )}
 
                 <h2>Neue Rezepte</h2>
 
@@ -67,6 +75,15 @@ export default function HomePage() {
                         difficulty="Einfach"
                         category="Salat"
                         rating={5}
+                    />
+
+                    <RecipeCard
+                        title="Chicken Curry"
+                        imageUrl="https://img.chefkoch-cdn.de/rezepte/1582261265704130/bilder/1573472/crop-960x540/chicken-curry.jpg"
+                        duration={40}
+                        difficulty="Mittel"
+                        category="Asiatisch"
+                        rating={4}
                     />
                 </div>
 

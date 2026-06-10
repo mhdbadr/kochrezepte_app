@@ -15,14 +15,14 @@ import { Redirect, Route } from 'react-router-dom';
 import {
     homeOutline,
     searchOutline,
-    gridOutline,
+    calendarOutline,
     heartOutline,
 } from 'ionicons/icons';
 
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
-import CategoriesPage from './pages/CategoriesPage';
 import FavoritesPage from './pages/FavoritesPage';
+import Wochenplaner from './pages/Wochenplaner';
 
 setupIonicReact();
 
@@ -34,7 +34,7 @@ export default function App() {
                     <IonRouterOutlet>
                         <Route exact path="/home" component={HomePage} />
                         <Route exact path="/search" component={SearchPage} />
-                        <Route exact path="/categories" component={CategoriesPage} />
+                        <Route exact path="/planner" component={Wochenplaner} />
                         <Route exact path="/favorites" component={FavoritesPage} />
 
                         <Route exact path="/">
@@ -53,14 +53,14 @@ export default function App() {
                             <IonLabel>Suche</IonLabel>
                         </IonTabButton>
 
-                        <IonTabButton tab="categories" href="/categories">
-                            <IonIcon icon={gridOutline} />
-                            <IonLabel>Kategorien</IonLabel>
+                        <IonTabButton tab="planner" href="/planner">
+                            <IonIcon icon={calendarOutline} />
+                            <IonLabel>Planer</IonLabel>
                         </IonTabButton>
 
                         <IonTabButton tab="favorites" href="/favorites">
                             <IonIcon icon={heartOutline} />
-                            <IonLabel>Merkzettel</IonLabel>
+                            <IonLabel>Kochbuch</IonLabel>
                         </IonTabButton>
                     </IonTabBar>
                 </IonTabs>
