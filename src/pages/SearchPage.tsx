@@ -22,6 +22,7 @@ export default function SearchPage() {
     const [searchMode, setSearchMode] = useState<'recipes' | 'ingredients'>('recipes');
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+    // Combine text search and category filtering before rendering the result cards.
     const filteredRecipes = mockRecipes.filter((recipe) => {
         const matchesSearch =
             query === '' ||
@@ -154,6 +155,7 @@ export default function SearchPage() {
 
                 <h2>Suchergebnisse</h2>
 
+                {/* Search results use the same clickable recipe cards as the home page. */}
                 <div className="recipe-grid">
                     {filteredRecipes.map((recipe) => (
                         <RecipeCard
