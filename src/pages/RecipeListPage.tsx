@@ -29,8 +29,10 @@ export default function RecipeListPage() {
         <main>
           <h1>Recipes</h1>
 
+          {/* Show an empty state instead of rendering an empty list. */}
           {recipes.length === 0 && <p>No recipes available.</p>}
 
+          {/* Render one card per recipe and link each title to its detail page. */}
           {recipes.map((recipe) => (
             <IonCard key={recipe.id}>
               <IonCardHeader>
