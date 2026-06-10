@@ -1,8 +1,14 @@
 import './HomePage.css';
 import FavoriteButton from '../components/FavoriteButton';
 import RatingComponent from '../components/RatingComponent';
+import { useRatings } from '../hooks/useRatings';
+import CommentSection from '../components/CommentSection';
 
 export default function HomePage() {
+  const { saveRating, getRecipeRating } = useRatings();
+  
+  const testRecipeId = "1";
+  const currentRating = getRecipeRating(testRecipeId);
   return (
     <main className="home-page">
       <section className="home-card">
@@ -13,17 +19,17 @@ export default function HomePage() {
         </p>
 
         <div style={{ marginTop: '24px', textAlign: 'center' }}>
-          <p className="home-label">Dein Favorite Button Test:</p>
-          <FavoriteButton  recipeId="1"/>
+          <FavoriteButton  recipeId={testRecipeId}/>
         </div>
         <div style={{ marginTop: '24px', textAlign: 'center' }}>
           <p className="home-label">Rezept bewerten:</p>
           <RatingComponent 
-            initialRating={0} 
-            onRatingChange={(newRating) => console.log('Neue Bewertung abgegeben:', newRating)} 
+            key={currentRating}
+            initialRating={currentRating}
+            onRatingChange={(newRating) => saveRating(testRecipeId, newRating)}
           />
         </div>
-
+        <CommentSection recipeId={testRecipeId}/>
       </section>
     </main>
   );
