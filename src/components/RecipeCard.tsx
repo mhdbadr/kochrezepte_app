@@ -8,8 +8,8 @@ interface RecipeCardProps {
     difficulty: string;
     category: string;
     rating?: number;
-    compact?: boolean;
-    to?: string;
+    compact?: boolean; // When true, the card is rendered in a more compact style
+    to?: string; // Optional URL to navigate to when the card is clicked. If not provided, the card is rendered as plain content.
 }
 
 export default function RecipeCard({
@@ -22,6 +22,7 @@ export default function RecipeCard({
                                        compact = false,
                                        to
                                    }: RecipeCardProps) {
+    // Build the card once so it can be rendered either as plain content or as a link.
     const card = (
         <article className={`recipe-card ${compact ? 'recipe-card--compact' : ''}`}>
             <img className="recipe-card__image" src={imageUrl} alt={title} />
@@ -41,10 +42,9 @@ export default function RecipeCard({
         </article>
     );
 
-    if (!to) {
-        return card;
-    }
+    if (!to) return card; // If no target URL is provided, render the card as plain content.
 
+    // When a target URL is provided, the whole card becomes clickable.
     return (
         <Link className="recipe-card-link" to={to}>
             {card}
