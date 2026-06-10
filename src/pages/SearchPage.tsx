@@ -159,9 +159,9 @@ export default function SearchPage() {
                         <RecipeCard
                             key={recipe.title}
                             title={recipe.title}
-                            imageUrl={recipe.imageUrl}
-                            duration={recipe.duration}
-                            difficulty={recipe.difficulty}
+                            imageUrl={recipe.imageUrl ?? ''}
+                            duration={recipe.preparationTime}
+                            difficulty="Einfach"
                             category={recipe.category}
                             rating={recipe.rating}
                         />

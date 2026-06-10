@@ -10,18 +10,22 @@ import {
 } from '@ionic/react';
 
 import { IonReactRouter } from '@ionic/react-router';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
 import {
-    homeOutline,
-    searchOutline,
     calendarOutline,
     heartOutline,
+    homeOutline,
+    searchOutline,
 } from 'ionicons/icons';
 
-import HomePage from './pages/HomePage';
-import SearchPage from './pages/SearchPage';
+import EditRecipePage from './pages/EditRecipePage';
 import FavoritesPage from './pages/FavoritesPage';
+import HomePage from './pages/HomePage';
+import RecipeDetailPage from './pages/RecipeDetailPage';
+import RecipeForm from './pages/RecipeForm';
+import RecipeListPage from './pages/RecipeListPage';
+import SearchPage from './pages/SearchPage';
 import Wochenplaner from './pages/Wochenplaner';
 
 setupIonicReact();
@@ -32,14 +36,20 @@ export default function App() {
             <IonReactRouter>
                 <IonTabs>
                     <IonRouterOutlet>
-                        <Route exact path="/home" component={HomePage} />
-                        <Route exact path="/search" component={SearchPage} />
-                        <Route exact path="/planner" component={Wochenplaner} />
-                        <Route exact path="/favorites" component={FavoritesPage} />
-
-                        <Route exact path="/">
-                            <Redirect to="/home" />
-                        </Route>
+                        <Switch>
+                            <Route exact path="/home" component={HomePage} />
+                            <Route exact path="/search" component={SearchPage} />
+                            <Route exact path="/planner" component={Wochenplaner} />
+                            <Route exact path="/favorites" component={FavoritesPage} />
+                            <Route exact path="/recipes" component={RecipeListPage} />
+                            {/* Specific recipe routes must be checked before dynamic string ID routes. */}
+                            <Route exact path="/recipes/new" component={RecipeForm} />
+                            <Route exact path="/recipes/:id/edit" component={EditRecipePage} />
+                            <Route exact path="/recipes/:id" component={RecipeDetailPage} />
+                            <Route exact path="/">
+                                <Redirect to="/home" />
+                            </Route>
+                        </Switch>
                     </IonRouterOutlet>
 
                     <IonTabBar slot="bottom">
