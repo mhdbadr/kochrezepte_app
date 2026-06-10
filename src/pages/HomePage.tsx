@@ -12,6 +12,12 @@ import RecipeCard from '../components/RecipeCard';
 import CategoryChip from '../components/CategoryChip';
 import { useState } from 'react';
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+import { Pagination, Autoplay } from 'swiper/modules';
+
 export default function HomePage() {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -24,6 +30,58 @@ export default function HomePage() {
             </IonHeader>
 
             <IonContent className="ion-padding">
+
+                <Swiper
+                    modules={[Pagination, Autoplay]}
+                    pagination={{ clickable: true }}
+                    autoplay={{ delay: 4000 }}
+                    loop={true}
+                >
+                    <SwiperSlide>
+                        <div
+                            className="hero-slide"
+                            style={{
+                                backgroundImage:
+                                    "url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200')",
+                            }}
+                        >
+                            <div className="hero-overlay">
+                                <p>Neue Rezepte</p>
+                                <h1>Entdecke neue Lieblingsgerichte</h1>
+                            </div>
+                        </div>
+                    </SwiperSlide>
+
+                    <SwiperSlide>
+                        <div
+                            className="hero-slide"
+                            style={{
+                                backgroundImage:
+                                    "url('https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?w=1200')",
+                            }}
+                        >
+                            <div className="hero-overlay">
+                                <p>Desserts</p>
+                                <h1>Süße Ideen für jeden Tag</h1>
+                            </div>
+                        </div>
+                    </SwiperSlide>
+
+                    <SwiperSlide>
+                        <div
+                            className="hero-slide"
+                            style={{
+                                backgroundImage:
+                                    "url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200')",
+                            }}
+                        >
+                            <div className="hero-overlay">
+                                <p>Vegan</p>
+                                <h1>Gesund und lecker kochen</h1>
+                            </div>
+                        </div>
+                    </SwiperSlide>
+                </Swiper>
 
                 <IonSearchbar
                     placeholder="Was möchtest du kochen?"
