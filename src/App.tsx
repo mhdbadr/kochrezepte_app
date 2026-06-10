@@ -1,24 +1,11 @@
-import {
-    IonApp,
-    IonIcon,
-    IonLabel,
-    IonRouterOutlet,
-    IonTabBar,
-    IonTabButton,
-    IonTabs,
-    setupIonicReact,
-} from '@ionic/react';
+import { IonApp, IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, setupIonicReact, } from '@ionic/react';
 
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-import {
-    calendarOutline,
-    heartOutline,
-    homeOutline,
-    searchOutline,
-} from 'ionicons/icons';
+import { calendarOutline, heartOutline, homeOutline, searchOutline, } from 'ionicons/icons';
 
+// Importing all page components used in the app's routing configuration.
 import EditRecipePage from './pages/EditRecipePage';
 import FavoritesPage from './pages/FavoritesPage';
 import HomePage from './pages/HomePage';
@@ -28,7 +15,7 @@ import RecipeListPage from './pages/RecipeListPage';
 import SearchPage from './pages/SearchPage';
 import Wochenplaner from './pages/Wochenplaner';
 
-setupIonicReact();
+setupIonicReact(); // Initialize Ionic React with default settings.
 
 export default function App() {
     return (
@@ -37,10 +24,13 @@ export default function App() {
                 <IonTabs>
                     <IonRouterOutlet>
                         <Switch>
+                            {/* Main app routes provided by the navigation/search epic. */}
                             <Route exact path="/home" component={HomePage} />
                             <Route exact path="/search" component={SearchPage} />
                             <Route exact path="/planner" component={Wochenplaner} />
                             <Route exact path="/favorites" component={FavoritesPage} />
+
+                            {/* Recipe core routes for listing, creating, editing, and viewing recipes. */}
                             <Route exact path="/recipes" component={RecipeListPage} />
                             {/* Specific recipe routes must be checked before dynamic string ID routes. */}
                             <Route exact path="/recipes/new" component={RecipeForm} />
@@ -52,6 +42,7 @@ export default function App() {
                         </Switch>
                     </IonRouterOutlet>
 
+                    {/* The tab bar is placed outside the router outlet to ensure it remains visible across all routes. */}
                     <IonTabBar slot="bottom">
                         <IonTabButton tab="home" href="/home">
                             <IonIcon icon={homeOutline} />
@@ -60,7 +51,7 @@ export default function App() {
 
                         <IonTabButton tab="search" href="/search">
                             <IonIcon icon={searchOutline} />
-                            <IonLabel>Suche</IonLabel>
+                            <IonLabel>Search</IonLabel>
                         </IonTabButton>
 
                         <IonTabButton tab="planner" href="/planner">
@@ -70,7 +61,7 @@ export default function App() {
 
                         <IonTabButton tab="favorites" href="/favorites">
                             <IonIcon icon={heartOutline} />
-                            <IonLabel>Kochbuch</IonLabel>
+                            <IonLabel>Favorites</IonLabel>
                         </IonTabButton>
                     </IonTabBar>
                 </IonTabs>
