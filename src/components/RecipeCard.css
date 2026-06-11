@@ -1,0 +1,101 @@
+.recipe-card-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.recipe-card {
+    overflow: hidden;
+    border-radius: 18px;
+    background: white;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.recipe-card-link:hover .recipe-card {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.recipe-card__image {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.recipe-card__content {
+    padding: 16px;
+}
+
+.recipe-card__category {
+    margin: 0 0 6px;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.recipe-card__title {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.recipe-card__meta {
+    margin: 8px 0 0;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.recipe-card__rating-container {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+.recipe-card__rating-container ion-button {
+    --padding-start: 1px;
+    --padding-end: 1px;
+    height: 24px;
+    margin: 0;
+}
+.recipe-card__rating-container ion-icon {
+    font-size: 1.2rem !important; 
+}
+.recipe-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid #f5f5f5; 
+}
+.recipe-card__actions {
+    display: flex;
+    align-items: center;
+    gap: 4px; 
+}
+.recipe-card__actions ion-button {
+    --padding-start: 4px;
+    --padding-end: 4px;
+    height: 32px;
+    margin: 0;
+}
+
+.recipe-card--compact {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px;
+}
+
+.recipe-card--compact .recipe-card__image {
+    width: 100px;
+    height: 80px;
+    border-radius: 14px;
+    flex-shrink: 0;
+}
+
+.recipe-card--compact .recipe-card__content {
+    padding: 0;
+    flex-grow: 1;
+}
+
+

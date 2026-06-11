@@ -6,7 +6,7 @@ import type { RecipeCategory } from "./RecipeCategory";
 export interface Recipe {
   id: string;
   title: string;
-    description: string;
+  description: string;
   ingredients: string[];
   instructions: string[];
   category: RecipeCategory;
@@ -14,4 +14,6 @@ export interface Recipe {
   preparationTime: number;
   rating?: number;
   createdAt?: string;
+  // Marks recipes created by the current user so sample recipes stay read-only.
+  isEditable?: boolean;
 }

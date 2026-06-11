@@ -1,3 +1,24 @@
+import { IonContent, IonHeader, IonIcon, IonPage, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
+
+// Importing icons for the category buttons from Ionicons.
+import {
+    appsOutline,
+    flashOutline,
+    iceCreamOutline,
+    leafOutline,
+    nutritionOutline,
+    pizzaOutline,
+    restaurantOutline,
+} from 'ionicons/icons';
+
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Autoplay, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import CategoryChip from '../components/CategoryChip';
+import RecipeCard from '../components/RecipeCard';
+import { mockRecipes } from '../data/mockRecipes';
 import './HomePage.css';
 import FavoriteButton from '../components/FavoriteButton';
 import RatingComponent from '../components/RatingComponent';
@@ -5,42 +26,166 @@ import { useRatings } from '../hooks/useRatings';
 import CommentSection from '../components/CommentSection';
 import ShareButton from '../components/ShareButton';
 
+
+import 'swiper/css';
+import 'swiper/css/pagination';
+
 export default function HomePage() {
-  const { saveRating, getRecipeRating } = useRatings();
-  
-  const testRecipeId = "1";
-  const currentRating = getRecipeRating(testRecipeId);
-  const testRecipeTitle = "Tomato Basil Pasta";
-  return (
-    <main className="home-page">
-      <section className="home-card">
-        <p className="home-label">Kochrezepte App</p>
-        <h1>Basic App Structure</h1>
-        <p className="home-text">
-          This is the initial project foundation. Features will be implemented in separate issues.
-        </p>
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-          <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'center', gap: '16px' }}>
-          <div>
-            <p className="home-label">Favorit</p>
-            <FavoriteButton recipeId={testRecipeId} />
-          </div>
-          <div>
-            <p className="home-label">Teilen</p>
-            <ShareButton recipeTitle={testRecipeTitle} recipeId={testRecipeId} />
-          </div>
-        </div>
+    // Filter recipes locally until the search/category logic is connected to the database.
+    const filteredRecipes =
+        selectedCategory === null
+            ? mockRecipes
+            : mockRecipes.filter((recipe) => recipe.category === selectedCategory);
 
-        <div style={{ marginTop: '24px', textAlign: 'center' }}>
-          <p className="home-label">Rezept bewerten:</p>
-          <RatingComponent 
-            key={currentRating}
-            initialRating={currentRating}
-            onRatingChange={(newRating) => saveRating(testRecipeId, newRating)}
-          />
-        </div>
-        <CommentSection recipeId={testRecipeId}/>
-      </section>
-    </main>
-  );
+    return (
+        <IonPage>
+            <IonHeader>
+                <IonToolbar>
+                    <IonTitle>Kochrezepte</IonTitle>
+                </IonToolbar>
+            </IonHeader>
+
+            <IonContent className="ion-padding">
+                <Swiper
+                    modules={[Pagination, Autoplay]}
+                    pagination={{ clickable: true }}
+                    autoplay={{ delay: 4000 }}
+                    loop={true}
+                >
+                    <SwiperSlide>
+                        <div
+                            className="hero-slide"
+                            style={{
+                                backgroundImage:
+                                    "url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200')",
+                            }}
+                        >
+                            <div className="hero-overlay">
+                                <p>Neue Rezepte</p>
+                                <h1>Entdecke neue Lieblingsgerichte</h1>
+                            </div>
+                        </div>
+                    </SwiperSlide>
+
+                    <SwiperSlide>
+                        <div
+                            className="hero-slide"
+                            style={{
+                                backgroundImage:
+                                    "url('https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?w=1200')",
+                            }}
+                        >
+                            <div className="hero-overlay">
+                                <p>Desserts</p>
+                                <h1>Suesse Ideen fuer jeden Tag</h1>
+                            </div>
+                        </div>
+                    </SwiperSlide>
+
+                    <SwiperSlide>
+                        <div
+                            className="hero-slide"
+                            style={{
+                                backgroundImage:
+                                    "url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200')",
+                            }}
+                        >
+                            <div className="hero-overlay">
+                                <p>Vegan</p>
+                                <h1>Gesund und lecker kochen</h1>
+                            </div>
+                        </div>
+                    </SwiperSlide>
+                </Swiper>
+
+                <IonSearchbar placeholder="Was moechtest du kochen?" />
+
+                <h2>Kategorien</h2>
+
+                {/* Category buttons update the local filter without leaving the home page. */}
+                <div className="category-grid">
+                    <button className="category-item" onClick={() => setSelectedCategory('Vegan')}>
+                        <div className="category-icon">
+                            <IonIcon icon={leafOutline} />
+                        </div>
+                        <span>Vegan</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Vegetarian')}>
+                        <div className="category-icon">
+                            <IonIcon icon={leafOutline} />
+                        </div>
+                        <span>Vegetarisch</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Dessert')}>
+                        <div className="category-icon">
+                            <IonIcon icon={iceCreamOutline} />
+                        </div>
+                        <span>Desserts</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Quick')}>
+                        <div className="category-icon">
+                            <IonIcon icon={flashOutline} />
+                        </div>
+                        <span>Schnell</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Pasta')}>
+                        <div className="category-icon">
+                            <IonIcon icon={pizzaOutline} />
+                        </div>
+                        <span>Pasta</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Healthy')}>
+                        <div className="category-icon">
+                            <IonIcon icon={nutritionOutline} />
+                        </div>
+                        <span>Gesund</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory('Main Dish')}>
+                        <div className="category-icon">
+                            <IonIcon icon={restaurantOutline} />
+                        </div>
+                        <span>Hauptgericht</span>
+                    </button>
+
+                    <button className="category-item" onClick={() => setSelectedCategory(null)}>
+                        <div className="category-icon">
+                            <IonIcon icon={appsOutline} />
+                        </div>
+                        <span>Alle</span>
+                    </button>
+                </div>
+
+                {selectedCategory && (
+                    <p>Ausgewaehlte Kategorie: {selectedCategory}</p>
+                )}
+
+                <h2>Neue Rezepte</h2>
+
+                {/* Recipe cards link directly to the detail page for the selected recipe. */}
+                <div className="recipe-grid">
+                    {filteredRecipes.map((recipe) => (
+                        <RecipeCard
+                            id={recipe.id}
+                            key={recipe.id}
+                            title={recipe.title}
+                            imageUrl={recipe.imageUrl ?? ''}
+                            duration={recipe.preparationTime}
+                            difficulty="Einfach"
+                            category={recipe.category}
+                            rating={recipe.rating}
+                            to={`/recipes/${recipe.id}`}
+                        />
+                    ))}
+                </div>
+            </IonContent>
+        </IonPage>
+    );
 }
