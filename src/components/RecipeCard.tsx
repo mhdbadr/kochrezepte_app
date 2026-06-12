@@ -15,6 +15,8 @@ interface RecipeCardProps {
     rating?: number;
     compact?: boolean; // When true, the card is rendered in a more compact style
     to?: string; // Optional URL to navigate to when the card is clicked. If not provided, the card is rendered as plain content.
+    isFavorite?: boolean; // Optional controlled favorite state for pages that manage favorites directly.
+    onFavoriteToggle?: (recipeId: string) => void; // Optional callback used before the favorite state changes.
 }
 
 export default function RecipeCard({
@@ -26,7 +28,9 @@ export default function RecipeCard({
                                        category,
                                        rating = 0,
                                        compact = false,
-                                       to
+                                       to,
+                                       isFavorite,
+                                       onFavoriteToggle
                                    }: RecipeCardProps) {
 
     const { saveRating, getRecipeRating } = useRatings();
@@ -61,7 +65,11 @@ export default function RecipeCard({
                     
                     <div className="recipe-card__actions" onClick={handleActionClick}>
                         <ShareButton recipeTitle={title} recipeId={id} />
-                        <FavoriteButton recipeId={id} />
+                        <FavoriteButton
+                            recipeId={id}
+                            isFavoriteOverride={isFavorite}
+                            onToggle={onFavoriteToggle}
+                        />
                     </div>
                 </div>
             </div>
