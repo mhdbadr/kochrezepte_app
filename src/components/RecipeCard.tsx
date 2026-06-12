@@ -55,7 +55,7 @@ export default function RecipeCard({
                 </p>
 
                <div className="recipe-card__footer">
-                   <div className="recipe-card__rating-container" onClick={handleActionClick}>
+                   <div className="recipe-card__rating-container">
                         <RatingComponent 
                             key={currentRating} 
                             initialRating={currentRating}

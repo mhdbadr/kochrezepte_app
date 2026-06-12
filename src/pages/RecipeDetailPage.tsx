@@ -12,6 +12,8 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { deleteRecipe, getRecipeById } from "../repositories/recipeRepository";
 import "./RecipeDetailPage.css";
 import CommentSection from '../components/CommentSection';
+import RatingComponent from '../components/RatingComponent';
+import { useRatings } from '../hooks/useRatings';
 
 // Define the route parameters used by /recipes/:id.
 interface RecipeDetailRouteParams {
@@ -27,6 +29,8 @@ export default function RecipeDetailPage() {
 
   // Load the matching recipe from the repository.
   const recipe = getRecipeById(id);
+  const { saveRating, getRecipeRating } = useRatings();
+  const currentRating = getRecipeRating(id);
 
   // Only recipes created through the form should expose edit and delete actions.
   const canModifyRecipe = recipe?.isEditable === true;
@@ -82,7 +86,7 @@ export default function RecipeDetailPage() {
 
               <div className="recipe-detail-meta">
                 <span>{recipe.preparationTime} Min</span>
-                {recipe.rating && <span>{recipe.rating} / 5</span>}
+                <span>⭐ {currentRating || recipe.rating || 0} / 5</span>
               </div>
             </div>
           </section>
@@ -141,6 +145,9 @@ export default function RecipeDetailPage() {
               </ol>
             </article>
           </section>
+
+        
+
           <div style={{ padding: '0 16px 24px' }}>
             <hr style={{ border: 'none', borderTop: '1px solid #e0e0e0', margin: '24px 0' }} />
             <CommentSection recipeId={recipe.id} /> 

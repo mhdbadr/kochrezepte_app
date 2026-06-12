@@ -14,10 +14,20 @@ const RatingComponent: React.FC<RatingComponentProps> = ({
  
   const [rating, setRating] = useState<number>(initialRating);
 
-  const handleStarClick = (selectedRating: number) => {
-    setRating(selectedRating);
+  const handleStarClick = (e: React.MouseEvent, selectedRating: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    let newRating = selectedRating;
+
+    if (selectedRating <= rating) {
+      newRating = selectedRating - 1;
+    }
+
+    setRating(newRating);
+
     if (onRatingChange) {
-      onRatingChange(selectedRating); 
+      onRatingChange(newRating); 
     }
   };
 
@@ -28,7 +38,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({
           key={starNumber} 
           fill="clear" 
           size="small"
-          onClick={() => handleStarClick(starNumber)}
+          onClick={(e) => handleStarClick(e,starNumber)}
           style={{ '--padding-start': '0', '--padding-end': '0', margin: '0' }}
         >
           <IonIcon
