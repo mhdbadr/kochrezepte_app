@@ -12,7 +12,6 @@ import {
 } from 'ionicons/icons';
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -25,12 +24,14 @@ import RatingComponent from '../components/RatingComponent';
 import { useRatings } from '../hooks/useRatings';
 import CommentSection from '../components/CommentSection';
 import ShareButton from '../components/ShareButton';
+import { Link, useHistory } from 'react-router-dom';
 
 
 import 'swiper/css';
 import 'swiper/css/pagination';
 
 export default function HomePage() {
+    const history = useHistory();
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
     // Filter recipes locally until the search/category logic is connected to the database.
@@ -100,7 +101,10 @@ export default function HomePage() {
                     </SwiperSlide>
                 </Swiper>
 
-                <IonSearchbar placeholder="Was moechtest du kochen?" />
+                    <IonSearchbar 
+                        placeholder="Was moechtest du kochen?" 
+                        onIonFocus={() => history.push('/search')}
+                    />
 
                 <h2>Kategorien</h2>
 
