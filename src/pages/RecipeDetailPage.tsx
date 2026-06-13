@@ -26,6 +26,8 @@ export default function RecipeDetailPage() {
   const [recipe, setRecipe] = useState<Recipe | undefined>();
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [deleteErrorMessage, setDeleteErrorMessage] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Read the recipe ID from the current URL.
   const { id } = useParams<RecipeDetailRouteParams>();
@@ -66,11 +68,20 @@ export default function RecipeDetailPage() {
   // Only recipes created through the form should expose edit and delete actions.
   const canModifyRecipe = recipe?.isEditable === true;
 
-  function handleDeleteRecipe() {
+  async function handleDeleteRecipe() {
     if (!recipe || !canModifyRecipe) return;
 
-    deleteRecipe(recipe.id); // Remove the recipe from the repository.
-    history.push("/recipes"); // Navigate back to the recipe list after deletion.
+    try {
+      setIsDeleting(true);
+      setDeleteErrorMessage("");
+
+      await deleteRecipe(recipe.id); // Delete the recipe from Supabase
+      history.push("/home"); // Navigate back to the main recipe overview after deletion
+    } catch (error) {
+      setDeleteErrorMessage(error instanceof Error ? error.message : "Recipe could not be deleted.");
+    } finally {
+      setIsDeleting(false);
+    }
   }
 
   if (isLoading) {
@@ -163,14 +174,18 @@ export default function RecipeDetailPage() {
           {canModifyRecipe ? (
             <div className="recipe-detail-actions">
               <IonButton routerLink={`/recipes/${recipe.id}/edit`}>Edit recipe</IonButton>
-              <IonButton color="danger" onClick={() => setIsDeleteAlertOpen(true)}>
-                Delete recipe
+              <IonButton color="danger" onClick={() => setIsDeleteAlertOpen(true)} disabled={isDeleting}>
+                {isDeleting ? "Deleting..." : "Delete recipe"}
               </IonButton>
             </div>
           ) : (
             <p className="recipe-detail-readonly-note">
               This is a sample recipe. Only recipes you create can be edited or deleted.
             </p>
+          )}
+
+          {deleteErrorMessage && (
+            <p className="recipe-detail-readonly-note">Delete error: {deleteErrorMessage}</p>
           )}
 
           {/* Confirm destructive actions before removing a recipe. */}
@@ -187,7 +202,9 @@ export default function RecipeDetailPage() {
               {
                 text: "Delete",
                 role: "destructive",
-                handler: handleDeleteRecipe,
+                handler: () => {
+                  void handleDeleteRecipe();
+                },
               },
             ]}
             onDidDismiss={() => setIsDeleteAlertOpen(false)}
