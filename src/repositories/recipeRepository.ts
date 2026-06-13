@@ -1,12 +1,9 @@
 import type { Recipe } from "../models/Recipe";
-import { mockRecipes } from "../data/mockRecipes";
 import { supabase } from "../lib/supabaseClient";
 import type { SupabaseRecipeRow } from "../models/SupabaseRecipeRow";
 import { mapSupabaseRecipeToRecipe } from "../mappers/recipeMapper";
 import { recipeSelectQuery } from "./recipeQueries";
 import { getCurrentUserId, getOptionalCurrentUserId, getCategoryId, ensureRecipeOwner } from "./recipeHelpers";
-
-
 
 /**
  * Returns all recipes from the Supabase database.
@@ -218,13 +215,21 @@ export async function updateRecipe(recipe: Recipe): Promise<Recipe> {
 }
 
 /**
- * Removes a recipe from the in-memory mock data.
+ * Deletes a recipe from Supabase.
+ * Only the user who created the recipe is allowed to delete it.
  */
-export function deleteRecipe(id: string): void {
-  const recipeIndex = mockRecipes.findIndex((recipe) => recipe.id === id);
+export async function deleteRecipe(id: string): Promise<void> {
+  const userId = await getCurrentUserId();
+  await ensureRecipeOwner(id, userId);
 
-  if (recipeIndex !== -1) {
-    // Remove exactly one recipe from the in-memory list.
-    mockRecipes.splice(recipeIndex, 1);
+  const { error } = await supabase
+    .from("recipes")
+    .delete()
+    .eq("id", id)
+    .eq("created_by", userId);
+
+  if (error) {
+    console.error("Failed to delete recipe from Supabase:", error.message);
+    throw new Error(error.message);
   }
 }
