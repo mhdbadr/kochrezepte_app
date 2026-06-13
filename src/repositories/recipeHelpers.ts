@@ -32,6 +32,11 @@ export async function getOptionalCurrentUserId(): Promise<string | undefined> {
   const { data, error } = await supabase.auth.getUser();
 
   if (error) {
+    // Public pages may be visited without an active Supabase session.
+    if (error.message.toLowerCase().includes("auth session missing")) {
+      return undefined;
+    }
+
     throw new Error(error.message);
   }
 
