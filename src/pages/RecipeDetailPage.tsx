@@ -7,12 +7,12 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
+import type { Recipe } from "../models/Recipe";
 import { deleteRecipe, getRecipeById } from "../repositories/recipeRepository";
 import "./RecipeDetailPage.css";
 import CommentSection from '../components/CommentSection';
-import RatingComponent from '../components/RatingComponent';
 import { useRatings } from '../hooks/useRatings';
 
 // Define the route parameters used by /recipes/:id.
@@ -23,14 +23,45 @@ interface RecipeDetailRouteParams {
 export default function RecipeDetailPage() {
   const history = useHistory();
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [recipe, setRecipe] = useState<Recipe | undefined>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Read the recipe ID from the current URL.
   const { id } = useParams<RecipeDetailRouteParams>();
 
-  // Load the matching recipe from the repository.
-  const recipe = getRecipeById(id);
-  const { saveRating, getRecipeRating } = useRatings();
+  const { getRecipeRating } = useRatings();
   const currentRating = getRecipeRating(id);
+
+  useEffect(() => {
+    let isPageActive = true;
+
+    async function loadRecipe() {
+      try {
+        // Load the matching recipe from Supabase using the route ID.
+        const loadedRecipe = await getRecipeById(id);
+
+        if (isPageActive) {
+          setRecipe(loadedRecipe);
+          setErrorMessage("");
+        }
+      } catch (error) {
+        if (isPageActive) {
+          setErrorMessage(error instanceof Error ? error.message : "Recipe could not be loaded.");
+        }
+      } finally {
+        if (isPageActive) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadRecipe();
+
+    return () => {
+      isPageActive = false;
+    };
+  }, [id]);
 
   // Only recipes created through the form should expose edit and delete actions.
   const canModifyRecipe = recipe?.isEditable === true;
@@ -40,6 +71,43 @@ export default function RecipeDetailPage() {
 
     deleteRecipe(recipe.id); // Remove the recipe from the repository.
     history.push("/recipes"); // Navigate back to the recipe list after deletion.
+  }
+
+  if (isLoading) {
+    return (
+      <IonPage>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Loading recipe</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+
+        <IonContent fullscreen>
+          <main>
+            <p>Loading recipe...</p>
+          </main>
+        </IonContent>
+      </IonPage>
+    );
+  }
+
+  if (errorMessage) {
+    return (
+      <IonPage>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Recipe error</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+
+        <IonContent fullscreen>
+          <main>
+            <p>Supabase error: {errorMessage}</p>
+            <IonButton routerLink="/home">Back to recipes</IonButton>
+          </main>
+        </IonContent>
+      </IonPage>
+    );
   }
 
   // Show a clear fallback if the URL contains an unknown recipe ID.
