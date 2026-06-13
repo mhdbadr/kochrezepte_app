@@ -18,7 +18,7 @@ export async function getCurrentUserId(): Promise<string> {
   }
 
   if (!data.user) {
-    throw new Error("You must be logged in to create a recipe.");
+    throw new Error("You must be logged in to manage recipes.");
   }
 
   return data.user.id;
@@ -84,6 +84,6 @@ export async function ensureRecipeOwner(recipeId: string, userId: string): Promi
   }
 
   if (data.created_by !== userId) {
-    throw new Error("You can only edit recipes that you created.");
+    throw new Error("You can only change recipes that you created.");
   }
 }
