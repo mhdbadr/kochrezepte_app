@@ -3,6 +3,7 @@ import { mockRecipes } from "../data/mockRecipes";
 import { supabase } from "../lib/supabaseClient";
 import type { SupabaseRecipeRow } from "../models/SupabaseRecipeRow";
 import { mapSupabaseRecipeToRecipe } from "../mappers/recipeMapper";
+import { recipeSelectQuery } from "./recipeSelectQuery";
 
 /**
  * Returns all recipes from the Supabase database.
@@ -12,26 +13,7 @@ import { mapSupabaseRecipeToRecipe } from "../mappers/recipeMapper";
 export async function getAllRecipes(): Promise<Recipe[]> {
   const { data, error } = await supabase
     .from("recipes")
-    .select(`
-      id,
-      title,
-      description,
-      image_url,
-      preparation_time,
-      created_at,
-      created_by,
-      recipe_categories (
-        name
-      ),
-      recipe_ingredients (
-        name,
-        sort_order
-      ),
-      recipe_steps (
-        instruction,
-        sort_order
-      )
-    `)
+    .select(recipeSelectQuery)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -43,10 +25,23 @@ export async function getAllRecipes(): Promise<Recipe[]> {
 }
 
 /**
- * Returns a single recipe by its ID.
+ * Returns a single recipe matching the provided ID from the Supabase database.
+ * If the database query fails, an error is thrown and logged to the console.
+ * If no recipe with the given ID is found, undefined is returned.
  */
-export function getRecipeById(id: string): Recipe | undefined {
-  return mockRecipes.find((recipe) => recipe.id === id);
+export async function getRecipeById(id: string): Promise<Recipe | undefined> {
+  const { data, error } = await supabase
+    .from("recipes")
+    .select(recipeSelectQuery)
+    .eq("id", id)
+    .maybeSingle(); // returns null if no match is found, instead of throwing an error.
+
+  if (error) {
+    console.error("Failed to load recipe from Supabase:", error.message);
+    throw new Error(error.message);
+  }
+
+  return data ? mapSupabaseRecipeToRecipe(data as SupabaseRecipeRow) : undefined;
 }
 
 /**
