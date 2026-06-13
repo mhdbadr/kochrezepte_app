@@ -50,6 +50,7 @@ export function mapSupabaseRecipeToRecipe(recipe: SupabaseRecipeRow): Recipe {
       .sort((a, b) => a.sort_order - b.sort_order)
       .map((step) => step.instruction),
     createdAt: recipe.created_at ?? undefined,
+    createdBy: recipe.created_by ?? undefined,
     isEditable: false,
   };
 }

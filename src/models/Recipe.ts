@@ -14,6 +14,6 @@ export interface Recipe {
   preparationTime: number;
   rating?: number;
   createdAt?: string;
-  // Marks recipes created by the current user so sample recipes stay read-only.
-  isEditable?: boolean;
+  createdBy?: string; // User ID of the recipe creator, used for permission checks.
+  isEditable?: boolean; // Indicates whether the current user can edit this recipe, based on ownership.
 }
