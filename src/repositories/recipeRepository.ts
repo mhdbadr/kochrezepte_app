@@ -1,11 +1,45 @@
 import type { Recipe } from "../models/Recipe";
 import { mockRecipes } from "../data/mockRecipes";
+import { supabase } from "../lib/supabaseClient";
+import type { SupabaseRecipeRow } from "../models/SupabaseRecipeRow";
+import { mapSupabaseRecipeToRecipe } from "../mappers/recipeMapper";
 
 /**
- * Returns all available recipes.
+ * Returns all recipes from the Supabase database.
+ * If the database query fails, an error is thrown and logged to the console.
+ * The recipes are ordered by creation date, with the newest recipes appearing first.
  */
-export function getAllRecipes(): Recipe[] {
-  return mockRecipes;
+export async function getAllRecipes(): Promise<Recipe[]> {
+  const { data, error } = await supabase
+    .from("recipes")
+    .select(`
+      id,
+      title,
+      description,
+      image_url,
+      preparation_time,
+      created_at,
+      created_by,
+      recipe_categories (
+        name
+      ),
+      recipe_ingredients (
+        name,
+        sort_order
+      ),
+      recipe_steps (
+        instruction,
+        sort_order
+      )
+    `)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Failed to load recipes from Supabase:", error.message);
+    throw new Error(error.message);
+  }
+
+  return (data ?? []).map((recipe) => mapSupabaseRecipeToRecipe(recipe as SupabaseRecipeRow));
 }
 
 /**
