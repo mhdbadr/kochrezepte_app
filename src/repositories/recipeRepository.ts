@@ -3,7 +3,8 @@ import { mockRecipes } from "../data/mockRecipes";
 import { supabase } from "../lib/supabaseClient";
 import type { SupabaseRecipeRow } from "../models/SupabaseRecipeRow";
 import { mapSupabaseRecipeToRecipe } from "../mappers/recipeMapper";
-import { recipeSelectQuery } from "./recipeSelectQuery";
+import { recipeSelectQuery } from "./recipeQueries";
+import { getCurrentUserId, getCategoryId } from "./recipeHelpers";
 
 /**
  * Returns all recipes from the Supabase database.
@@ -45,11 +46,71 @@ export async function getRecipeById(id: string): Promise<Recipe | undefined> {
 }
 
 /**
- * Adds a new recipe to the in-memory mock data.
+ * Creates a new recipe in Supabase for the currently logged-in user.
  */
-export function createRecipe(recipe: Recipe): void {
-  // New recipes are stored in mock data until the database repository is connected.
-  mockRecipes.push(recipe);
+export async function createRecipe(recipe: Recipe): Promise<Recipe> {
+  const userId = await getCurrentUserId();
+  const categoryId = await getCategoryId(recipe.category);
+
+  const { data: insertedRecipe, error: recipeError } = await supabase
+    .from("recipes")
+    .insert({
+      title: recipe.title,
+      description: recipe.description,
+      category_id: categoryId,
+      image_url: recipe.imageUrl ?? null,
+      preparation_time: recipe.preparationTime,
+      created_by: userId,
+    })
+    .select("id")
+    .single();
+
+  if (recipeError) {
+    console.error("Failed to create recipe in Supabase:", recipeError.message);
+    throw new Error(recipeError.message);
+  }
+
+  const recipeId = insertedRecipe.id;
+
+  const ingredientRows = recipe.ingredients.map((ingredient, index) => ({
+    recipe_id: recipeId,
+    name: ingredient,
+    sort_order: index + 1,
+  }));
+
+  const stepRows = recipe.instructions.map((instruction, index) => ({
+    recipe_id: recipeId,
+    instruction,
+    sort_order: index + 1,
+  }));
+
+  const { error: ingredientsError } = await supabase
+    .from("recipe_ingredients")
+    .insert(ingredientRows);
+
+  if (ingredientsError) {
+    await supabase.from("recipes").delete().eq("id", recipeId);
+    console.error("Failed to create recipe ingredients in Supabase:", ingredientsError.message);
+    throw new Error(ingredientsError.message);
+  }
+
+  const { error: stepsError } = await supabase
+    .from("recipe_steps")
+    .insert(stepRows);
+
+  if (stepsError) {
+    await supabase.from("recipes").delete().eq("id", recipeId);
+    console.error("Failed to create recipe steps in Supabase:", stepsError.message);
+    throw new Error(stepsError.message);
+  }
+
+  const createdRecipe = await getRecipeById(recipeId);
+
+  if (!createdRecipe) {
+    throw new Error("Recipe was created but could not be loaded.");
+  }
+
+  return createdRecipe;
 }
 
 /**
