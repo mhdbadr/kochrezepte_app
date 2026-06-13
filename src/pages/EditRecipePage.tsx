@@ -31,6 +31,7 @@ export default function EditRecipePage() {
   const [ingredients, setIngredients] = useState([""]);
   const [instructions, setInstructions] = useState([""]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   // Only allow editing if the recipe is loaded and marked as editable
   const canEditRecipe = recipe?.isEditable === true;
@@ -110,7 +111,7 @@ export default function EditRecipePage() {
     reader.readAsDataURL(file);
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     // Guard against editing missing recipes or read-only sample recipes.
@@ -145,8 +146,17 @@ export default function EditRecipePage() {
       rating: rating || undefined,
     };
 
-    updateRecipe(updatedRecipe);
-    history.push(`/recipes/${recipe.id}`);
+    try {
+      setIsSaving(true);
+      setErrorMessage("");
+
+      const savedRecipe = await updateRecipe(updatedRecipe);
+      history.push(`/recipes/${savedRecipe.id}`);
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Recipe could not be updated.");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   if (isLoading) {
@@ -403,8 +413,8 @@ export default function EditRecipePage() {
 
             <div className="recipe-form-actions">
               <Link to={`/recipes/${recipe.id}`}>Cancel</Link>
-              <button className="recipe-form-submit-button" type="submit">
-                Save changes
+              <button className="recipe-form-submit-button" type="submit" disabled={isSaving}>
+                {isSaving ? "Saving..." : "Save changes"}
               </button>
             </div>
           </form>
