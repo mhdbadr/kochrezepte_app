@@ -21,6 +21,7 @@ export default function RecipeForm() {
   const [ingredients, setIngredients] = useState([""]);
   const [instructions, setInstructions] = useState([""]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   function updateIngredient(index: number, value: string) {
     const updatedIngredients = [...ingredients];
@@ -55,7 +56,7 @@ export default function RecipeForm() {
   }
 
   /* Handle form submission by validating input, constructing a complete Recipe object, and saving it. */
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     // Remove empty rows before validating and saving the recipe.
@@ -87,8 +88,17 @@ export default function RecipeForm() {
       isEditable: true,
     };
 
-    createRecipe(newRecipe);
-    history.push("/recipes");
+    try {
+      setIsSaving(true);
+      setErrorMessage("");
+
+      const createdRecipe = await createRecipe(newRecipe);
+      history.push(`/recipes/${createdRecipe.id}`);
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Recipe could not be saved.");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (
@@ -281,7 +291,9 @@ export default function RecipeForm() {
             {/* The action row separates navigation from the final save action. */}
             <div className="recipe-form-actions">
               <Link to="/home">Cancel</Link>
-              <button className="recipe-form-submit-button" type="submit">Save recipe</button>
+              <button className="recipe-form-submit-button" type="submit" disabled={isSaving}>
+                {isSaving ? "Saving..." : "Save recipe"}
+              </button>
             </div>
           </form>
         </main>
