@@ -37,8 +37,8 @@ export default function App() {
           <IonContent>
             <section className="app-menu__intro">
               <span>BiteBook</span>
-              <h2>Menue</h2>
-              <p>Zusatzbereiche wie Rezept erstellen, Wochenplaner und spaetere Einstellungen.</p>
+              <h2>Menü</h2>
+              <p>Bereiche für Rezepterstellung, Wochenplaner und Einstellungen</p>
             </section>
 
             <IonList lines="none">
