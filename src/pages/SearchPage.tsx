@@ -1,16 +1,14 @@
 import {
   IonContent,
-  IonHeader,
   IonLabel,
   IonPage,
   IonSearchbar,
   IonSegment,
   IonSegmentButton,
   IonText,
-  IonTitle,
-  IonToolbar,
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
+import PageHeader from '../components/PageHeader';
 import RecipeCard from '../components/RecipeCard';
 import type { Recipe } from '../models/Recipe';
 import { getAllRecipes } from '../repositories/recipeRepository';
@@ -77,11 +75,7 @@ export default function SearchPage() {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Suche</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title="Suche" />
 
       <IonContent className="ion-padding">
         <IonSegment value={searchMode} onIonChange={(event) => setSearchMode(event.detail.value as 'recipes' | 'ingredients')}>

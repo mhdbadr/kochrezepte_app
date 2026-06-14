@@ -5,13 +5,11 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
-  IonHeader,
   IonPage,
-  IonTitle,
-  IonToolbar,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import PageHeader from "../components/PageHeader";
 import type { Recipe } from "../models/Recipe";
 import { getAllRecipes } from "../repositories/recipeRepository";
 
@@ -52,11 +50,7 @@ export default function RecipeListPage() {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Recipes</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title="Recipes" />
 
       <IonContent fullscreen>
         <main>

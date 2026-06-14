@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonIcon, IonPage, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonIcon, IonPage, IonSearchbar } from '@ionic/react';
 
 // Importing icons for the category buttons from Ionicons.
 import {
@@ -16,6 +16,7 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import RecipeCard from '../components/RecipeCard';
+import PageHeader from '../components/PageHeader';
 import type { Recipe } from '../models/Recipe';
 import { getAllRecipes } from '../repositories/recipeRepository';
 import './HomePage.css';
@@ -71,11 +72,7 @@ export default function HomePage() {
 
     return (
         <IonPage>
-            <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Kochrezepte</IonTitle>
-                </IonToolbar>
-            </IonHeader>
+            <PageHeader title="Kochrezepte" />
 
             <IonContent className="ion-padding">
                 <Swiper

@@ -2,13 +2,12 @@ import {
   IonAlert,
   IonButton,
   IonContent,
-  IonHeader,
   IonPage,
-  IonTitle,
-  IonToolbar,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
+import BackLink from "../components/BackLink";
+import PageHeader from "../components/PageHeader";
 import type { Recipe } from "../models/Recipe";
 import { deleteRecipe, getRecipeById } from "../repositories/recipeRepository";
 import "./RecipeDetailPage.css";
@@ -87,11 +86,7 @@ export default function RecipeDetailPage() {
   if (isLoading) {
     return (
       <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Loading recipe</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+        <PageHeader title="Loading recipe" />
 
         <IonContent fullscreen>
           <main>
@@ -105,11 +100,7 @@ export default function RecipeDetailPage() {
   if (errorMessage) {
     return (
       <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Recipe error</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+        <PageHeader title="Recipe error" />
 
         <IonContent fullscreen>
           <main>
@@ -125,11 +116,7 @@ export default function RecipeDetailPage() {
   if (!recipe) {
     return (
       <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Recipe not found</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+        <PageHeader title="Recipe not found" />
 
         <IonContent fullscreen>
           <main>
@@ -143,15 +130,11 @@ export default function RecipeDetailPage() {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>{recipe.title}</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title={recipe.title} />
 
       <IonContent fullscreen>
         <main className="recipe-detail-page">
-          <Link className="recipe-detail-back-link" to="/home">Back to recipes</Link>
+          <BackLink to="/home" label="Zurück zur Übersicht" />
 
           <section className="recipe-detail-hero">
             {recipe.imageUrl && (

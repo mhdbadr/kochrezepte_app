@@ -1,6 +1,8 @@
-import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButton, IonContent, IonPage } from "@ionic/react";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
+import BackLink from "../components/BackLink";
+import PageHeader from "../components/PageHeader";
 import type { Recipe } from "../models/Recipe";
 import type { RecipeCategory } from "../models/RecipeCategory";
 import { getRecipeById, updateRecipe } from "../repositories/recipeRepository";
@@ -162,11 +164,7 @@ export default function EditRecipePage() {
   if (isLoading) {
     return (
       <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Loading recipe</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+        <PageHeader title="Loading recipe" />
 
         <IonContent fullscreen>
           <main className="recipe-form-page">
@@ -180,11 +178,7 @@ export default function EditRecipePage() {
   if (loadErrorMessage) {
     return (
       <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Recipe error</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+        <PageHeader title="Recipe error" />
 
         <IonContent fullscreen>
           <main className="recipe-form-page">
@@ -200,11 +194,7 @@ export default function EditRecipePage() {
   if (!recipe || !canEditRecipe) {
     return (
       <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Recipe cannot be edited</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+        <PageHeader title="Recipe cannot be edited" />
 
         <IonContent fullscreen>
           <main className="recipe-form-page">
@@ -218,17 +208,11 @@ export default function EditRecipePage() {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Edit Recipe</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title="Edit Recipe" />
 
       <IonContent fullscreen>
         <main className="recipe-form-page">
-          <Link className="recipe-form-back-link" to={`/recipes/${recipe.id}`}>
-            Back to recipe
-          </Link>
+          <BackLink to={`/recipes/${recipe.id}`} label="Zurück zum Rezept" />
 
           <section className="recipe-form-hero">
             <p>Recipe Core</p>

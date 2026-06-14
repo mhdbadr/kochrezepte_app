@@ -1,13 +1,11 @@
 import {
   IonAlert,
   IonContent,
-  IonHeader,
   IonPage,
   IonText,
-  IonTitle,
-  IonToolbar,
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
+import PageHeader from '../components/PageHeader';
 import RecipeCard from '../components/RecipeCard';
 import { useFavorites } from '../hooks/useFavorites';
 import type { Recipe } from '../models/Recipe';
@@ -52,11 +50,7 @@ export default function FavoritesPage() {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Meine Favoriten</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title="Meine Favoriten" />
 
       <IonContent className="ion-padding">
         <main className="favorites-page">

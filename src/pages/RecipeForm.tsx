@@ -1,6 +1,8 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from "@ionic/react";
+import { IonContent, IonPage } from "@ionic/react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import BackLink from "../components/BackLink";
+import PageHeader from "../components/PageHeader";
 import type { Recipe } from "../models/Recipe";
 import type { RecipeCategory } from "../models/RecipeCategory";
 import { createRecipe } from "../repositories/recipeRepository";
@@ -103,15 +105,11 @@ export default function RecipeForm() {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Create Recipe</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title="Create Recipe" />
 
       <IonContent fullscreen>
         <main className="recipe-form-page">
-          <Link className="recipe-form-back-link" to="/home">Back to recipes</Link>
+          <BackLink to="/home" label="Zurück zur Übersicht" />
 
           {/* The form hero keeps the create flow visually aligned with the rest of the app. */}
           <section className="recipe-form-hero">
