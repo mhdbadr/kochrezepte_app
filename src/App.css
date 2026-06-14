@@ -1,0 +1,51 @@
+.app-menu::part(container) {
+  border-radius: 0 28px 28px 0;
+  background: #f8faf5;
+  box-shadow: 18px 0 38px rgba(36, 48, 37, 0.16);
+}
+
+.app-menu__intro {
+  margin: 18px;
+  padding: 20px;
+  border-radius: 22px;
+  color: var(--app-text);
+  background: linear-gradient(135deg, #ffffff, #edf3e8);
+  box-shadow: 0 10px 24px rgba(36, 48, 37, 0.08);
+}
+
+.app-menu__intro span {
+  color: var(--app-primary);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.app-menu__intro h2 {
+  margin: 8px 0;
+  font-size: 1.7rem;
+}
+
+.app-menu__intro p {
+  margin: 0;
+  color: var(--app-muted);
+  line-height: 1.45;
+}
+
+.app-menu ion-list {
+  background: transparent;
+  padding: 0 12px;
+}
+
+.app-menu ion-item {
+  --background: transparent;
+  --background-hover: #eef4e9;
+  --border-radius: 16px;
+  --color: var(--app-text);
+  margin: 6px 0;
+  font-weight: 700;
+}
+
+.app-menu ion-icon {
+  color: var(--app-primary);
+}
