@@ -1,177 +1,177 @@
 import {
-    IonContent,
-    IonHeader,
-    IonPage,
-    IonSearchbar,
-    IonTitle,
-    IonToolbar,
-    IonSegment,
-    IonSegmentButton,
-    IonLabel,
+  IonContent,
+  IonHeader,
+  IonLabel,
+  IonPage,
+  IonSearchbar,
+  IonSegment,
+  IonSegmentButton,
+  IonText,
+  IonTitle,
+  IonToolbar,
 } from '@ionic/react';
-
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RecipeCard from '../components/RecipeCard';
-import CategoryChip from '../components/CategoryChip';
-import { mockRecipes } from '../data/mockRecipes';
-
-
+import type { Recipe } from '../models/Recipe';
+import { getAllRecipes } from '../repositories/recipeRepository';
 
 export default function SearchPage() {
-    const [query, setQuery] = useState('');
-    const [searchMode, setSearchMode] = useState<'recipes' | 'ingredients'>('recipes');
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [query, setQuery] = useState('');
+  const [searchMode, setSearchMode] = useState<'recipes' | 'ingredients'>('recipes');
+  const [selectedCategory, setSelectedCategory] = useState<Recipe['category'] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
-    // Combine text search and category filtering before rendering the result cards.
-    const filteredRecipes = mockRecipes.filter((recipe) => {
-        const matchesSearch =
-            query === '' ||
-            (searchMode === 'recipes'
-                ? recipe.title.toLowerCase().includes(query.toLowerCase())
-                : recipe.ingredients.some((ingredient) =>
-                    ingredient.toLowerCase().includes(query.toLowerCase())
-                ));
+  useEffect(() => {
+    async function loadRecipes() {
+      try {
+        setIsLoading(true);
+        setErrorMessage('');
 
-        const matchesCategory =
-            selectedCategory === null || recipe.category === selectedCategory;
+        // Search reads recipes through the repository, so this page uses Supabase instead of mock data.
+        const recipesFromSupabase = await getAllRecipes();
+        setRecipes(recipesFromSupabase);
+      } catch (error) {
+        setErrorMessage(error instanceof Error ? error.message : 'Recipes could not be loaded.');
+      } finally {
+        setIsLoading(false);
+      }
+    }
 
-        return matchesSearch && matchesCategory;
-    });
+    loadRecipes();
+  }, []);
 
-    const ingredientSuggestions = [
-        { label: 'Tomaten', emoji: '🍅' },
-        { label: 'Basilikum', emoji: '☘️' },
-        { label: 'Mozzarella', emoji: '🧀' },
-        { label: 'Hähnchen', emoji: '🍗' },
-        { label: 'Avocado', emoji: '🥑' },
-        { label: 'Zucchini', emoji: '🥒' },
-    ];
+  const categories: Array<{ label: string; value: Recipe['category']; icon: string }> = [
+    { label: 'Vegan', value: 'Vegan', icon: '🌿' },
+    { label: 'Vegetarisch', value: 'Vegetarian', icon: '🥬' },
+    { label: 'Dessert', value: 'Dessert', icon: '🧁' },
+    { label: 'Schnell', value: 'Quick', icon: '⚡' },
+    { label: 'Pasta', value: 'Pasta', icon: '🍕' },
+    { label: 'Hauptgericht', value: 'Main Dish', icon: '🍜' },
+    { label: 'Gesund', value: 'Healthy', icon: '🥗' },
+  ];
 
-    return (
-        <IonPage>
-            <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Suche</IonTitle>
-                </IonToolbar>
-            </IonHeader>
+  const ingredientSuggestions = [
+    { label: 'Tomaten', icon: '🍅' },
+    { label: 'Basilikum', icon: '☘️' },
+    { label: 'Mozzarella', icon: '🧀' },
+    { label: 'Haehnchen', icon: '🍗' },
+    { label: 'Avocado', icon: '🥑' },
+    { label: 'Zucchini', icon: '🥒' },
+  ];
 
-            <IonContent className="ion-padding">
-                <IonSegment
-                    value={searchMode}
-                    onIonChange={(e) =>
-                        setSearchMode(e.detail.value as 'recipes' | 'ingredients')
-                    }
+  // Combine text search and category filtering before rendering the result cards.
+  const filteredRecipes = recipes.filter((recipe) => {
+    const lowerQuery = query.toLowerCase();
+    const matchesSearch =
+      query === '' ||
+      (searchMode === 'recipes'
+        ? recipe.title.toLowerCase().includes(lowerQuery)
+        : recipe.ingredients.some((ingredient) => ingredient.toLowerCase().includes(lowerQuery)));
+
+    const matchesCategory = selectedCategory === null || recipe.category === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+  });
+
+  return (
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Suche</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+
+      <IonContent className="ion-padding">
+        <IonSegment value={searchMode} onIonChange={(event) => setSearchMode(event.detail.value as 'recipes' | 'ingredients')}>
+          <IonSegmentButton value="recipes">
+            <IonLabel>Rezepte</IonLabel>
+          </IonSegmentButton>
+
+          <IonSegmentButton value="ingredients">
+            <IonLabel>Zutaten</IonLabel>
+          </IonSegmentButton>
+        </IonSegment>
+
+        <IonSearchbar
+          placeholder={searchMode === 'recipes' ? 'Nach Rezepten suchen' : 'Nach Zutaten suchen'}
+          value={query}
+          onIonInput={(event) => setQuery(event.detail.value ?? '')}
+        />
+
+        {searchMode === 'ingredients' && (
+          <>
+            <h2>Nach Zutaten suchen</h2>
+
+            <div className="ingredient-grid">
+              {ingredientSuggestions.map((ingredient) => (
+                <button
+                  key={ingredient.label}
+                  className="ingredient-item"
+                  onClick={() => setQuery(ingredient.label)}
                 >
-                    <IonSegmentButton value="recipes">
-                        <IonLabel>Rezepte</IonLabel>
-                    </IonSegmentButton>
+                  <div className="ingredient-icon">{ingredient.icon}</div>
+                  <span>{ingredient.label}</span>
+                </button>
+              ))}
+            </div>
+          </>
+        )}
 
-                    <IonSegmentButton value="ingredients">
-                        <IonLabel>Zutaten</IonLabel>
-                    </IonSegmentButton>
-                </IonSegment>
+        <h2>Kategorien</h2>
 
-                <IonSearchbar
-                    placeholder={
-                        searchMode === 'recipes'
-                            ? 'Nach Rezepten suchen'
-                            : 'Nach Zutaten suchen'
-                    }
-                    value={query}
-                    onIonInput={(e) => setQuery(e.detail.value ?? '')}
-                />
+        <div className="category-grid">
+          {categories.map((category) => (
+            <button className="category-item" key={category.value} onClick={() => setSelectedCategory(category.value)}>
+              <div className="category-icon">{category.icon}</div>
+              <span>{category.label}</span>
+            </button>
+          ))}
 
-                {searchMode === 'ingredients' && (
-                    <>
-                        <h2>Nach Zutaten suchen</h2>
+          <button className="category-item" onClick={() => setSelectedCategory(null)}>
+            <div className="category-icon">🍽️</div>
+            <span>Alle</span>
+          </button>
+        </div>
 
-                        <div className="ingredient-grid">
-                            {ingredientSuggestions.map((ingredient) => (
-                                <button
-                                    key={ingredient.label}
-                                    className="ingredient-item"
-                                    onClick={() => setQuery(ingredient.label)}
-                                >
-                                    <div className="ingredient-icon">{ingredient.emoji}</div>
-                                    <span>{ingredient.label}</span>
-                                </button>
-                            ))}
-                        </div>
-                    </>
-                )}
-                <h2>Kategorien</h2>
+        <h2>Suchergebnisse</h2>
 
-                <div className="category-grid">
-                    <button className="category-item" onClick={() => setSelectedCategory('Vegan')}>
-                        <div className="category-icon">🌿</div>
-                        <span>Vegan</span>
-                    </button>
+        {isLoading && (
+          <IonText color="medium">
+            <p>Rezepte werden geladen...</p>
+          </IonText>
+        )}
 
-                    <button className="category-item" onClick={() => setSelectedCategory('Vegetarisch')}>
-                        <div className="category-icon">🥬</div>
-                        <span>Vegetarisch</span>
-                    </button>
+        {errorMessage && (
+          <IonText color="danger">
+            <p>{errorMessage}</p>
+          </IonText>
+        )}
 
-                    <button className="category-item" onClick={() => setSelectedCategory('Dessert')}>
-                        <div className="category-icon">🧁</div>
-                        <span>Desserts</span>
-                    </button>
+        {!isLoading && !errorMessage && filteredRecipes.length === 0 && (
+          <IonText color="medium">
+            <p>Keine Rezepte gefunden.</p>
+          </IonText>
+        )}
 
-                    <button className="category-item" onClick={() => setSelectedCategory('Schnell')}>
-                        <div className="category-icon">⚡</div>
-                        <span>Schnell</span>
-                    </button>
-
-                    <button className="category-item" onClick={() => setSelectedCategory('Pizza')}>
-                        <div className="category-icon">🍕</div>
-                        <span>Pizza</span>
-                    </button>
-
-                    <button className="category-item" onClick={() => setSelectedCategory('Salat')}>
-                        <div className="category-icon">🥗</div>
-                        <span>Salat</span>
-                    </button>
-
-                    <button className="category-item" onClick={() => setSelectedCategory('Asiatisch')}>
-                        <div className="category-icon">🍜</div>
-                        <span>Asiatisch</span>
-                    </button>
-
-                    <button className="category-item" onClick={() => setSelectedCategory('Frühstück')}>
-                        <div className="category-icon">🥐</div>
-                        <span>Frühstück</span>
-                    </button>
-
-                    <button className="category-item" onClick={() => setSelectedCategory('Getränke')}>
-                        <div className="category-icon">🥤</div>
-                        <span>Getränke</span>
-                    </button>
-
-                    <button className="category-item" onClick={() => setSelectedCategory(null)}>
-                        <div className="category-icon">🍽️</div>
-                        <span>Alle</span>
-                    </button>
-                </div>
-
-                <h2>Suchergebnisse</h2>
-
-                {/* Search results use the same clickable recipe cards as the home page. */}
-                <div className="recipe-grid">
-                    {filteredRecipes.map((recipe) => (
-                        <RecipeCard
-                            id={recipe.id}
-                            key={recipe.id}
-                            title={recipe.title}
-                            imageUrl={recipe.imageUrl ?? ''}
-                            duration={recipe.preparationTime}
-                            difficulty="Einfach"
-                            category={recipe.category}
-                            rating={recipe.rating}
-                            to={`/recipes/${recipe.id}`}
-                        />
-                    ))}
-                </div>
-            </IonContent>
-        </IonPage>
-    );
+        {/* Search results use the same clickable recipe cards as the home page. */}
+        <div className="recipe-grid">
+          {filteredRecipes.map((recipe) => (
+            <RecipeCard
+              id={recipe.id}
+              key={recipe.id}
+              title={recipe.title}
+              imageUrl={recipe.imageUrl ?? ''}
+              duration={recipe.preparationTime}
+              difficulty="Einfach"
+              category={recipe.category}
+              rating={recipe.rating}
+              to={`/recipes/${recipe.id}`}
+            />
+          ))}
+        </div>
+      </IonContent>
+    </IonPage>
+  );
 }
