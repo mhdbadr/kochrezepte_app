@@ -14,6 +14,10 @@ import RecipeForm from './pages/RecipeForm';
 import RecipeListPage from './pages/RecipeListPage';
 import SearchPage from './pages/SearchPage';
 import Wochenplaner from './pages/Wochenplaner';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import WelcomePage from "./pages/WelcomePage";
+import OnboardingPage from "./pages/OnboardingPage";
 
 setupIonicReact(); // Initialize Ionic React with default settings.
 
@@ -25,6 +29,11 @@ export default function App() {
                     <IonRouterOutlet>
                         <Switch>
                             {/* Main app routes provided by the navigation/search epic. */}
+                            <Route exact path="/login" component={LoginPage} />
+                            <Route exact path="/register" component={RegisterPage} />
+                            <Route exact path="/welcome" component={WelcomePage} />
+                            <Route exact path="/onboarding" component={OnboardingPage} />
+
                             <Route exact path="/home" component={HomePage} />
                             <Route exact path="/search" component={SearchPage} />
                             <Route exact path="/planner" component={Wochenplaner} />
@@ -37,7 +46,7 @@ export default function App() {
                             <Route exact path="/recipes/:id/edit" component={EditRecipePage} />
                             <Route exact path="/recipes/:id" component={RecipeDetailPage} />
                             <Route exact path="/">
-                                <Redirect to="/home" />
+                                <Redirect to="/welcome" />
                             </Route>
                         </Switch>
                     </IonRouterOutlet>
