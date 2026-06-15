@@ -6,7 +6,6 @@ import {
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -32,6 +31,14 @@ const slides = [
 ];
 
 export default function OnboardingPage() {
+
+
+
+    const finishOnboarding = () => {
+        localStorage.setItem('onboardingCompleted', 'true');
+        window.location.href = '/login';
+    };
+
     return (
         <IonPage>
             <IonContent fullscreen>
@@ -46,9 +53,8 @@ export default function OnboardingPage() {
                             <h1>{slide.title}</h1>
 
                             <p>{slide.description}</p>
-
                             {index === slides.length - 1 && (
-                                <IonButton expand="block" routerLink="/login">
+                                <IonButton expand="block" onClick={finishOnboarding}>
                                     Los geht&apos;s
                                 </IonButton>
                             )}

@@ -28,6 +28,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import WelcomePage from './pages/WelcomePage';
 import OnboardingPage from './pages/OnboardingPage';
+import { useState } from 'react';
 
 setupIonicReact();
 
@@ -67,6 +68,10 @@ function MainTabs() {
 }
 
 export default function App() {
+    const [onboardingCompleted] = useState(
+        localStorage.getItem('onboardingCompleted') === 'true'
+    );
+
     return (
         <IonApp>
             <IonReactRouter>
@@ -80,8 +85,12 @@ export default function App() {
                         <MainTabs />
                     </Route>
 
+
                     <Route exact path="/">
-                        <Redirect to="/welcome" />
+                        {onboardingCompleted
+                            ? <Redirect to="/login" />
+                            : <Redirect to="/welcome" />
+                        }
                     </Route>
                 </Switch>
             </IonReactRouter>
