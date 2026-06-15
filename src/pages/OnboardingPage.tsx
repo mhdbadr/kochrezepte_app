@@ -4,21 +4,57 @@ import {
     IonPage
 } from '@ionic/react';
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+const slides = [
+    {
+        image: "/assets/discover.png",
+        title: "Entdecke neue Rezepte",
+        description:
+            "Finde leckere Gerichte für jeden Geschmack – von schnellen Snacks bis zu besonderen Menüs."
+    },
+    {
+        image: "/assets/create.png",
+        title: "Erstelle deine eigenen Rezepte",
+        description:
+            "Speichere deine Lieblingsrezepte und passe Zutaten und Portionen nach deinen Wünschen an."
+    },
+    {
+        image: "/assets/planner.png",
+        title: "Plane deine Woche",
+        description:
+            "Organisiere deine Mahlzeiten und behalte den Überblick über deine Rezepte für die ganze Woche."
+    }
+];
+
 export default function OnboardingPage() {
     return (
         <IonPage>
-            <IonContent className="ion-padding">
+            <IonContent fullscreen>
+                <Swiper
+                    modules={[Pagination]}
+                    pagination={{ clickable: true }}
+                >
+                    {slides.map((slide, index) => (
+                        <SwiperSlide key={index}>
+                            <img src={slide.image} alt="" />
 
-                <h1>❤️ Speichere Lieblingsrezepte</h1>
+                            <h1>{slide.title}</h1>
 
-                <p>
-                    Erstelle dein eigenes Kochbuch.
-                </p>
+                            <p>{slide.description}</p>
 
-                <IonButton expand="block" routerLink="/login">
-                    Weiter
-                </IonButton>
-
+                            {index === slides.length - 1 && (
+                                <IonButton expand="block" routerLink="/login">
+                                    Los geht&apos;s
+                                </IonButton>
+                            )}
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
             </IonContent>
         </IonPage>
     );

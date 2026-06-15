@@ -3,24 +3,36 @@ import {
     IonContent,
     IonPage
 } from '@ionic/react';
-
+import welcomeImage from '../assets/1bild.png';
+import './WelcomePage.css';
 export default function WelcomePage() {
     return (
         <IonPage>
-            <IonContent className="ion-padding">
+            <IonContent fullscreen>
+                <section
+                    className="welcome-hero"
+                    style={{ backgroundImage: `url(${welcomeImage})` }}
+                >
+                    <div className="welcome-overlay">
+                        <h1>Kochrezepte</h1>
 
-                <h1>🍳 Kochrezepte</h1>
+                        <h2>
+                            Rezepte für Anfänger
+                            <br />
+                            und Profis
+                        </h2>
 
-                <h2>Über 1000 Rezepte für Anfänger bis Profis</h2>
+                        <p>
+                            Entdecke leckere Gerichte
+                            <br />
+                            und plane deine Woche.
+                        </p>
 
-                <p>
-                    Entdecke leckere Gerichte und plane deine Woche.
-                </p>
-
-                <IonButton expand="block" routerLink="/onboarding">
-                    Los geht's
-                </IonButton>
-
+                        <IonButton expand="block" routerLink="/onboarding">
+                            Los geht&apos;s
+                        </IonButton>
+                    </div>
+                </section>
             </IonContent>
         </IonPage>
     );
