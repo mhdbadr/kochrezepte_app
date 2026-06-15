@@ -43,6 +43,14 @@ export default function LoginPage() {
                     Registrieren
                 </IonButton>
 
+                <IonButton fill="clear" color="medium" routerLink="/home">
+                    Als Gast fortfahren
+                </IonButton>
+
+                <p className="guest-info">
+                    Mit einem Gastkonto stehen nur eingeschränkte Funktionen zur Verfügung.
+                </p>
+
             </IonContent>
         </IonPage>
     );
