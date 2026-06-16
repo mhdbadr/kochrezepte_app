@@ -1,6 +1,8 @@
-import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from "@ionic/react";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { IonButton, IonContent, IonPage } from "@ionic/react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
+import BackLink from "../components/BackLink";
+import PageHeader from "../components/PageHeader";
 import type { Recipe } from "../models/Recipe";
 import type { RecipeCategory } from "../models/RecipeCategory";
 import { getRecipeById, updateRecipe } from "../repositories/recipeRepository";
@@ -16,20 +18,67 @@ export default function EditRecipePage() {
   const history = useHistory();
   const { id } = useParams<EditRecipeRouteParams>();
 
-  // Load the recipe once from the route ID to prefill the edit form.
-  const recipe = getRecipeById(id);
-  const canEditRecipe = recipe?.isEditable === true;
+  // Local state for the loaded recipe, form fields, loading status, and error messages.
+  const [recipe, setRecipe] = useState<Recipe | undefined>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadErrorMessage, setLoadErrorMessage] = useState("");
 
   // Prefill the form with existing recipe data so users only change what they need.
-  const [title, setTitle] = useState(recipe?.title ?? "");
-  const [description, setDescription] = useState(recipe?.description ?? "");
-  const [category, setCategory] = useState<RecipeCategory>(recipe?.category ?? "Quick");
-  const [preparationTime, setPreparationTime] = useState(recipe?.preparationTime ?? 0);
-  const [rating, setRating] = useState(recipe?.rating ?? 0);
-  const [imageUrl, setImageUrl] = useState(recipe?.imageUrl ?? "");
-  const [ingredients, setIngredients] = useState(recipe?.ingredients.length ? recipe.ingredients : [""]);
-  const [instructions, setInstructions] = useState(recipe?.instructions.length ? recipe.instructions : [""]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState<RecipeCategory>("Quick");
+  const [preparationTime, setPreparationTime] = useState(0);
+  const [rating, setRating] = useState(0);
+  const [imageUrl, setImageUrl] = useState("");
+  const [ingredients, setIngredients] = useState([""]);
+  const [instructions, setInstructions] = useState([""]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Only allow editing if the recipe is loaded and marked as editable
+  const canEditRecipe = recipe?.isEditable === true;
+
+  useEffect(() => {
+    let isPageActive = true;
+
+    async function loadRecipe() {
+      try {
+        // Load the recipe from Supabase before prefilling the edit form.
+        const loadedRecipe = await getRecipeById(id);
+
+        if (isPageActive) {
+          setRecipe(loadedRecipe);
+          setLoadErrorMessage("");
+
+          // Prefill the form fields with the loaded recipe data
+          if (loadedRecipe) {
+            setTitle(loadedRecipe.title);
+            setDescription(loadedRecipe.description);
+            setCategory(loadedRecipe.category);
+            setPreparationTime(loadedRecipe.preparationTime);
+            setRating(loadedRecipe.rating ?? 0);
+            setImageUrl(loadedRecipe.imageUrl ?? "");
+            setIngredients(loadedRecipe.ingredients.length ? loadedRecipe.ingredients : [""]);
+            setInstructions(loadedRecipe.instructions.length ? loadedRecipe.instructions : [""]);
+          }
+        }
+      } catch (error) {
+        if (isPageActive) {
+          setLoadErrorMessage(error instanceof Error ? error.message : "Recipe could not be loaded.");
+        }
+      } finally {
+        if (isPageActive) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadRecipe();
+
+    return () => {
+      isPageActive = false;
+    };
+  }, [id]);
 
   function updateIngredient(index: number, value: string) {
     const updatedIngredients = [...ingredients];
@@ -64,7 +113,7 @@ export default function EditRecipePage() {
     reader.readAsDataURL(file);
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     // Guard against editing missing recipes or read-only sample recipes.
@@ -99,19 +148,53 @@ export default function EditRecipePage() {
       rating: rating || undefined,
     };
 
-    updateRecipe(updatedRecipe);
-    history.push(`/recipes/${recipe.id}`);
+    try {
+      setIsSaving(true);
+      setErrorMessage("");
+
+      const savedRecipe = await updateRecipe(updatedRecipe);
+      history.push(`/recipes/${savedRecipe.id}`);
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Recipe could not be updated.");
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <IonPage>
+        <PageHeader title="Loading recipe" />
+
+        <IonContent fullscreen>
+          <main className="recipe-form-page">
+            <p>Loading recipe...</p>
+          </main>
+        </IonContent>
+      </IonPage>
+    );
+  }
+
+  if (loadErrorMessage) {
+    return (
+      <IonPage>
+        <PageHeader title="Recipe error" />
+
+        <IonContent fullscreen>
+          <main className="recipe-form-page">
+            <p>Supabase error: {loadErrorMessage}</p>
+            <IonButton routerLink="/home">Back to recipes</IonButton>
+          </main>
+        </IonContent>
+      </IonPage>
+    );
   }
 
   // Show a safe fallback instead of rendering an edit form for invalid or read-only recipes.
   if (!recipe || !canEditRecipe) {
     return (
       <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Recipe cannot be edited</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+        <PageHeader title="Recipe cannot be edited" />
 
         <IonContent fullscreen>
           <main className="recipe-form-page">
@@ -125,17 +208,11 @@ export default function EditRecipePage() {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Edit Recipe</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title="Edit Recipe" />
 
       <IonContent fullscreen>
         <main className="recipe-form-page">
-          <Link className="recipe-form-back-link" to={`/recipes/${recipe.id}`}>
-            Back to recipe
-          </Link>
+          <BackLink to={`/recipes/${recipe.id}`} label="Zurück zum Rezept" />
 
           <section className="recipe-form-hero">
             <p>Recipe Core</p>
@@ -320,8 +397,8 @@ export default function EditRecipePage() {
 
             <div className="recipe-form-actions">
               <Link to={`/recipes/${recipe.id}`}>Cancel</Link>
-              <button className="recipe-form-submit-button" type="submit">
-                Save changes
+              <button className="recipe-form-submit-button" type="submit" disabled={isSaving}>
+                {isSaving ? "Saving..." : "Save changes"}
               </button>
             </div>
           </form>

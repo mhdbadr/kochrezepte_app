@@ -1,40 +1,69 @@
-import { useState, useEffect } from 'react';
+/**
+ * Custom hook to manage comments for a recipe, including loading existing comments and adding new ones.
+ */
 
-const STORAGE_KEY = 'kochrezepte_comments';
+import { useEffect, useState } from 'react';
+import {
+  createComment,
+  deleteCommentById,
+  getCommentsByRecipeId,
+  type RecipeComment,
+} from '../repositories/commentRepository';
+import { getOptionalCurrentUserId } from '../repositories/recipeHelpers';
 
-export interface CommentItem {
-  id: string;
-  recipeId: string;
-  text: string;
-  createdAt: string;
-}
-
-export function useComments() {
-  const [allComments, setAllComments] = useState<CommentItem[]>([]);
+export function useComments(recipeId: string) {
+  const [comments, setComments] = useState<RecipeComment[]>([]);
+  const [currentUserId, setCurrentUserId] = useState<string | undefined>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    const storedComments = localStorage.getItem(STORAGE_KEY);
-    if (storedComments) {
-      setAllComments(JSON.parse(storedComments));
+    async function loadComments() {
+      try {
+        setIsLoading(true);
+        setErrorMessage('');
+
+        // Comments and the current user are loaded together so the UI can show owner-only actions.
+        const [commentsFromSupabase, userId] = await Promise.all([
+          getCommentsByRecipeId(recipeId),
+          getOptionalCurrentUserId(),
+        ]);
+
+        setComments(commentsFromSupabase);
+        setCurrentUserId(userId);
+      } catch (error) {
+        setErrorMessage(error instanceof Error ? error.message : 'Comments could not be loaded.');
+      } finally {
+        setIsLoading(false);
+      }
     }
-  }, []);
 
-  const addComment = (recipeId: string, text: string) => {
-    const newComment: CommentItem = {
-      id: Date.now().toString(),
-      recipeId: recipeId,
-      text: text,
-      createdAt: new Date().toLocaleDateString('de-DE')
-    };
+    loadComments();
+  }, [recipeId]);
 
-    const updatedComments = [...allComments, newComment];
-    setAllComments(updatedComments);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedComments));
-  };
+  // Adds a new comment for the current recipe and updates the local state.
+  async function addComment(text: string) {
+    try {
+      setErrorMessage('');
 
-  const getCommentsForRecipe = (recipeId: string): CommentItem[] => {
-    return allComments.filter(comment => comment.recipeId === recipeId);
-  };
+      const createdComment = await createComment(recipeId, text);
+      setComments((currentComments) => [...currentComments, createdComment]);
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Comment could not be saved.');
+    }
+  }
 
-  return { addComment, getCommentsForRecipe };
+  // Deletes one of the current user's own comments from Supabase and local state.
+  async function deleteComment(commentId: string) {
+    try {
+      setErrorMessage('');
+
+      await deleteCommentById(commentId);
+      setComments((currentComments) => currentComments.filter((comment) => comment.id !== commentId));
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Comment could not be deleted.');
+    }
+  }
+
+  return { comments, currentUserId, addComment, deleteComment, isLoading, errorMessage };
 }

@@ -2,17 +2,16 @@ import {
   IonAlert,
   IonButton,
   IonContent,
-  IonHeader,
   IonPage,
-  IonTitle,
-  IonToolbar,
 } from "@ionic/react";
-import { useState } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
+import BackLink from "../components/BackLink";
+import PageHeader from "../components/PageHeader";
+import type { Recipe } from "../models/Recipe";
 import { deleteRecipe, getRecipeById } from "../repositories/recipeRepository";
 import "./RecipeDetailPage.css";
 import CommentSection from '../components/CommentSection';
-import RatingComponent from '../components/RatingComponent';
 import { useRatings } from '../hooks/useRatings';
 
 // Define the route parameters used by /recipes/:id.
@@ -23,34 +22,101 @@ interface RecipeDetailRouteParams {
 export default function RecipeDetailPage() {
   const history = useHistory();
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [recipe, setRecipe] = useState<Recipe | undefined>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [deleteErrorMessage, setDeleteErrorMessage] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Read the recipe ID from the current URL.
   const { id } = useParams<RecipeDetailRouteParams>();
 
-  // Load the matching recipe from the repository.
-  const recipe = getRecipeById(id);
-  const { saveRating, getRecipeRating } = useRatings();
+  const { getRecipeRating } = useRatings();
   const currentRating = getRecipeRating(id);
+
+  useEffect(() => {
+    let isPageActive = true;
+
+    async function loadRecipe() {
+      try {
+        // Load the matching recipe from Supabase using the route ID.
+        const loadedRecipe = await getRecipeById(id);
+
+        if (isPageActive) {
+          setRecipe(loadedRecipe);
+          setErrorMessage("");
+        }
+      } catch (error) {
+        if (isPageActive) {
+          setErrorMessage(error instanceof Error ? error.message : "Recipe could not be loaded.");
+        }
+      } finally {
+        if (isPageActive) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadRecipe();
+
+    return () => {
+      isPageActive = false;
+    };
+  }, [id]);
 
   // Only recipes created through the form should expose edit and delete actions.
   const canModifyRecipe = recipe?.isEditable === true;
 
-  function handleDeleteRecipe() {
+  async function handleDeleteRecipe() {
     if (!recipe || !canModifyRecipe) return;
 
-    deleteRecipe(recipe.id); // Remove the recipe from the repository.
-    history.push("/recipes"); // Navigate back to the recipe list after deletion.
+    try {
+      setIsDeleting(true);
+      setDeleteErrorMessage("");
+
+      await deleteRecipe(recipe.id); // Delete the recipe from Supabase
+      history.push("/home"); // Navigate back to the main recipe overview after deletion
+    } catch (error) {
+      setDeleteErrorMessage(error instanceof Error ? error.message : "Recipe could not be deleted.");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <IonPage>
+        <PageHeader title="Loading recipe" />
+
+        <IonContent fullscreen>
+          <main>
+            <p>Loading recipe...</p>
+          </main>
+        </IonContent>
+      </IonPage>
+    );
+  }
+
+  if (errorMessage) {
+    return (
+      <IonPage>
+        <PageHeader title="Recipe error" />
+
+        <IonContent fullscreen>
+          <main>
+            <p>Supabase error: {errorMessage}</p>
+            <IonButton routerLink="/home">Back to recipes</IonButton>
+          </main>
+        </IonContent>
+      </IonPage>
+    );
   }
 
   // Show a clear fallback if the URL contains an unknown recipe ID.
   if (!recipe) {
     return (
       <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Recipe not found</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+        <PageHeader title="Recipe not found" />
 
         <IonContent fullscreen>
           <main>
@@ -64,15 +130,11 @@ export default function RecipeDetailPage() {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>{recipe.title}</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title={recipe.title} />
 
       <IonContent fullscreen>
         <main className="recipe-detail-page">
-          <Link className="recipe-detail-back-link" to="/home">Back to recipes</Link>
+          <BackLink to="/home" label="Zurück zur Übersicht" />
 
           <section className="recipe-detail-hero">
             {recipe.imageUrl && (
@@ -95,14 +157,18 @@ export default function RecipeDetailPage() {
           {canModifyRecipe ? (
             <div className="recipe-detail-actions">
               <IonButton routerLink={`/recipes/${recipe.id}/edit`}>Edit recipe</IonButton>
-              <IonButton color="danger" onClick={() => setIsDeleteAlertOpen(true)}>
-                Delete recipe
+              <IonButton color="danger" onClick={() => setIsDeleteAlertOpen(true)} disabled={isDeleting}>
+                {isDeleting ? "Deleting..." : "Delete recipe"}
               </IonButton>
             </div>
           ) : (
             <p className="recipe-detail-readonly-note">
               This is a sample recipe. Only recipes you create can be edited or deleted.
             </p>
+          )}
+
+          {deleteErrorMessage && (
+            <p className="recipe-detail-readonly-note">Delete error: {deleteErrorMessage}</p>
           )}
 
           {/* Confirm destructive actions before removing a recipe. */}
@@ -119,7 +185,9 @@ export default function RecipeDetailPage() {
               {
                 text: "Delete",
                 role: "destructive",
-                handler: handleDeleteRecipe,
+                handler: () => {
+                  void handleDeleteRecipe();
+                },
               },
             ]}
             onDidDismiss={() => setIsDeleteAlertOpen(false)}

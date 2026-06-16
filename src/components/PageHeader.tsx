@@ -1,0 +1,41 @@
+/**
+ * PageHeader is a component that displays the title and subtitle of a page, along with a menu button for navigation.
+ */
+
+import {
+  IonButtons,
+  IonHeader,
+  IonMenuButton,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/react';
+import './PageHeader.css';
+
+interface PageHeaderProps {
+  title: string;
+  subtitle?: string;
+}
+
+/**
+ * PageHeader component for displaying the title and subtitle of a page, along with a menu button for navigation.
+ * @param title - The main title of the page.
+ * @param subtitle - An optional subtitle displayed above the main title, defaulting to 'BiteBook'.
+ * @returns A header component with a menu button and titles.
+ */
+export default function PageHeader({ title, subtitle = 'BiteBook' }: PageHeaderProps) {
+  return (
+    <IonHeader className="page-header">
+      <IonToolbar>
+        {/* The menu button opens secondary actions without duplicating the bottom tab navigation. */}
+        <IonButtons slot="start">
+          <IonMenuButton className="page-header__menu-button" />
+        </IonButtons>
+
+        <IonTitle>
+          <span className="page-header__subtitle">{subtitle}</span>
+          <span className="page-header__title">{title}</span>
+        </IonTitle>
+      </IonToolbar>
+    </IonHeader>
+  );
+}
