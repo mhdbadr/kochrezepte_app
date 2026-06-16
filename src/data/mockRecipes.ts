@@ -1,6 +1,7 @@
 import type { Recipe } from "../models/Recipe";
 
-// Mock data for recipes to be used until the Supabase repository is connected.
+// Legacy mock data kept only as reference/test data.
+// The current app loads recipes from Supabase through recipeRepository.ts.
 export const mockRecipes: Recipe[] = [
   {
     id: "1",

@@ -1,23 +1,17 @@
 import {
     IonContent,
-    IonHeader,
     IonPage,
-    IonTitle,
-    IonToolbar,
     IonCard,
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
 } from '@ionic/react';
+import PageHeader from '../components/PageHeader';
 
 export default function PlannerPage() {
     return (
         <IonPage>
-            <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Wochenplaner</IonTitle>
-                </IonToolbar>
-            </IonHeader>
+            <PageHeader title="Wochenplaner" />
 
             <IonContent className="ion-padding">
 

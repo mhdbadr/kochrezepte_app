@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { 
-  IonList, 
-  IonItem, 
-  IonLabel, 
-  IonInput, 
-  IonButton, 
-  IonIcon, 
-  IonNote 
+import {
+  IonButton,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonNote,
+  IonText,
 } from '@ionic/react';
-import { send } from 'ionicons/icons';
+import { send, trashOutline } from 'ionicons/icons';
 import { useComments } from '../hooks/useComments';
 
 interface CommentSectionProps {
@@ -16,17 +17,15 @@ interface CommentSectionProps {
 }
 
 export default function CommentSection({ recipeId }: CommentSectionProps) {
-  const { addComment, getCommentsForRecipe } = useComments();
-  
-  const comments = getCommentsForRecipe(recipeId);
-
+  const { comments, currentUserId, addComment, deleteComment, isLoading, errorMessage } = useComments(recipeId);
   const [inputText, setInputText] = useState<string>('');
 
-  const handleSendComment = () => {
+  async function handleSendComment() {
     if (!inputText.trim()) return;
-    addComment(recipeId, inputText);
+
+    await addComment(inputText.trim());
     setInputText('');
-  };
+  }
 
   return (
     <div style={{ marginTop: '32px' }}>
@@ -38,13 +37,13 @@ export default function CommentSection({ recipeId }: CommentSectionProps) {
         <IonInput
           placeholder="Schreibe einen Kommentar..."
           value={inputText}
-          onIonInput={(e) => setInputText(e.detail.value || '')}
+          onIonInput={(event) => setInputText(event.detail.value || '')}
           style={{
             background: '#ffffff',
             border: '1px solid #e0e0e0',
             borderRadius: '12px',
             padding: '8px 16px',
-            '--background': 'transparent'
+            '--background': 'transparent',
           }}
         />
         <IonButton fill="clear" onClick={handleSendComment} disabled={!inputText.trim()}>
@@ -52,15 +51,27 @@ export default function CommentSection({ recipeId }: CommentSectionProps) {
         </IonButton>
       </div>
 
+      {isLoading && (
+        <IonText color="medium">
+          <p>Kommentare werden geladen...</p>
+        </IonText>
+      )}
+
+      {errorMessage && (
+        <IonText color="danger">
+          <p>{errorMessage}</p>
+        </IonText>
+      )}
+
       <IonList lines="none" style={{ background: 'transparent' }}>
         {comments.map((comment) => (
-          <IonItem 
-            key={comment.id} 
-            style={{ 
-              '--background': '#ffffff', 
-              marginBottom: '12px', 
+          <IonItem
+            key={comment.id}
+            style={{
+              '--background': '#ffffff',
+              marginBottom: '12px',
               borderRadius: '16px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.02)'
+              boxShadow: '0 4px 12px rgba(0,0,0,0.02)',
             }}
           >
             <IonLabel className="ion-text-wrap" style={{ padding: '8px 0' }}>
@@ -69,6 +80,13 @@ export default function CommentSection({ recipeId }: CommentSectionProps) {
               </p>
               <IonNote style={{ fontSize: '0.75rem' }}>{comment.createdAt}</IonNote>
             </IonLabel>
+
+            {/* Only the comment owner can delete their own comment. */}
+            {comment.userId === currentUserId && (
+              <IonButton fill="clear" color="danger" onClick={() => deleteComment(comment.id)}>
+                <IonIcon slot="icon-only" icon={trashOutline} />
+              </IonButton>
+            )}
           </IonItem>
         ))}
       </IonList>

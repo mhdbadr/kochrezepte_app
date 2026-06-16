@@ -1,36 +1,60 @@
-import { useState, useEffect } from 'react';
+/**
+ * Custom hook to manage favorite recipes, including loading, toggling, and error handling.
+ */
 
-const STORAGE_KEY = 'kochrezepte_favorites';
+import { useEffect, useState } from 'react';
+import {
+  addFavoriteRecipe,
+  getFavoriteRecipeIds,
+  removeFavoriteRecipe,
+} from '../repositories/favoriteRepository';
 
 export function useFavorites() {
-  
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    const storedFavorites = localStorage.getItem(STORAGE_KEY);
-    if (storedFavorites) {
-      setFavorites(JSON.parse(storedFavorites));
+    async function loadFavorites() {
+      try {
+        setIsLoading(true);
+        setErrorMessage('');
+
+        // Favorite IDs are loaded from Supabase instead of localStorage.
+        const favoriteIds = await getFavoriteRecipeIds();
+        setFavorites(favoriteIds);
+      } catch (error) {
+        setErrorMessage(error instanceof Error ? error.message : 'Favorites could not be loaded.');
+      } finally {
+        setIsLoading(false);
+      }
     }
+
+    loadFavorites();
   }, []);
 
-  const updateFavorites = (newFavorites: string[]) => {
-    setFavorites(newFavorites);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newFavorites));
-  };
+  // Toggles a recipe's favorite status and updates both Supabase and local state.
+  async function toggleFavorite(recipeId: string) {
+    try {
+      setErrorMessage('');
 
-  const toggleFavorite = (recipeId: string) => {
-    if (favorites.includes(recipeId)) {
-   
-      updateFavorites(favorites.filter(id => id !== recipeId));
-    } else {
-    
-      updateFavorites([...favorites, recipeId]);
+      if (favorites.includes(recipeId)) {
+        await removeFavoriteRecipe(recipeId);
+        setFavorites((currentFavorites) => currentFavorites.filter((id) => id !== recipeId));
+        return;
+      }
+
+      await addFavoriteRecipe(recipeId);
+      setFavorites((currentFavorites) => [...currentFavorites, recipeId]);
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Favorite could not be changed.');
     }
-  };
+  }
 
-  const isFavorite = (recipeId: string) => {
+  // check if a recipe is in the user's favorites
+  function isFavorite(recipeId: string) {
     return favorites.includes(recipeId);
-  };
+  }
 
-  return { favorites, toggleFavorite, isFavorite };
+  return { favorites, toggleFavorite, isFavorite, isLoading, errorMessage };
 }

@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonIcon, IonPage, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonIcon, IonPage, IonSearchbar } from '@ionic/react';
 
 // Importing icons for the category buttons from Ionicons.
 import {
@@ -11,20 +11,16 @@ import {
     restaurantOutline,
 } from 'ionicons/icons';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import CategoryChip from '../components/CategoryChip';
 import RecipeCard from '../components/RecipeCard';
-import { mockRecipes } from '../data/mockRecipes';
+import PageHeader from '../components/PageHeader';
+import type { Recipe } from '../models/Recipe';
+import { getAllRecipes } from '../repositories/recipeRepository';
 import './HomePage.css';
-import FavoriteButton from '../components/FavoriteButton';
-import RatingComponent from '../components/RatingComponent';
-import { useRatings } from '../hooks/useRatings';
-import CommentSection from '../components/CommentSection';
-import ShareButton from '../components/ShareButton';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 
 import 'swiper/css';
@@ -32,21 +28,51 @@ import 'swiper/css/pagination';
 
 export default function HomePage() {
     const history = useHistory();
+    // Local state for recipes, selected category, loading status, and error messages.
+    const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [errorMessage, setErrorMessage] = useState("");
 
-    // Filter recipes locally until the search/category logic is connected to the database.
+    useEffect(() => {
+        let isPageActive = true;
+
+        async function loadRecipes() {
+            try {
+                // Load recipes from Supabase through the repository layer.
+                const loadedRecipes = await getAllRecipes();
+
+                if (isPageActive) {
+                    setRecipes(loadedRecipes);
+                    setErrorMessage("");
+                }
+            } catch (error) {
+                if (isPageActive) {
+                    setErrorMessage(error instanceof Error ? error.message : "Recipes could not be loaded.");
+                }
+            } finally {
+                if (isPageActive) {
+                    setIsLoading(false);
+                }
+            }
+        }
+
+        loadRecipes();
+
+        return () => {
+            isPageActive = false;
+        };
+    }, []);
+
+    // Filter loaded recipes locally by category.
     const filteredRecipes =
         selectedCategory === null
-            ? mockRecipes
-            : mockRecipes.filter((recipe) => recipe.category === selectedCategory);
+            ? recipes
+            : recipes.filter((recipe) => recipe.category === selectedCategory);
 
     return (
         <IonPage>
-            <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Kochrezepte</IonTitle>
-                </IonToolbar>
-            </IonHeader>
+            <PageHeader title="Kochrezepte" />
 
             <IonContent className="ion-padding">
                 <Swiper
@@ -172,6 +198,12 @@ export default function HomePage() {
                 )}
 
                 <h2>Neue Rezepte</h2>
+
+                {isLoading && <p>Rezepte werden geladen...</p>}
+                {errorMessage && <p>Supabase error: {errorMessage}</p>}
+                {!isLoading && !errorMessage && filteredRecipes.length === 0 && (
+                    <p>Keine Rezepte gefunden.</p>
+                )}
 
                 {/* Recipe cards link directly to the detail page for the selected recipe. */}
                 <div className="recipe-grid">
