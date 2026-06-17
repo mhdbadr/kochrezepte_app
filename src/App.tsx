@@ -55,6 +55,12 @@ export default function App() {
       localStorage.getItem('userRole') !== null
   );
 
+  const [userRole, setUserRole] = useState<string | null>(
+      localStorage.getItem('userRole')
+  );
+
+  const isAppAccessAllowed = userRole !== null;
+
   return (
       <IonApp>
         <IonReactRouter>
@@ -63,6 +69,7 @@ export default function App() {
               side="start"
               menuId="main-menu"
               className="app-menu"
+              disabled={!isAppAccessAllowed}
           >
             <IonContent>
               <section className="app-menu__intro">
@@ -101,15 +108,30 @@ export default function App() {
                 <Route exact path="/welcome" component={WelcomePage} />
                 <Route exact path="/onboarding" component={OnboardingPage} />
                 <Route exact path="/login">
-                  <LoginPage setIsLoggedIn={setIsLoggedIn} />
+                  <LoginPage
+                      setIsLoggedIn={setIsLoggedIn}
+                      setAppUserRole={setUserRole}
+                  />
                 </Route>
                 <Route exact path="/register" component={RegisterPage} />
 
                 {/* Main pages */}
-                <Route exact path="/home" component={HomePage} />
-                <Route exact path="/search" component={SearchPage} />
-                <Route exact path="/planner" component={Wochenplaner} />
-                <Route exact path="/favorites" component={FavoritesPage} />
+                <Route exact path="/home">
+                  {isAppAccessAllowed ? <HomePage /> : <Redirect to="/login" />}
+                </Route>
+
+                <Route exact path="/search">
+                  {isAppAccessAllowed ? <SearchPage /> : <Redirect to="/login" />}
+                </Route>
+
+                <Route exact path="/planner">
+                  {isAppAccessAllowed ? <Wochenplaner /> : <Redirect to="/login" />}
+                </Route>
+
+                <Route exact path="/favorites">
+                  {isAppAccessAllowed ? <FavoritesPage /> : <Redirect to="/login" />}
+                </Route>
+
 
                 {/* Recipe pages */}
                 <Route exact path="/recipes" component={RecipeListPage} />
@@ -131,17 +153,17 @@ export default function App() {
             </IonRouterOutlet>
 
             <IonTabBar slot="bottom">
-              <IonTabButton tab="home" href="/home">
+              <IonTabButton tab="home" href="/home" disabled={!isAppAccessAllowed}>
                 <IonIcon icon={homeOutline} />
                 <IonLabel>Home</IonLabel>
               </IonTabButton>
 
-              <IonTabButton tab="search" href="/search">
+              <IonTabButton tab="search" href="/search" disabled={!isAppAccessAllowed}>
                 <IonIcon icon={searchOutline} />
                 <IonLabel>Search</IonLabel>
               </IonTabButton>
 
-              <IonTabButton tab="favorites" href="/favorites">
+              <IonTabButton tab="favorites" href="/favorites" disabled={!isAppAccessAllowed}>
                 <IonIcon icon={heartOutline} />
                 <IonLabel>Favorites</IonLabel>
               </IonTabButton>

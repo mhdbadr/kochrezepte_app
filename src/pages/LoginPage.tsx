@@ -14,9 +14,10 @@ import { useEffect, useState } from 'react';
 
 interface LoginPageProps {
     setIsLoggedIn: (value: boolean) => void;
+    setAppUserRole: (value: string | null) => void;
 }
 
-export default function LoginPage({ setIsLoggedIn }: LoginPageProps) {
+export default function LoginPage({ setIsLoggedIn, setAppUserRole }: LoginPageProps) {
     const router = useIonRouter();
     const [present] = useIonToast();
 
@@ -47,6 +48,7 @@ export default function LoginPage({ setIsLoggedIn }: LoginPageProps) {
         localStorage.setItem('userRole', 'user');
         setIsLoggedIn(true);
         setUserRole('user');
+        setAppUserRole('user');
         router.push('/home', 'root');
     };
 
@@ -55,6 +57,7 @@ export default function LoginPage({ setIsLoggedIn }: LoginPageProps) {
         setCurrentUserEmail(null);
         setUserRole('guest');
         setIsLoggedIn(true);
+        setAppUserRole('guest');
         router.push('/home', 'root');
     };
 
@@ -77,6 +80,7 @@ export default function LoginPage({ setIsLoggedIn }: LoginPageProps) {
         setCurrentUserEmail(null);
         setUserRole(null);
         setIsLoggedIn(false);
+        setAppUserRole(null);
 
         router.push('/login', 'root');
     };
@@ -96,17 +100,9 @@ export default function LoginPage({ setIsLoggedIn }: LoginPageProps) {
                         <>
                             <h2>Profil</h2>
 
-                            <p>
-                                <strong>Benutzername:</strong> {currentUserEmail.split('@')[0]}
-                            </p>
-
-                            <p>
-                                <strong>E-Mail:</strong> {currentUserEmail}
-                            </p>
-
-                            <p>
-                                <strong>Typ:</strong> Benutzer
-                            </p>
+                            <p><strong>Benutzername:</strong> {currentUserEmail.split('@')[0]}</p>
+                            <p><strong>E-Mail:</strong> {currentUserEmail}</p>
+                            <p><strong>Typ:</strong> Benutzer</p>
 
                             <IonButton color="danger" fill="solid" onClick={logout}>
                                 Abmelden
@@ -117,19 +113,20 @@ export default function LoginPage({ setIsLoggedIn }: LoginPageProps) {
                             <h2>Gastmodus</h2>
 
                             <p>
-                                <strong>Typ:</strong> Gast
-                            </p>
-
-                            <p>
-                                Mit einem Gastkonto stehen nur eingeschränkte Funktionen zur Verfügung.
+                                Du nutzt die App aktuell als Gast. Einige Funktionen wie Favoriten,
+                                Bewertungen, Kommentare und eigene Rezepte sind eingeschränkt.
                             </p>
 
                             <IonButton expand="block" onClick={logout}>
-                                Gastmodus beenden
+                                Anmelden
                             </IonButton>
 
-                            <IonButton expand="block" routerLink="/register">
+                            <IonButton expand="block" fill="clear" routerLink="/register">
                                 Konto erstellen
+                            </IonButton>
+
+                            <IonButton expand="block" fill="clear" routerLink="/home">
+                                Zur Startseite
                             </IonButton>
                         </>
                     ) : (

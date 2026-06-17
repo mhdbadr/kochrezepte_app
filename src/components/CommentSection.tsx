@@ -26,7 +26,7 @@ export default function CommentSection({ recipeId }: CommentSectionProps) {
 
   async function handleSendComment() {
     if (!inputText.trim()) return;
-    
+
       if (isGuest()) {
           present('Bitte melde dich an, um Kommentare zu schreiben.', 2000);
           return;
