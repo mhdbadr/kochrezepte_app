@@ -1,15 +1,19 @@
 /**
  * PageHeader is a component that displays the title and subtitle of a page, along with a menu button for navigation.
  */
-
 import {
+  IonAvatar,
   IonButtons,
   IonHeader,
+  IonLabel,
   IonMenuButton,
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
 import './PageHeader.css';
+import { useIonRouter } from '@ionic/react';
 
 interface PageHeaderProps {
   title: string;
@@ -23,6 +27,37 @@ interface PageHeaderProps {
  * @returns A header component with a menu button and titles.
  */
 export default function PageHeader({ title, subtitle = 'BiteBook' }: PageHeaderProps) {
+  const [username, setUsername] = useState<string | null>(null);
+  const router = useIonRouter();
+
+  useEffect(() => {
+    async function loadUser() {
+      const { data } = await supabase.auth.getUser();
+
+      if (data.user?.email) {
+        setUsername(data.user.email.split('@')[0]);
+      } else {
+        setUsername(null);
+      }
+    }
+
+    loadUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user?.email) {
+        setUsername(session.user.email.split('@')[0]);
+      } else {
+        setUsername(null);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
   return (
     <IonHeader className="page-header">
       <IonToolbar>
@@ -35,6 +70,33 @@ export default function PageHeader({ title, subtitle = 'BiteBook' }: PageHeaderP
           <span className="page-header__subtitle">{subtitle}</span>
           <span className="page-header__title">{title}</span>
         </IonTitle>
+
+        {username && (
+            <IonButtons
+                slot="end"
+                onClick={() => router.push('/login', 'forward')}
+                style={{ cursor: 'pointer' }}
+            >
+              <IonAvatar
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    background: '#4caf50',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    marginRight: '8px',
+                    cursor: 'pointer',
+                  }}
+              >
+                {username.charAt(0).toUpperCase()}
+              </IonAvatar>
+
+              <IonLabel>{username}</IonLabel>
+            </IonButtons>
+        )}
       </IonToolbar>
     </IonHeader>
   );
