@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { IonButton, IonIcon } from '@ionic/react';
+import { IonButton, IonIcon, useIonToast } from '@ionic/react';
 import { star, starOutline } from 'ionicons/icons';
-
+import { isGuest } from '../utils/auth';
 interface RatingComponentProps {
   initialRating?: number;
   onRatingChange?: (rating: number) => void;
@@ -13,10 +13,18 @@ const RatingComponent: React.FC<RatingComponentProps> = ({
 }) => {
  
   const [rating, setRating] = useState<number>(initialRating);
+  const [present] = useIonToast();
 
   const handleStarClick = (e: React.MouseEvent, selectedRating: number) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (isGuest()) {
+      present('Bitte melde dich an, um Rezepte zu bewerten.', 2000);
+      return;
+    }
+
+
 
     let newRating = selectedRating;
 

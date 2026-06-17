@@ -7,6 +7,9 @@ import type { Recipe } from "../models/Recipe";
 import type { RecipeCategory } from "../models/RecipeCategory";
 import { createRecipe } from "../repositories/recipeRepository";
 import "./RecipeForm.css";
+import { isGuest } from '../utils/auth';
+import { useIonToast } from '@ionic/react';
+
 
 export default function RecipeForm() {
   const history = useHistory();
@@ -24,6 +27,8 @@ export default function RecipeForm() {
   const [instructions, setInstructions] = useState([""]);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+
+  const [present] = useIonToast();
 
   function updateIngredient(index: number, value: string) {
     const updatedIngredients = [...ingredients];
@@ -60,6 +65,10 @@ export default function RecipeForm() {
   /* Handle form submission by validating input, constructing a complete Recipe object, and saving it. */
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (isGuest()) {
+      present('Bitte melde dich an, um diese Funktion zu nutzen.', 2000);
+      return;
+    }
 
     // Remove empty rows before validating and saving the recipe.
     const cleanedIngredients = ingredients.map((ingredient) => ingredient.trim()).filter(Boolean);

@@ -46,12 +46,14 @@ export default function LoginPage({ setIsLoggedIn }: LoginPageProps) {
 
         localStorage.setItem('userRole', 'user');
         setIsLoggedIn(true);
+        setUserRole('user');
         router.push('/home', 'root');
     };
 
     const continueAsGuest = () => {
         localStorage.setItem('userRole', 'guest');
         setCurrentUserEmail(null);
+        setUserRole('guest');
         setIsLoggedIn(true);
         router.push('/home', 'root');
     };
@@ -73,10 +75,15 @@ export default function LoginPage({ setIsLoggedIn }: LoginPageProps) {
 
         localStorage.removeItem('userRole');
         setCurrentUserEmail(null);
+        setUserRole(null);
         setIsLoggedIn(false);
 
         router.push('/login', 'root');
     };
+
+    const [userRole, setUserRole] = useState<string | null>(
+        localStorage.getItem('userRole')
+    );
 
 
     return (
@@ -85,18 +92,50 @@ export default function LoginPage({ setIsLoggedIn }: LoginPageProps) {
 
             <IonContent className="ion-padding">
                 <main style={{ maxWidth: '560px', margin: '48px auto' }}>
-                    {currentUserEmail ? (
+                    {userRole === 'user' && currentUserEmail ? (
                         <>
+                            <h2>Profil</h2>
+
                             <p>
-                                Angemeldet als: <strong>{currentUserEmail}</strong>
+                                <strong>Benutzername:</strong> {currentUserEmail.split('@')[0]}
                             </p>
 
-                            <IonButton color="danger" onClick={logout}>
+                            <p>
+                                <strong>E-Mail:</strong> {currentUserEmail}
+                            </p>
+
+                            <p>
+                                <strong>Typ:</strong> Benutzer
+                            </p>
+
+                            <IonButton color="danger" fill="solid" onClick={logout}>
                                 Abmelden
+                            </IonButton>
+                        </>
+                    ) : userRole === 'guest' ? (
+                        <>
+                            <h2>Gastmodus</h2>
+
+                            <p>
+                                <strong>Typ:</strong> Gast
+                            </p>
+
+                            <p>
+                                Mit einem Gastkonto stehen nur eingeschränkte Funktionen zur Verfügung.
+                            </p>
+
+                            <IonButton expand="block" onClick={logout}>
+                                Gastmodus beenden
+                            </IonButton>
+
+                            <IonButton expand="block" routerLink="/register">
+                                Konto erstellen
                             </IonButton>
                         </>
                     ) : (
                         <>
+                            <h2>Anmelden</h2>
+
                             <IonItem>
                                 <IonInput
                                     label="E-Mail"
@@ -127,8 +166,6 @@ export default function LoginPage({ setIsLoggedIn }: LoginPageProps) {
                             <IonButton expand="block" fill="clear" color="medium" onClick={continueAsGuest}>
                                 Als Gast fortfahren
                             </IonButton>
-
-                            <p>Mit einem Gastkonto stehen nur eingeschränkte Funktionen zur Verfügung.</p>
                         </>
                     )}
                 </main>

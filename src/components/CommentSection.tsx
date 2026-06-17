@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import {
-  IonButton,
-  IonIcon,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonNote,
-  IonText,
+    IonButton,
+    IonIcon,
+    IonInput,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonNote,
+    IonText,
+    useIonToast,
 } from '@ionic/react';
 import { send, trashOutline } from 'ionicons/icons';
 import { useComments } from '../hooks/useComments';
+import { isGuest } from '../utils/auth';
 
 interface CommentSectionProps {
   recipeId: string;
@@ -19,9 +21,16 @@ interface CommentSectionProps {
 export default function CommentSection({ recipeId }: CommentSectionProps) {
   const { comments, currentUserId, addComment, deleteComment, isLoading, errorMessage } = useComments(recipeId);
   const [inputText, setInputText] = useState<string>('');
+    const [present] = useIonToast();
+
 
   async function handleSendComment() {
     if (!inputText.trim()) return;
+    
+      if (isGuest()) {
+          present('Bitte melde dich an, um Kommentare zu schreiben.', 2000);
+          return;
+      }
 
     await addComment(inputText.trim());
     setInputText('');

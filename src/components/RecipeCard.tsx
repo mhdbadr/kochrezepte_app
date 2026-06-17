@@ -66,6 +66,7 @@ export default function RecipeCard({
                     <div className="recipe-card__actions" onClick={handleActionClick}>
                         <ShareButton recipeTitle={title} recipeId={id} />
                         <FavoriteButton
+
                             recipeId={id}
                             isFavoriteOverride={isFavorite}
                             onToggle={onFavoriteToggle}
