@@ -46,8 +46,13 @@ import './App.css';
 setupIonicReact();
 
 export default function App() {
+
   const [onboardingCompleted] = useState(
       localStorage.getItem('onboardingCompleted') === 'true'
+  );
+
+  const [isLoggedIn, setIsLoggedIn] = useState(
+      localStorage.getItem('userRole') !== null
   );
 
   return (
@@ -95,7 +100,9 @@ export default function App() {
                 {/* Welcome & Auth */}
                 <Route exact path="/welcome" component={WelcomePage} />
                 <Route exact path="/onboarding" component={OnboardingPage} />
-                <Route exact path="/login" component={LoginPage} />
+                <Route exact path="/login">
+                  <LoginPage setIsLoggedIn={setIsLoggedIn} />
+                </Route>
                 <Route exact path="/register" component={RegisterPage} />
 
                 {/* Main pages */}
@@ -112,10 +119,12 @@ export default function App() {
 
                 {/* Start page */}
                 <Route exact path="/">
-                  {onboardingCompleted ? (
-                      <Redirect to="/login" />
-                  ) : (
+                  {!onboardingCompleted ? (
                       <Redirect to="/welcome" />
+                  ) : isLoggedIn ? (
+                      <Redirect to="/home" />
+                  ) : (
+                      <Redirect to="/login" />
                   )}
                 </Route>
               </Switch>

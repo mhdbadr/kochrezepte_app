@@ -6,17 +6,23 @@ import {
     IonPage,
     useIonToast,
 } from '@ionic/react';
-import { useState } from 'react';
+
 import { useIonRouter } from '@ionic/react';
 import PageHeader from '../components/PageHeader';
 import { supabase } from '../lib/supabaseClient';
+import { useEffect, useState } from 'react';
 
-export default function LoginPage() {
+interface LoginPageProps {
+    setIsLoggedIn: (value: boolean) => void;
+}
+
+export default function LoginPage({ setIsLoggedIn }: LoginPageProps) {
     const router = useIonRouter();
     const [present] = useIonToast();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null);
 
     const login = async () => {
 
@@ -39,13 +45,39 @@ export default function LoginPage() {
         }
 
         localStorage.setItem('userRole', 'user');
-        router.push('/home', 'forward');
+        setIsLoggedIn(true);
+        router.push('/home', 'root');
     };
 
     const continueAsGuest = () => {
         localStorage.setItem('userRole', 'guest');
-        router.push('/home', 'forward');
+        setCurrentUserEmail(null);
+        setIsLoggedIn(true);
+        router.push('/home', 'root');
     };
+
+    useEffect(() => {
+        async function loadUser() {
+            const { data } = await supabase.auth.getUser();
+
+            if (data.user) {
+                setCurrentUserEmail(data.user.email ?? null);
+            }
+        }
+
+        loadUser();
+    }, []);
+// Logout Funktion
+    const logout = async () => {
+        await supabase.auth.signOut();
+
+        localStorage.removeItem('userRole');
+        setCurrentUserEmail(null);
+        setIsLoggedIn(false);
+
+        router.push('/login', 'root');
+    };
+
 
     return (
         <IonPage>
@@ -53,38 +85,52 @@ export default function LoginPage() {
 
             <IonContent className="ion-padding">
                 <main style={{ maxWidth: '560px', margin: '48px auto' }}>
-                    <IonItem>
-                        <IonInput
-                            label="E-Mail"
-                            type="email"
-                            placeholder="name@email.de"
-                            value={email}
-                            onIonInput={(e) => setEmail(e.detail.value ?? '')}
-                        />
-                    </IonItem>
+                    {currentUserEmail ? (
+                        <>
+                            <p>
+                                Angemeldet als: <strong>{currentUserEmail}</strong>
+                            </p>
 
-                    <IonItem>
-                        <IonInput
-                            label="Passwort"
-                            type="password"
-                            value={password}
-                            onIonInput={(e) => setPassword(e.detail.value ?? '')}
-                        />
-                    </IonItem>
+                            <IonButton color="danger" onClick={logout}>
+                                Abmelden
+                            </IonButton>
+                        </>
+                    ) : (
+                        <>
+                            <IonItem>
+                                <IonInput
+                                    label="E-Mail"
+                                    type="email"
+                                    placeholder="name@email.de"
+                                    value={email}
+                                    onIonInput={(e) => setEmail(e.detail.value ?? '')}
+                                />
+                            </IonItem>
 
-                    <IonButton expand="block" onClick={login}>
-                        Anmelden
-                    </IonButton>
+                            <IonItem>
+                                <IonInput
+                                    label="Passwort"
+                                    type="password"
+                                    value={password}
+                                    onIonInput={(e) => setPassword(e.detail.value ?? '')}
+                                />
+                            </IonItem>
 
-                    <IonButton expand="block" fill="clear" routerLink="/register">
-                        Registrieren
-                    </IonButton>
+                            <IonButton expand="block" onClick={login}>
+                                Anmelden
+                            </IonButton>
 
-                    <IonButton expand="block" fill="clear" color="medium" onClick={continueAsGuest}>
-                        Als Gast fortfahren
-                    </IonButton>
+                            <IonButton expand="block" fill="clear" routerLink="/register">
+                                Registrieren
+                            </IonButton>
 
-                    <p>Mit einem Gastkonto stehen nur eingeschränkte Funktionen zur Verfügung.</p>
+                            <IonButton expand="block" fill="clear" color="medium" onClick={continueAsGuest}>
+                                Als Gast fortfahren
+                            </IonButton>
+
+                            <p>Mit einem Gastkonto stehen nur eingeschränkte Funktionen zur Verfügung.</p>
+                        </>
+                    )}
                 </main>
             </IonContent>
         </IonPage>
