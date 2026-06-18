@@ -14,6 +14,8 @@ export interface SupabaseRecipeRow {
   recipe_ingredients: Array<{
     name: string;
     sort_order: number;
+    amount: number | null; 
+    unit: string | null;
   }>;
   recipe_steps: Array<{
     instruction: string;

@@ -27,6 +27,7 @@ export default function RecipeDetailPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [deleteErrorMessage, setDeleteErrorMessage] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [portions, setPortions] = useState<number>(4);
 
   // Read the recipe ID from the current URL.
   const { id } = useParams<RecipeDetailRouteParams>();
@@ -150,6 +151,22 @@ export default function RecipeDetailPage() {
                 <span>{recipe.preparationTime} Min</span>
                 <span>⭐ {currentRating || recipe.rating || 0} / 5</span>
               </div>
+                          
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '16px' }}>
+                <button 
+                  style={{ background: 'rgba(255,255,255,0.2)', color: 'white', border: 'none', borderRadius: '50%', width: '32px', height: '32px', fontSize: '1.2rem' }}
+                  onClick={() => portions > 1 && setPortions(portions - 1)}
+                >
+                  -
+                </button>
+                <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{portions} Portionen</span>
+                <button 
+                  style={{ background: 'rgba(255,255,255,0.2)', color: 'white', border: 'none', borderRadius: '50%', width: '32px', height: '32px', fontSize: '1.2rem' }}
+                  onClick={() => setPortions(portions + 1)}
+                >
+                  +
+                </button>
+              </div>
             </div>
           </section>
 
@@ -193,15 +210,28 @@ export default function RecipeDetailPage() {
             onDidDismiss={() => setIsDeleteAlertOpen(false)}
           />
 
-          {/* Ingredients and instructions are separated for a clearer recipe detail layout. */}
           <section className="recipe-detail-content">
             <article className="recipe-detail-card">
               <h2>Ingredients</h2>
-              <ul className="recipe-detail-list">
-                {recipe.ingredients.map((ingredient, index) => (
-                  <li key={index}>{ingredient}</li>
-                ))}
-              </ul>
+                   <ul className="recipe-detail-list">
+                    {recipe.ingredients.map((ingredient, index) => {
+                
+                      const baseAmount = ingredient.amount ?? 0;
+                      const scaledAmount = (baseAmount / 4) * portions;
+
+                      return (
+                        <li key={index}>
+                          {baseAmount > 0 && (
+                            <strong style={{ color: 'var(--ion-color-primary)' }}>
+                              {scaledAmount % 1 === 0 ? scaledAmount.toFixed(0) : scaledAmount.toFixed(1)}
+                              {ingredient.unit}{' '}
+                            </strong>
+                          )}
+                          {ingredient.name}
+                        </li>
+                      );
+                    })}
+                  </ul>
             </article>
 
             <article className="recipe-detail-card">

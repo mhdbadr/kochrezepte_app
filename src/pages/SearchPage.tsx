@@ -66,7 +66,7 @@ export default function SearchPage() {
       query === '' ||
       (searchMode === 'recipes'
         ? recipe.title.toLowerCase().includes(lowerQuery)
-        : recipe.ingredients.some((ingredient) => ingredient.toLowerCase().includes(lowerQuery)));
+        : recipe.ingredients.some((ingredient) => ingredient.name.toLowerCase().includes(lowerQuery)));
 
     const matchesCategory = selectedCategory === null || recipe.category === selectedCategory;
 

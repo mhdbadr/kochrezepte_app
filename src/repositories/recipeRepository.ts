@@ -85,7 +85,9 @@ export async function createRecipe(recipe: Recipe): Promise<Recipe> {
 
   const ingredientRows = recipe.ingredients.map((ingredient, index) => ({
     recipe_id: recipeId,
-    name: ingredient,
+    name: ingredient.name,      
+    amount: ingredient.amount, 
+    unit: ingredient.unit,
     sort_order: index + 1,
   }));
 
@@ -166,7 +168,9 @@ export async function updateRecipe(recipe: Recipe): Promise<Recipe> {
   // Prepare the new ingredient rows with the correct recipe ID and sort order.
   const ingredientRows = recipe.ingredients.map((ingredient, index) => ({
     recipe_id: recipe.id,
-    name: ingredient,
+    name: ingredient.name,     
+    amount: ingredient.amount,   
+    unit: ingredient.unit,
     sort_order: index + 1,
   }));
 

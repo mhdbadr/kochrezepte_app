@@ -12,6 +12,7 @@ import {
   restaurantOutline,
   searchOutline,
   settingsOutline,
+  cartOutline,
 } from 'ionicons/icons';
 
 // Importing all page components used in the app's routing configuration.
@@ -25,6 +26,7 @@ import RecipeListPage from './pages/RecipeListPage';
 import SearchPage from './pages/SearchPage';
 import Wochenplaner from './pages/Wochenplaner';
 import './App.css';
+import ShoppingListPage from './pages/ShoppingListPage';
 
 setupIonicReact(); // Initialize Ionic React with default settings.
 
@@ -56,6 +58,14 @@ export default function App() {
                 </IonItem>
               </IonMenuToggle>
 
+
+              <IonMenuToggle autoHide={true}>
+                <IonItem routerLink="/shopping-list" button>
+                  <IonIcon icon={cartOutline} slot="start" />
+                  <IonLabel>Einkaufsliste</IonLabel>
+                </IonItem>
+              </IonMenuToggle>
+
               <IonItem button disabled>
                 <IonIcon icon={settingsOutline} slot="start" />
                 <IonLabel>Einstellungen</IonLabel>
@@ -72,6 +82,7 @@ export default function App() {
               <Route exact path="/search" component={SearchPage} />
               <Route exact path="/planner" component={Wochenplaner} />
               <Route exact path="/favorites" component={FavoritesPage} />
+              <Route exact path="/shopping-list" component={ShoppingListPage} />
               
               {/* The login page is a placeholder for future authentication features. */}
               <Route exact path="/login" component={LoginPage} />

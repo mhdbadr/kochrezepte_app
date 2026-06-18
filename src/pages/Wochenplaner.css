@@ -1,0 +1,27 @@
+.planner-container {
+  max-width: 800px;  /* Verhindert, dass der Planer im Web zu breit gezogen wird */
+  margin: 0 auto;    /* Zentriert den gesamten Planer im Webbrowser */
+  width: 100%;
+}
+
+.planner-hero {
+  padding: 24px 16px;
+  background: var(--ion-color-primary);
+  color: #fff;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.2);
+}
+
+.day-card {
+  margin: 12px 0 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid #f0f0f0;
+}
+
+.day-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ion-color-primary);
+}
