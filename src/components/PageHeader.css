@@ -6,7 +6,7 @@
   --min-height: 60px;
   --padding-start: 12px;
   --padding-end: 12px;
-  --background: #ffffff;
+  --background: var(--app-surface);
   --border-width: 0;
   border-bottom: 1px solid rgba(36, 48, 37, 0.06);
   box-shadow: 0 4px 14px rgba(36, 48, 37, 0.04);
@@ -39,8 +39,8 @@
 }
 
 .page-header__menu-button {
-  --background: #f8faf5;
-  --background-hover: #f3f5ef;
+  --background: var(--app-background);
+  --background-hover: var(--app-surface-muted);
   --border-radius: 12px;
   --box-shadow: none;
   --color: var(--app-primary);

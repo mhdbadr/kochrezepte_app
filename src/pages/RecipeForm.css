@@ -57,7 +57,7 @@
   padding: 22px;
   border: 0;
   border-radius: 20px;
-  background: white;
+  background: var(--app-surface);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
@@ -85,9 +85,9 @@
 .recipe-form-field textarea {
   width: 100%;
   padding: 12px 14px;
-  border: 1px solid #dde3d9;
+  border: 1px solid var(--app-border);
   border-radius: 14px;
-  background: #fbfcf8;
+  background: var(--app-field-background);
   color: var(--app-text);
   font: inherit;
   font-weight: 500;
@@ -160,7 +160,7 @@
 
 .recipe-form-secondary-button {
   color: var(--app-primary);
-  background: #f3f5ef;
+  background: var(--app-surface-muted);
 }
 
 .recipe-form-secondary-button:disabled {

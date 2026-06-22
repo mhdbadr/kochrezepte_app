@@ -8,7 +8,7 @@
   border: 1px solid rgba(107, 142, 98, 0.18);
   border-radius: 999px;
   color: var(--app-text);
-  background: #ffffff;
+  background: var(--app-surface);
   box-shadow: 0 8px 22px rgba(36, 48, 37, 0.08);
   font-weight: 700;
   text-decoration: none;
@@ -16,7 +16,7 @@
 }
 
 .app-back-link:hover {
-  background: #f3f5ef;
+  background: var(--app-surface-muted);
   box-shadow: 0 12px 28px rgba(36, 48, 37, 0.12);
   transform: translateY(-1px);
 }
