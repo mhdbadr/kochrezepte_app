@@ -1,0 +1,61 @@
+.search-page {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.search-mode {
+  margin-bottom: 14px;
+  padding: 4px;
+  border: 1px solid var(--app-border);
+  border-radius: 16px;
+  background: var(--app-surface);
+}
+
+.search-mode ion-segment-button {
+  --color: var(--app-muted);
+  --color-checked: var(--ion-color-primary-contrast);
+  --indicator-color: var(--app-primary);
+  --border-radius: 12px;
+  min-height: 42px;
+  font-weight: 800;
+}
+
+.search-input {
+  margin: 0 0 20px;
+  padding: 0;
+  border: 1px solid var(--app-border);
+  border-radius: 16px;
+  --background: var(--app-field-background);
+  --color: var(--app-text);
+  --placeholder-color: var(--app-muted);
+  --icon-color: var(--app-primary);
+  --clear-button-color: var(--app-muted);
+  --border-radius: 16px;
+}
+
+.search-section-title {
+  color: var(--app-text);
+}
+
+.category-item--active .category-icon,
+.ingredient-item--active .ingredient-icon {
+  color: var(--ion-color-primary-contrast);
+  background: var(--app-primary);
+  border-color: var(--app-primary);
+  box-shadow: 0 8px 18px var(--app-shadow);
+}
+
+.category-item--active span,
+.ingredient-item--active span {
+  color: var(--app-primary);
+}
+
+:root[data-theme='dark'] .search-mode ion-segment-button {
+  --color-checked: #101510;
+}
+
+:root[data-theme='dark'] .category-item--active span,
+:root[data-theme='dark'] .ingredient-item--active span {
+  color: #c5e7bb;
+}
+
