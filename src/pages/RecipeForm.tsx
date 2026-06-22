@@ -3,7 +3,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import BackLink from "../components/BackLink";
 import PageHeader from "../components/PageHeader";
-import type { Recipe } from "../models/Recipe";
+import type { Recipe, RecipeIngredient } from "../models/Recipe";
 import type { RecipeCategory } from "../models/RecipeCategory";
 import { createRecipe } from "../repositories/recipeRepository";
 import "./RecipeForm.css";
@@ -62,7 +62,14 @@ export default function RecipeForm() {
     event.preventDefault();
 
     // Remove empty rows before validating and saving the recipe.
-    const cleanedIngredients = ingredients.map((ingredient) => ingredient.trim()).filter(Boolean);
+    const cleanedIngredients: RecipeIngredient[] = ingredients
+      .map((ingredient) => ingredient.trim())
+      .filter(Boolean)
+      .map((ingredient) => ({
+        name: ingredient,
+        amount: null,
+        unit: null,
+      }));
     const cleanedInstructions = instructions.map((instruction) => instruction.trim()).filter(Boolean);
 
     if (!title.trim() || !description.trim()) {
