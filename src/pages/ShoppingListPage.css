@@ -1,0 +1,7 @@
+.shopping-list-hero {
+  background:
+    linear-gradient(135deg, rgba(36, 48, 37, 0.9), rgba(107, 142, 98, 0.76)),
+    url("https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200");
+  background-size: cover;
+  background-position: center;
+}
