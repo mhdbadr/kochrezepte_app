@@ -12,6 +12,8 @@ import PageHeader from '../components/PageHeader';
 import RecipeCard from '../components/RecipeCard';
 import type { Recipe } from '../models/Recipe';
 import { getAllRecipes } from '../repositories/recipeRepository';
+import './HomePage.css';
+import './SearchPage.css';
 
 export default function SearchPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -78,17 +80,19 @@ export default function SearchPage() {
       <PageHeader title="Suche" />
 
       <IonContent className="ion-padding">
-        <IonSegment value={searchMode} onIonChange={(event) => setSearchMode(event.detail.value as 'recipes' | 'ingredients')}>
-          <IonSegmentButton value="recipes">
-            <IonLabel>Rezepte</IonLabel>
-          </IonSegmentButton>
+        <main className="search-page">
+          <IonSegment className="search-mode" value={searchMode} onIonChange={(event) => setSearchMode(event.detail.value as 'recipes' | 'ingredients')}>
+            <IonSegmentButton value="recipes">
+              <IonLabel>Rezepte</IonLabel>
+            </IonSegmentButton>
 
-          <IonSegmentButton value="ingredients">
-            <IonLabel>Zutaten</IonLabel>
-          </IonSegmentButton>
-        </IonSegment>
+            <IonSegmentButton value="ingredients">
+              <IonLabel>Zutaten</IonLabel>
+            </IonSegmentButton>
+          </IonSegment>
 
         <IonSearchbar
+          className="search-input"
           placeholder={searchMode === 'recipes' ? 'Nach Rezepten suchen' : 'Nach Zutaten suchen'}
           value={query}
           onIonInput={(event) => setQuery(event.detail.value ?? '')}
@@ -96,13 +100,13 @@ export default function SearchPage() {
 
         {searchMode === 'ingredients' && (
           <>
-            <h2>Nach Zutaten suchen</h2>
+            <h2 className="search-section-title">Nach Zutaten suchen</h2>
 
             <div className="ingredient-grid">
               {ingredientSuggestions.map((ingredient) => (
                 <button
                   key={ingredient.label}
-                  className="ingredient-item"
+                  className={`ingredient-item ${query === ingredient.label ? 'ingredient-item--active' : ''}`}
                   onClick={() => setQuery(ingredient.label)}
                 >
                   <div className="ingredient-icon">{ingredient.icon}</div>
@@ -113,23 +117,30 @@ export default function SearchPage() {
           </>
         )}
 
-        <h2>Kategorien</h2>
+        <h2 className="search-section-title">Kategorien</h2>
 
         <div className="category-grid">
           {categories.map((category) => (
-            <button className="category-item" key={category.value} onClick={() => setSelectedCategory(category.value)}>
+            <button
+              className={`category-item ${selectedCategory === category.value ? 'category-item--active' : ''}`}
+              key={category.value}
+              onClick={() => setSelectedCategory(category.value)}
+            >
               <div className="category-icon">{category.icon}</div>
               <span>{category.label}</span>
             </button>
           ))}
 
-          <button className="category-item" onClick={() => setSelectedCategory(null)}>
+          <button
+            className={`category-item ${selectedCategory === null ? 'category-item--active' : ''}`}
+            onClick={() => setSelectedCategory(null)}
+          >
             <div className="category-icon">🍽️</div>
             <span>Alle</span>
           </button>
         </div>
 
-        <h2>Suchergebnisse</h2>
+        <h2 className="search-section-title">Suchergebnisse</h2>
 
         {isLoading && (
           <IonText color="medium">
@@ -165,6 +176,7 @@ export default function SearchPage() {
             />
           ))}
         </div>
+        </main>
       </IonContent>
     </IonPage>
   );

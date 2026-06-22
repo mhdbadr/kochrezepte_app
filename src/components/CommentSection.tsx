@@ -11,6 +11,7 @@ import {
 } from '@ionic/react';
 import { send, trashOutline } from 'ionicons/icons';
 import { useComments } from '../hooks/useComments';
+import './CommentSection.css';
 
 interface CommentSectionProps {
   recipeId: string;
@@ -28,23 +29,17 @@ export default function CommentSection({ recipeId }: CommentSectionProps) {
   }
 
   return (
-    <div style={{ marginTop: '32px' }}>
-      <h3 style={{ color: 'var(--app-text)', fontWeight: 600, marginBottom: '16px' }}>
+    <div className="comment-section">
+      <h3 className="comment-section__title">
         Kommentare ({comments.length})
       </h3>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}>
+      <div className="comment-section__composer">
         <IonInput
+          className="comment-section__input"
           placeholder="Schreibe einen Kommentar..."
           value={inputText}
           onIonInput={(event) => setInputText(event.detail.value || '')}
-          style={{
-            background: '#ffffff',
-            border: '1px solid #e0e0e0',
-            borderRadius: '12px',
-            padding: '8px 16px',
-            '--background': 'transparent',
-          }}
         />
         <IonButton fill="clear" onClick={handleSendComment} disabled={!inputText.trim()}>
           <IonIcon slot="icon-only" icon={send} color="primary" />
@@ -63,22 +58,17 @@ export default function CommentSection({ recipeId }: CommentSectionProps) {
         </IonText>
       )}
 
-      <IonList lines="none" style={{ background: 'transparent' }}>
+      <IonList className="comment-section__list" lines="none">
         {comments.map((comment) => (
           <IonItem
             key={comment.id}
-            style={{
-              '--background': '#ffffff',
-              marginBottom: '12px',
-              borderRadius: '16px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.02)',
-            }}
+            className="comment-section__item"
           >
-            <IonLabel className="ion-text-wrap" style={{ padding: '8px 0' }}>
-              <p style={{ color: 'var(--app-text)', fontSize: '0.95rem', margin: '0 0 4px' }}>
+            <IonLabel className="comment-section__label ion-text-wrap">
+              <p className="comment-section__text">
                 {comment.text}
               </p>
-              <IonNote style={{ fontSize: '0.75rem' }}>{comment.createdAt}</IonNote>
+              <IonNote className="comment-section__note">{comment.createdAt}</IonNote>
             </IonLabel>
 
             {/* Only the comment owner can delete their own comment. */}
