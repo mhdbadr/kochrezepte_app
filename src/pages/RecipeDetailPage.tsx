@@ -152,16 +152,16 @@ export default function RecipeDetailPage() {
                 <span>⭐ {currentRating || recipe.rating || 0} / 5</span>
               </div>
                           
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '16px' }}>
+              <div className="recipe-detail-portions">
                 <button 
-                  style={{ background: 'rgba(255,255,255,0.2)', color: 'white', border: 'none', borderRadius: '50%', width: '32px', height: '32px', fontSize: '1.2rem' }}
+                  className="recipe-detail-portion-button"
                   onClick={() => portions > 1 && setPortions(portions - 1)}
                 >
                   -
                 </button>
-                <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{portions} Portionen</span>
+                <span className="recipe-detail-portion-count">{portions} Portionen</span>
                 <button 
-                  style={{ background: 'rgba(255,255,255,0.2)', color: 'white', border: 'none', borderRadius: '50%', width: '32px', height: '32px', fontSize: '1.2rem' }}
+                  className="recipe-detail-portion-button"
                   onClick={() => setPortions(portions + 1)}
                 >
                   +
@@ -246,8 +246,8 @@ export default function RecipeDetailPage() {
 
         
 
-          <div style={{ padding: '0 16px 24px' }}>
-            <hr style={{ border: 'none', borderTop: '1px solid #e0e0e0', margin: '24px 0' }} />
+          <div className="recipe-detail-comments">
+            <hr className="recipe-detail-divider" />
             <CommentSection recipeId={recipe.id} /> 
           </div>
         </main>
