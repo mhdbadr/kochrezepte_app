@@ -27,6 +27,7 @@ export default function RecipeDetailPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [deleteErrorMessage, setDeleteErrorMessage] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [portions, setPortions] = useState<number>(4);
 
   // Read the recipe ID from the current URL.
   const { id } = useParams<RecipeDetailRouteParams>();
@@ -150,6 +151,22 @@ export default function RecipeDetailPage() {
                 <span>{recipe.preparationTime} Min</span>
                 <span>⭐ {currentRating || recipe.rating || 0} / 5</span>
               </div>
+                          
+              <div className="recipe-detail-portions">
+                <button 
+                  className="recipe-detail-portion-button"
+                  onClick={() => portions > 1 && setPortions(portions - 1)}
+                >
+                  -
+                </button>
+                <span className="recipe-detail-portion-count">{portions} Portionen</span>
+                <button 
+                  className="recipe-detail-portion-button"
+                  onClick={() => setPortions(portions + 1)}
+                >
+                  +
+                </button>
+              </div>
             </div>
           </section>
 
@@ -193,14 +210,25 @@ export default function RecipeDetailPage() {
             onDidDismiss={() => setIsDeleteAlertOpen(false)}
           />
 
-          {/* Ingredients and instructions are separated for a clearer recipe detail layout. */}
           <section className="recipe-detail-content">
             <article className="recipe-detail-card">
               <h2>Ingredients</h2>
               <ul className="recipe-detail-list">
-                {recipe.ingredients.map((ingredient, index) => (
-                  <li key={index}>{ingredient}</li>
-                ))}
+                {recipe.ingredients.map((ingredient, index) => {
+                  const baseAmount = ingredient.amount ?? 0;
+                  const scaledAmount = (baseAmount / 4) * portions;
+                  const formattedAmount =
+                    baseAmount > 0
+                      ? `${scaledAmount % 1 === 0 ? scaledAmount.toFixed(0) : scaledAmount.toFixed(1)} ${ingredient.unit ?? ''}`.trim()
+                      : 'nach Bedarf';
+
+                  return (
+                    <li className="recipe-detail-ingredient" key={index}>
+                      <span className="recipe-detail-ingredient__amount">{formattedAmount}</span>
+                      <span className="recipe-detail-ingredient__name">{ingredient.name}</span>
+                    </li>
+                  );
+                })}
               </ul>
             </article>
 
@@ -216,8 +244,8 @@ export default function RecipeDetailPage() {
 
         
 
-          <div style={{ padding: '0 16px 24px' }}>
-            <hr style={{ border: 'none', borderTop: '1px solid #e0e0e0', margin: '24px 0' }} />
+          <div className="recipe-detail-comments">
+            <hr className="recipe-detail-divider" />
             <CommentSection recipeId={recipe.id} /> 
           </div>
         </main>

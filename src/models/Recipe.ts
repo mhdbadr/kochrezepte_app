@@ -1,13 +1,23 @@
 import type { RecipeCategory } from "./RecipeCategory";
 
 /**
+ * RecipeIngredient model representing the structure of an ingredient in a recipe
+ */
+export interface RecipeIngredient {
+  id?: string;          
+  recipe_id?: string;   
+  amount: number | null; 
+  unit: string | null;   
+  name: string;          
+}
+
+/**
  * Recipe model representing the structure of a recipe in the application.
  */
 export interface Recipe {
   id: string;
   title: string;
   description: string;
-  ingredients: string[];
   instructions: string[];
   category: RecipeCategory;
   imageUrl?: string;
@@ -16,4 +26,5 @@ export interface Recipe {
   createdAt?: string;
   createdBy?: string; // User ID of the recipe creator, used for permission checks.
   isEditable?: boolean; // Indicates whether the current user can edit this recipe, based on ownership.
+  ingredients: RecipeIngredient[];
 }

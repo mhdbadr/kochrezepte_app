@@ -45,7 +45,11 @@ export function mapSupabaseRecipeToRecipe(recipe: SupabaseRecipeRow): Recipe {
     preparationTime: recipe.preparation_time,
     ingredients: [...recipe.recipe_ingredients]
       .sort((a, b) => a.sort_order - b.sort_order)
-      .map((ingredient) => ingredient.name),
+      .map((ingredient) => ({
+        amount: ingredient.amount, 
+        unit: ingredient.unit,     
+        name: ingredient.name,     
+      })),
     instructions: [...recipe.recipe_steps]
       .sort((a, b) => a.sort_order - b.sort_order)
       .map((step) => step.instruction),

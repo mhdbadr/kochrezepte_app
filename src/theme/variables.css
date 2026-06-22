@@ -10,6 +10,31 @@
 
   --app-primary: #6b8e62;
   --app-background: #f8faf5;
+  --app-surface: #ffffff;
+  --app-surface-muted: #f3f5ef;
+  --app-field-background: #fbfcf8;
+  --app-border: #dde3d9;
   --app-text: #243025;
   --app-muted: #6f7c70;
+  --app-shadow: rgba(36, 48, 37, 0.08);
+}
+
+:root[data-theme='dark'] {
+  --ion-background-color: #101510;
+  --ion-text-color: #eef4ec;
+  --ion-item-background: #202820;
+  --ion-card-background: #202820;
+  --ion-color-dark: #eef4ec;
+  --ion-color-medium: #aebbac;
+  --ion-color-primary-contrast: #101510;
+
+  --app-primary: #9fca92;
+  --app-background: #101510;
+  --app-surface: #202820;
+  --app-surface-muted: #2b352b;
+  --app-field-background: #151c15;
+  --app-border: #42513f;
+  --app-text: #eef4ec;
+  --app-muted: #aebbac;
+  --app-shadow: rgba(0, 0, 0, 0.32);
 }

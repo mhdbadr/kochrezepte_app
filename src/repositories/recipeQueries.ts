@@ -15,7 +15,9 @@ export const recipeSelectQuery = `
   ),
   recipe_ingredients (
     name,
-    sort_order
+    sort_order,
+    amount,
+    unit
   ),
   recipe_steps (
     instruction,

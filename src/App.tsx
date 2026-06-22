@@ -1,5 +1,6 @@
 import { IonApp, IonContent, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle,
   IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, setupIonicReact, } from '@ionic/react';
+import { useEffect } from 'react';
 
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -12,6 +13,7 @@ import {
   restaurantOutline,
   searchOutline,
   settingsOutline,
+  cartOutline,
 } from 'ionicons/icons';
 
 // Importing all page components used in the app's routing configuration.
@@ -25,10 +27,23 @@ import RecipeListPage from './pages/RecipeListPage';
 import SearchPage from './pages/SearchPage';
 import Wochenplaner from './pages/Wochenplaner';
 import './App.css';
+import ShoppingListPage from './pages/ShoppingListPage';
+import SettingsPage from './pages/SettingsPage';
+import { applyTheme, loadAppSettings } from './utils/appSettings';
 
 setupIonicReact(); // Initialize Ionic React with default settings.
 
 export default function App() {
+  useEffect(() => {
+    const updateTheme = () => applyTheme(loadAppSettings().themeMode);
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+    updateTheme();
+    systemTheme.addEventListener('change', updateTheme);
+
+    return () => systemTheme.removeEventListener('change', updateTheme);
+  }, []);
+
   return (
     <IonApp>
       <IonReactRouter>
@@ -56,10 +71,20 @@ export default function App() {
                 </IonItem>
               </IonMenuToggle>
 
-              <IonItem button disabled>
+
+              <IonMenuToggle autoHide={true}>
+                <IonItem routerLink="/shopping-list" button>
+                  <IonIcon icon={cartOutline} slot="start" />
+                  <IonLabel>Einkaufsliste</IonLabel>
+                </IonItem>
+              </IonMenuToggle>
+
+              <IonMenuToggle autoHide={true}>
+                <IonItem routerLink="/settings" button>
                 <IonIcon icon={settingsOutline} slot="start" />
                 <IonLabel>Einstellungen</IonLabel>
               </IonItem>
+              </IonMenuToggle>
             </IonList>
           </IonContent>
         </IonMenu>
@@ -72,6 +97,8 @@ export default function App() {
               <Route exact path="/search" component={SearchPage} />
               <Route exact path="/planner" component={Wochenplaner} />
               <Route exact path="/favorites" component={FavoritesPage} />
+              <Route exact path="/shopping-list" component={ShoppingListPage} />
+              <Route exact path="/settings" component={SettingsPage} />
               
               {/* The login page is a placeholder for future authentication features. */}
               <Route exact path="/login" component={LoginPage} />
