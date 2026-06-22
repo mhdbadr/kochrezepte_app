@@ -109,7 +109,7 @@ export default function PlannerPage() {
                             const dayRecipes = plan[day] || [];
                             return (
                                 <IonCol size="12" key={day}>
-                                    <IonCard style={{ margin: '12px 0', borderRadius: '14px', boxShadow: '0 4px 14px rgba(0,0,0,0.04)', border: '1px solid #f0f0f0' }}>
+                                    <IonCard className="day-card">
                                         <IonCardHeader style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '8px' }}>
                                             <IonCardTitle style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--ion-color-primary)' }}>{day}</IonCardTitle>
                                             <IonButton fill="clear" size="small" onClick={() => openPlanModal(day)}>
