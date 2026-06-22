@@ -92,23 +92,16 @@ export default function PlannerPage() {
     <IonPage>
         <PageHeader title="Wochenplaner" />
 
-        <IonContent fullscreen className="ion-padding">
-            <div style={{ maxWidth: '800px', margin: '0 auto', width: '100%' }}>
+        <IonContent fullscreen>
+            <main className="planner-container">
                 
-                <div style={{ 
-                    padding: '24px 16px', 
-                    background: 'var(--ion-color-primary)', 
-                    color: '#fff', 
-                    borderRadius: '12px', 
-                    marginBottom: '20px',
-                    boxShadow: '0 4px 12px rgba(var(--ion-color-primary-rgb, 0,0,0), 0.2)'
-                }}>
-                    <span style={{ fontSize: '0.8rem', opacity: 0.8, textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '1px' }}>BiteBook Core</span>
-                    <h1 style={{ margin: '4px 0 6px 0', fontWeight: '800', fontSize: '1.8rem' }}>Dein Wochenplaner</h1>
-                    <p style={{ margin: 0, fontSize: '0.95rem', opacity: 0.9, lineHeight: '1.4' }}>
+                <section className="planner-hero">
+                    <p>Wochenplanung</p>
+                    <h1>Dein Wochenplaner</h1>
+                    <span>
                         Plane deine Mahlzeiten für die Woche und generiere deine Einkaufsliste.
-                    </p>
-                </div>
+                    </span>
+                </section>
 
                 <IonGrid style={{ padding: 0 }}>
                     <IonRow>
@@ -164,7 +157,7 @@ export default function PlannerPage() {
                     </IonRow>
                 </IonGrid>
                 
-            </div>
+            </main>
 
             <IonModal isOpen={isModalOpen} onDidDismiss={() => setIsModalOpen(false)}>
                 <IonHeader>
