@@ -213,25 +213,23 @@ export default function RecipeDetailPage() {
           <section className="recipe-detail-content">
             <article className="recipe-detail-card">
               <h2>Ingredients</h2>
-                   <ul className="recipe-detail-list">
-                    {recipe.ingredients.map((ingredient, index) => {
-                
-                      const baseAmount = ingredient.amount ?? 0;
-                      const scaledAmount = (baseAmount / 4) * portions;
+              <ul className="recipe-detail-list">
+                {recipe.ingredients.map((ingredient, index) => {
+                  const baseAmount = ingredient.amount ?? 0;
+                  const scaledAmount = (baseAmount / 4) * portions;
+                  const formattedAmount =
+                    baseAmount > 0
+                      ? `${scaledAmount % 1 === 0 ? scaledAmount.toFixed(0) : scaledAmount.toFixed(1)} ${ingredient.unit ?? ''}`.trim()
+                      : 'nach Bedarf';
 
-                      return (
-                        <li key={index}>
-                          {baseAmount > 0 && (
-                            <strong style={{ color: 'var(--ion-color-primary)' }}>
-                              {scaledAmount % 1 === 0 ? scaledAmount.toFixed(0) : scaledAmount.toFixed(1)}
-                              {ingredient.unit}{' '}
-                            </strong>
-                          )}
-                          {ingredient.name}
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  return (
+                    <li className="recipe-detail-ingredient" key={index}>
+                      <span className="recipe-detail-ingredient__amount">{formattedAmount}</span>
+                      <span className="recipe-detail-ingredient__name">{ingredient.name}</span>
+                    </li>
+                  );
+                })}
+              </ul>
             </article>
 
             <article className="recipe-detail-card">
