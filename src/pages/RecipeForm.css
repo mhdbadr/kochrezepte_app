@@ -106,6 +106,13 @@
   gap: 12px;
 }
 
+.recipe-form-ingredient-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(110px, 0.35fr) minmax(120px, 0.35fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+
 .recipe-form-image-preview {
   margin: 0;
 }
@@ -177,7 +184,8 @@
   }
 
   .recipe-form-grid,
-  .recipe-form-row {
+  .recipe-form-row,
+  .recipe-form-ingredient-row {
     grid-template-columns: 1fr;
   }
 

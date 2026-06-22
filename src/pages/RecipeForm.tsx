@@ -20,14 +20,18 @@ export default function RecipeForm() {
   const [imageUrl, setImageUrl] = useState("");
 
   // Dynamic sections start with one empty row to guide the user.
-  const [ingredients, setIngredients] = useState([""]);
+  const [ingredients, setIngredients] = useState<RecipeIngredient[]>([
+    { name: "", amount: null, unit: null },
+  ]);
   const [instructions, setInstructions] = useState([""]);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
-  function updateIngredient(index: number, value: string) {
-    const updatedIngredients = [...ingredients];
-    updatedIngredients[index] = value;
+  function updateIngredient(index: number, changes: Partial<RecipeIngredient>) {
+    const updatedIngredients = ingredients.map((ingredient, ingredientIndex) =>
+      ingredientIndex === index ? { ...ingredient, ...changes } : ingredient,
+    );
+
     setIngredients(updatedIngredients);
   }
 
@@ -63,13 +67,12 @@ export default function RecipeForm() {
 
     // Remove empty rows before validating and saving the recipe.
     const cleanedIngredients: RecipeIngredient[] = ingredients
-      .map((ingredient) => ingredient.trim())
-      .filter(Boolean)
       .map((ingredient) => ({
-        name: ingredient,
-        amount: null,
-        unit: null,
-      }));
+        name: ingredient.name.trim(),
+        amount: ingredient.amount,
+        unit: ingredient.unit?.trim() || null,
+      }))
+      .filter((ingredient) => ingredient.name);
     const cleanedInstructions = instructions.map((instruction) => instruction.trim()).filter(Boolean);
 
     if (!title.trim() || !description.trim()) {
@@ -232,15 +235,43 @@ export default function RecipeForm() {
               <legend>Ingredients</legend>
 
               {ingredients.map((ingredient, index) => (
-                <div className="recipe-form-row" key={index}>
+                <div className="recipe-form-ingredient-row" key={index}>
                   <label className="recipe-form-field" htmlFor={`ingredient-${index}`}>
                     <span>Ingredient {index + 1}</span>
                     <input
                       id={`ingredient-${index}`}
                       type="text"
-                      value={ingredient}
-                      onChange={(event) => updateIngredient(index, event.target.value)}
+                      value={ingredient.name}
+                      onChange={(event) => updateIngredient(index, { name: event.target.value })}
                       placeholder="e.g. Tomatoes"
+                    />
+                  </label>
+
+                  <label className="recipe-form-field" htmlFor={`ingredient-amount-${index}`}>
+                    <span>Amount</span>
+                    <input
+                      id={`ingredient-amount-${index}`}
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={ingredient.amount ?? ""}
+                      onChange={(event) =>
+                        updateIngredient(index, {
+                          amount: event.target.value === "" ? null : Number(event.target.value),
+                        })
+                      }
+                      placeholder="e.g. 250"
+                    />
+                  </label>
+
+                  <label className="recipe-form-field" htmlFor={`ingredient-unit-${index}`}>
+                    <span>Unit</span>
+                    <input
+                      id={`ingredient-unit-${index}`}
+                      type="text"
+                      value={ingredient.unit ?? ""}
+                      onChange={(event) => updateIngredient(index, { unit: event.target.value })}
+                      placeholder="g, ml, pcs"
                     />
                   </label>
 
@@ -255,7 +286,11 @@ export default function RecipeForm() {
                 </div>
               ))}
 
-              <button className="recipe-form-secondary-button" type="button" onClick={() => setIngredients([...ingredients, ""])}>
+              <button
+                className="recipe-form-secondary-button"
+                type="button"
+                onClick={() => setIngredients([...ingredients, { name: "", amount: null, unit: null }])}
+              >
                 Add ingredient
               </button>
             </fieldset>
