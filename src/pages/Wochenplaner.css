@@ -1,16 +1,40 @@
 .planner-container {
-  max-width: 800px;  /* Verhindert, dass der Planer im Web zu breit gezogen wird */
-  margin: 0 auto;    /* Zentriert den gesamten Planer im Webbrowser */
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 16px 16px 32px;
   width: 100%;
 }
 
 .planner-hero {
-  padding: 24px 16px;
-  background: var(--ion-color-primary);
-  color: #fff;
-  border-radius: 12px;
   margin-bottom: 20px;
-  box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.2);
+  padding: 32px;
+  border-radius: 24px;
+  color: white;
+  background:
+    linear-gradient(135deg, rgba(36, 48, 37, 0.92), rgba(107, 142, 98, 0.78)),
+    url("https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=1200");
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.planner-hero p {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.planner-hero h1 {
+  max-width: 720px;
+  margin: 8px 0;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+}
+
+.planner-hero span {
+  display: block;
+  max-width: 620px;
 }
 
 .day-card {
@@ -24,4 +48,10 @@
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--ion-color-primary);
+}
+
+@media (max-width: 760px) {
+  .planner-hero {
+    padding: 22px;
+  }
 }
