@@ -40,8 +40,10 @@
 .day-card {
   margin: 12px 0 !important;
   border-radius: 14px !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
-  border: 1px solid #f0f0f0;
+  color: var(--app-text);
+  background: var(--app-surface);
+  box-shadow: 0 4px 14px var(--app-shadow) !important;
+  border: 1px solid var(--app-border);
 }
 
 .day-title {

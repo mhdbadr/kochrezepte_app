@@ -84,13 +84,14 @@ h2 {
   height: 60px;
   margin: 0 auto 10px;
   border-radius: 16px;
-  background-color: #f3f5ef;
+  background-color: var(--app-surface-muted);
+  border: 1px solid var(--app-border);
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  color: #6b8e23;
+  color: var(--app-primary);
   font-size: 28px;
 }
 
@@ -98,11 +99,11 @@ h2 {
   display: block;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #222;
+  color: var(--app-text);
 }
 
 .category-item:hover .category-icon {
-  background-color: #e8eedf;
+  background-color: var(--app-surface);
 }
 
 
@@ -124,7 +125,8 @@ h2 {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: #f6f6f6;
+  background: var(--app-surface-muted);
+  border: 1px solid var(--app-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,4 +137,5 @@ h2 {
 .ingredient-item span {
   font-size: 0.85rem;
   font-weight: 600;
+  color: var(--app-text);
 }

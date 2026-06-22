@@ -7,8 +7,10 @@
 .recipe-card {
     overflow: hidden;
     border-radius: 18px;
-    background: white;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    background: var(--app-surface);
+    color: var(--app-text);
+    border: 1px solid var(--app-border);
+    box-shadow: 0 8px 24px var(--app-shadow);
     width: 100%;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
@@ -30,7 +32,7 @@
 
 .recipe-card__category {
     margin: 0 0 6px;
-    color: #666;
+    color: var(--app-muted);
     font-size: 0.85rem;
 }
 
@@ -41,7 +43,7 @@
 
 .recipe-card__meta {
     margin: 8px 0 0;
-    color: #888;
+    color: var(--app-muted);
     font-size: 0.9rem;
 }
 
@@ -65,7 +67,7 @@
     align-items: center;
     margin-top: 12px;
     padding-top: 8px;
-    border-top: 1px solid #f5f5f5; 
+    border-top: 1px solid var(--app-border); 
 }
 .recipe-card__actions {
     display: flex;

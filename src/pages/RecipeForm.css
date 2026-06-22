@@ -58,13 +58,15 @@
   border: 0;
   border-radius: 20px;
   background: var(--app-surface);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--app-border);
+  box-shadow: 0 8px 24px var(--app-shadow);
 }
 
 .recipe-form-card legend {
   padding: 0;
   font-size: 1.2rem;
   font-weight: 700;
+  color: var(--app-text);
 }
 
 .recipe-form-grid {
@@ -164,8 +166,8 @@
 }
 
 .recipe-form-secondary-button:disabled {
-  color: #8c9289;
-  background: #eef0ea;
+  color: var(--app-muted);
+  background: var(--app-field-background);
   cursor: not-allowed;
 }
 
