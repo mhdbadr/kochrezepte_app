@@ -1,6 +1,8 @@
 import type { RecipeCategory } from "./RecipeCategory";
 
-
+/**
+ * RecipeIngredient model representing the structure of an ingredient in a recipe
+ */
 export interface RecipeIngredient {
   id?: string;          
   recipe_id?: string;   
@@ -8,6 +10,7 @@ export interface RecipeIngredient {
   unit: string | null;   
   name: string;          
 }
+
 /**
  * Recipe model representing the structure of a recipe in the application.
  */
