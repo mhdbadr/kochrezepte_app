@@ -3,7 +3,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import BackLink from "../components/BackLink";
 import PageHeader from "../components/PageHeader";
-import type { Recipe } from "../models/Recipe";
+import type { Recipe, RecipeIngredient } from "../models/Recipe";
 import type { RecipeCategory } from "../models/RecipeCategory";
 import { getRecipeById, updateRecipe } from "../repositories/recipeRepository";
 // Reuse the create form styles so create and edit flows stay consistent.
@@ -58,7 +58,7 @@ export default function EditRecipePage() {
             setPreparationTime(loadedRecipe.preparationTime);
             setRating(loadedRecipe.rating ?? 0);
             setImageUrl(loadedRecipe.imageUrl ?? "");
-            setIngredients(loadedRecipe.ingredients.length ? loadedRecipe.ingredients : [""]);
+            setIngredients(loadedRecipe.ingredients.length ? loadedRecipe.ingredients.map((ingredient) => ingredient.name) : [""]);
             setInstructions(loadedRecipe.instructions.length ? loadedRecipe.instructions : [""]);
           }
         }
@@ -122,7 +122,14 @@ export default function EditRecipePage() {
     }
 
     // Remove empty rows before validating and saving the updated recipe.
-    const cleanedIngredients = ingredients.map((ingredient) => ingredient.trim()).filter(Boolean);
+    const cleanedIngredients: RecipeIngredient[] = ingredients
+      .map((ingredient) => ingredient.trim())
+      .filter(Boolean)
+      .map((ingredient) => ({
+        name: ingredient,
+        amount: null,
+        unit: null,
+      }));
     const cleanedInstructions = instructions.map((instruction) => instruction.trim()).filter(Boolean);
 
     if (!title.trim() || !description.trim()) {
