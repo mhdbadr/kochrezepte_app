@@ -49,3 +49,22 @@
 .app-menu ion-icon {
   color: var(--app-primary);
 }
+
+ion-tab-bar {
+  --background: var(--app-surface);
+  --border: 1px solid var(--app-border);
+  border-top: 1px solid var(--app-border);
+  box-shadow: 0 -8px 24px var(--app-shadow);
+}
+
+ion-tab-button {
+  --background: transparent;
+  --background-focused: var(--app-surface-muted);
+  --color: var(--app-muted);
+  --color-selected: var(--app-primary);
+  font-weight: 750;
+}
+
+ion-tab-button.tab-selected {
+  background: var(--app-surface-muted);
+}
