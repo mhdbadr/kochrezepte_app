@@ -74,27 +74,12 @@ export default function PageHeader({ title, subtitle = 'BiteBook' }: PageHeaderP
         {username && (
             <IonButtons
                 slot="end"
+                className="header-profile"
                 onClick={() => router.push('/login', 'forward')}
-                style={{ cursor: 'pointer' }}
             >
-              <IonAvatar
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    background: '#4caf50',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'white',
-                    fontWeight: 'bold',
-                    marginRight: '8px',
-                    cursor: 'pointer',
-                  }}
-              >
+              <IonAvatar className="header-avatar">
                 {username.charAt(0).toUpperCase()}
               </IonAvatar>
-
-              <IonLabel>{username}</IonLabel>
             </IonButtons>
         )}
       </IonToolbar>
