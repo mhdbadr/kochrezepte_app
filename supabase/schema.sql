@@ -44,8 +44,16 @@ create table if not exists public.recipe_ingredients (
   id uuid primary key default gen_random_uuid(),
   recipe_id uuid not null references public.recipes(id) on delete cascade,
   name text not null,
+  amount numeric,
+  unit text,
   sort_order integer not null default 0
 );
+
+alter table public.recipe_ingredients
+add column if not exists amount numeric;
+
+alter table public.recipe_ingredients
+add column if not exists unit text;
 
 -- ---------------------------------------------------------
 -- 5. Recipe steps
