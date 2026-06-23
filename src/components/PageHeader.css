@@ -49,3 +49,38 @@
   border: 1px solid rgba(107, 142, 98, 0.12);
   border-radius: 12px;
 }
+
+.header-profile {
+  cursor: pointer;
+}
+
+.header-avatar {
+  width: 45px;
+  height: 45px;
+
+  background: #f8faf5;
+  color: var(--app-primary);
+  /* gleicher Hintergrund */
+  border: 1px solid rgba(107, 142, 98, 0.12);
+  border-radius: 14px;              /* nicht rund, wie die Kategorie-Karten */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--app-primary);
+  font-size: 1rem;
+  font-weight: 700;
+
+  box-shadow: none;
+  transition: 0.2s;
+}
+
+.header-avatar:hover {
+  background: #f3f5ef;
+}
+
+.header-avatar {
+  border-radius: 50%;
+}
+

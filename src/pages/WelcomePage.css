@@ -1,0 +1,66 @@
+.welcome-hero {
+    min-height: 100vh;
+    width: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.welcome-overlay {
+    width: 100%;
+    height: 100%;
+    color: white;
+    text-align: center;
+}
+
+.welcome-overlay h1 {
+    position: absolute;
+    top: 13%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+
+    font-size: 3.4rem;
+    font-family: serif;
+    font-weight: 400;
+    margin: 0;
+}
+
+.welcome-overlay h2 {
+    position: absolute;
+    top: 22%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+
+    font-size: 1.25rem;
+    font-weight: 300;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.welcome-overlay p {
+    position: absolute;
+    bottom: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.welcome-overlay ion-button {
+    position: absolute;
+    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 85%;
+
+    --background: #7d9d6f;
+    --border-radius: 16px;
+}
