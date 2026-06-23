@@ -1,4 +1,4 @@
-import { IonContent, IonIcon, IonPage, IonSearchbar } from '@ionic/react';
+import { IonContent, IonIcon, IonPage, IonSearchbar ,useIonViewWillEnter} from '@ionic/react';
 
 // Importing icons for the category buttons from Ionicons.
 import {
@@ -40,6 +40,7 @@ export default function HomePage() {
         async function loadRecipes() {
             try {
                 // Load recipes from Supabase through the repository layer.
+                setIsLoading(true);
                 const loadedRecipes = await getAllRecipes();
 
                 if (isPageActive) {

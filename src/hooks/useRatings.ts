@@ -28,6 +28,7 @@ export function useRatings() {
     loadRatings();
   }, []);
 
+
   // Saves a new rating for a recipe and updates the local state.
   async function saveRating(recipeId: string, starCount: number) {
     try {

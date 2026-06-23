@@ -2,8 +2,6 @@ import { Link } from 'react-router-dom';
 import './RecipeCard.css';
 import FavoriteButton from './FavoriteButton';
 import ShareButton from './ShareButton';
-import RatingComponent from './RatingComponent'; // <-- NEU: Deine Sterne importieren
-import { useRatings } from '../hooks/useRatings';
 
 interface RecipeCardProps {
     id: string;
@@ -33,8 +31,6 @@ export default function RecipeCard({
                                        onFavoriteToggle
                                    }: RecipeCardProps) {
 
-    const { saveRating, getRecipeRating } = useRatings();
-    const currentRating = getRecipeRating(id);
 
     const handleActionClick = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -55,12 +51,11 @@ export default function RecipeCard({
                 </p>
 
                <div className="recipe-card__footer">
-                   <div className="recipe-card__rating-container">
-                        <RatingComponent 
-                            key={currentRating} 
-                            initialRating={currentRating}
-                            onRatingChange={(newRating) => saveRating(id, newRating)}
-                        />
+                  <div className="recipe-card__rating-display">
+                        <span className="recipe-card__star">⭐</span>
+                        <span className="recipe-card__rating-value">
+                            {rating ? rating.toFixed(1) : '0.0'}
+                        </span>
                     </div>
                     
                     <div className="recipe-card__actions" onClick={handleActionClick}>

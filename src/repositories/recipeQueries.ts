@@ -10,6 +10,8 @@ export const recipeSelectQuery = `
   preparation_time,
   created_at,
   created_by,
+  rating,
+  rating_count,
   recipe_categories (
     name
   ),

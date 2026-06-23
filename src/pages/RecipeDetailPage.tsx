@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import BackLink from "../components/BackLink";
 import PageHeader from "../components/PageHeader";
+import RatingComponent from '../components/RatingComponent';
 import type { Recipe } from "../models/Recipe";
 import { deleteRecipe, getRecipeById } from "../repositories/recipeRepository";
 import "./RecipeDetailPage.css";
@@ -32,7 +33,7 @@ export default function RecipeDetailPage() {
   // Read the recipe ID from the current URL.
   const { id } = useParams<RecipeDetailRouteParams>();
 
-  const { getRecipeRating } = useRatings();
+  const { getRecipeRating ,saveRating} = useRatings();
   const currentRating = getRecipeRating(id);
 
   useEffect(() => {
@@ -149,10 +150,12 @@ export default function RecipeDetailPage() {
 
               <div className="recipe-detail-meta">
                 <span>{recipe.preparationTime} Min</span>
-                <span>⭐ {currentRating || recipe.rating || 0} / 5</span>
+                <span>
+                  ⭐ {recipe.rating ? recipe.rating.toFixed(1) : '0.0'} / 5
+                </span>
               </div>
-                          
-              <div className="recipe-detail-portions">
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '16px' }}>
                 <button 
                   className="recipe-detail-portion-button"
                   onClick={() => portions > 1 && setPortions(portions - 1)}
@@ -183,7 +186,40 @@ export default function RecipeDetailPage() {
               This is a sample recipe. Only recipes you create can be edited or deleted.
             </p>
           )}
+                   
+          <div className="recipe-detail-rating-container">
+            <article className="recipe-detail-card recipe-detail-rating-card">
+              
+              <div className="recipe-detail-rating-text">
+                <h3>Wie schmeckt dir dieses Rezept?</h3>
+                <p>Gib deine persönliche Bewertung ab</p>
+              </div>
 
+               <div className="recipe-detail-rating-stars">
+                  <RatingComponent 
+                    initialRating={currentRating} 
+                    onRatingChange={async (newStars) => {
+                      try {
+                        // 1. Speichere die persönliche Bewertung des Nutzers
+                        await saveRating(recipe.id, newStars); 
+                        
+                        // 2. Lade das Rezept neu, damit der von Supabase 
+                        //    berechnete Durchschnitt (Trigger) ins Frontend kommt
+                        const updatedRecipe = await getRecipeById(recipe.id);
+                        if (updatedRecipe) {
+                          setRecipe(updatedRecipe);
+                        }
+                      } catch (err) {
+                        console.error("Fehler beim Aktualisieren der Bewertung:", err);
+                      }
+                    }} 
+                  />
+               </div>
+
+            </article>
+          </div>
+
+          
           {deleteErrorMessage && (
             <p className="recipe-detail-readonly-note">Delete error: {deleteErrorMessage}</p>
           )}
