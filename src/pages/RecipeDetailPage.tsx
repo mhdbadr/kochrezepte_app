@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import BackLink from "../components/BackLink";
 import PageHeader from "../components/PageHeader";
+import RatingComponent from '../components/RatingComponent';
 import type { Recipe } from "../models/Recipe";
 import { deleteRecipe, getRecipeById } from "../repositories/recipeRepository";
 import "./RecipeDetailPage.css";
@@ -32,7 +33,7 @@ export default function RecipeDetailPage() {
   // Read the recipe ID from the current URL.
   const { id } = useParams<RecipeDetailRouteParams>();
 
-  const { getRecipeRating } = useRatings();
+  const { getRecipeRating ,saveRating} = useRatings();
   const currentRating = getRecipeRating(id);
 
   useEffect(() => {
@@ -149,9 +150,9 @@ export default function RecipeDetailPage() {
 
               <div className="recipe-detail-meta">
                 <span>{recipe.preparationTime} Min</span>
-                <span>⭐ {currentRating || recipe.rating || 0} / 5</span>
+                <span>⭐ {recipe.rating ? recipe.rating.toFixed(1) : '0.0'} / 5</span>
               </div>
-                          
+
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '16px' }}>
                 <button 
                   style={{ background: 'rgba(255,255,255,0.2)', color: 'white', border: 'none', borderRadius: '50%', width: '32px', height: '32px', fontSize: '1.2rem' }}
@@ -183,7 +184,26 @@ export default function RecipeDetailPage() {
               This is a sample recipe. Only recipes you create can be edited or deleted.
             </p>
           )}
+                   
+          <div className="recipe-detail-rating-container">
+            <article className="recipe-detail-card recipe-detail-rating-card">
+              
+              <div className="recipe-detail-rating-text">
+                <h3>Wie schmeckt dir dieses Rezept?</h3>
+                <p>Gib deine persönliche Bewertung ab</p>
+              </div>
 
+              <div className="recipe-detail-rating-stars">
+                <RatingComponent 
+                  initialRating={currentRating} 
+                  onRatingChange={(newStars) => saveRating(recipe.id, newStars)} 
+                />
+              </div>
+
+            </article>
+          </div>
+
+          
           {deleteErrorMessage && (
             <p className="recipe-detail-readonly-note">Delete error: {deleteErrorMessage}</p>
           )}
