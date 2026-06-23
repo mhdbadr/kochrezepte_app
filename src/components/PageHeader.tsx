@@ -28,17 +28,21 @@ interface PageHeaderProps {
  */
 export default function PageHeader({ title, subtitle = 'BiteBook' }: PageHeaderProps) {
   const [username, setUsername] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const router = useIonRouter();
 
   useEffect(() => {
     async function loadUser() {
       const { data } = await supabase.auth.getUser();
 
-      if (data.user?.email) {
-        setUsername(data.user.email.split('@')[0]);
+      if (data.user) {
+        setUsername(data.user.user_metadata?.username ?? null);
+        setAvatarUrl(data.user.user_metadata?.avatarUrl ?? null);
       } else {
         setUsername(null);
+        setAvatarUrl(null);
       }
+
     }
 
     loadUser();
@@ -46,10 +50,12 @@ export default function PageHeader({ title, subtitle = 'BiteBook' }: PageHeaderP
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user?.email) {
-        setUsername(session.user.email.split('@')[0]);
+      if (session?.user) {
+        setUsername(session.user.user_metadata?.username ?? null);
+        setAvatarUrl(session.user.user_metadata?.avatarUrl ?? null);
       } else {
         setUsername(null);
+        setAvatarUrl(null);
       }
     });
 
@@ -78,7 +84,11 @@ export default function PageHeader({ title, subtitle = 'BiteBook' }: PageHeaderP
                 onClick={() => router.push('/login', 'forward')}
             >
               <IonAvatar className="header-avatar">
-                {username.charAt(0).toUpperCase()}
+                {avatarUrl ? (
+                    <img src={avatarUrl} alt="Profilbild" />
+                ) : (
+                    username.charAt(0).toUpperCase()
+                )}
               </IonAvatar>
             </IonButtons>
         )}
