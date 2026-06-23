@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import './RecipeCard.css';
 import FavoriteButton from './FavoriteButton';
 import ShareButton from './ShareButton';
-import RatingComponent from './RatingComponent'; // <-- NEU: Deine Sterne importieren
+import RatingComponent from './RatingComponent';
 import { useRatings } from '../hooks/useRatings';
 
 interface RecipeCardProps {
