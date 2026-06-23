@@ -10,7 +10,11 @@ import {
 import { useIonRouter } from '@ionic/react';
 import PageHeader from '../components/PageHeader';
 import { supabase } from '../lib/supabaseClient';
-import { useEffect, useState } from 'react';
+import { useEffect,useRef, useState } from 'react';
+import './LoginPage.css'
+import { createOutline } from 'ionicons/icons';
+import { IonIcon } from '@ionic/react';
+
 
 interface LoginPageProps {
     setIsLoggedIn: (value: boolean) => void;
@@ -24,6 +28,13 @@ export default function LoginPage({ setIsLoggedIn, setAppUserRole }: LoginPagePr
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null);
+    const [username, setUsername] = useState('');
+
+
+    const [avatarUrl, setAvatarUrl] = useState('');
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const [isEditingName, setIsEditingName] = useState(false);
 
     const login = async () => {
 
@@ -67,6 +78,8 @@ export default function LoginPage({ setIsLoggedIn, setAppUserRole }: LoginPagePr
 
             if (data.user) {
                 setCurrentUserEmail(data.user.email ?? null);
+                setUsername(data.user.user_metadata?.username ?? '');
+                setAvatarUrl(data.user.user_metadata?.avatarUrl ?? '');
             }
         }
 
@@ -90,44 +103,163 @@ export default function LoginPage({ setIsLoggedIn, setAppUserRole }: LoginPagePr
     );
 
 
+    const updateUsername = async () => {
+        const { error } = await supabase.auth.updateUser({
+            data: {
+                username: username,
+            },
+        });
+
+        if (error) {
+            present(error.message, 2000);
+            return;
+        }
+
+        present('Name wurde gespeichert', 2000);
+    };
+
+
+    const uploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+
+        if (!file) return;
+
+        const { data: userData } = await supabase.auth.getUser();
+        const user = userData.user;
+
+        if (!user) {
+            present('Kein Benutzer angemeldet', 2000);
+            return;
+        }
+
+        const filePath = `${user.id}/avatar.jpg`;
+
+        const { error: uploadError } = await supabase.storage
+            .from('avatars')
+            .upload(filePath, file, {
+                upsert: true,
+            });
+
+        if (uploadError) {
+            present(uploadError.message, 2000);
+            return;
+        }
+
+        const { data } = supabase.storage
+            .from('avatars')
+            .getPublicUrl(filePath);
+
+        const publicUrl = data.publicUrl;
+
+        const { error: updateError } = await supabase.auth.updateUser({
+            data: {
+                username,
+                avatarUrl: publicUrl,
+            },
+        });
+
+        if (updateError) {
+            present(updateError.message, 2000);
+            return;
+        }
+
+        setAvatarUrl(publicUrl);
+        present('Profilbild wurde gespeichert', 2000);
+    };
+
+
+
     return (
         <IonPage>
             <PageHeader title="Profil" />
 
             <IonContent className="ion-padding">
-                <main style={{ maxWidth: '560px', margin: '48px auto' }}>
+                <main className="profile-page">
                     {userRole === 'user' && currentUserEmail ? (
                         <>
-                            <h2>Profil</h2>
 
-                            <p><strong>Benutzername:</strong> {currentUserEmail.split('@')[0]}</p>
-                            <p><strong>E-Mail:</strong> {currentUserEmail}</p>
-                            <p><strong>Typ:</strong> Benutzer</p>
 
-                            <IonButton color="danger" fill="solid" onClick={logout}>
-                                Abmelden
-                            </IonButton>
-                        </>
-                    ) : userRole === 'guest' ? (
-                        <>
-                            <h2>Gastmodus</h2>
+                            <div className="profile-card">
 
-                            <p>
-                                Du nutzt die App aktuell als Gast. Einige Funktionen wie Favoriten,
-                                Bewertungen, Kommentare und eigene Rezepte sind eingeschränkt.
-                            </p>
+                                <div className="profile-avatar-container">
+                                    <div className="profile-avatar">
+                                        {avatarUrl ? (
+                                            <img src={avatarUrl} alt="Profilbild" />
+                                        ) : (
+                                            username.charAt(0).toUpperCase()
+                                        )}
+                                    </div>
 
-                            <IonButton expand="block" onClick={logout}>
-                                Anmelden
-                            </IonButton>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        hidden
+                                        ref={fileInputRef}
+                                        onChange={uploadAvatar}
+                                    />
 
-                            <IonButton expand="block" fill="clear" routerLink="/register">
-                                Konto erstellen
-                            </IonButton>
+                                    <div
+                                        className="edit-avatar-button"
+                                        onClick={() => fileInputRef.current?.click()}
+                                    >
+                                        <IonIcon icon={createOutline} />
+                                    </div>
+                                </div>
+                                <h2 className="profile-title">Profil</h2>
+                                <p className="profile-subtitle">Du bist angemeldet.</p>
 
-                            <IonButton expand="block" fill="clear" routerLink="/home">
-                                Zur Startseite
-                            </IonButton>
+                                <div className="profile-info">
+                                    <div className="profile-info__row">
+                                        <span className="profile-info__label">Benutzername</span>
+
+                                        {!isEditingName ? (
+                                            <div className="username-row">
+                                                <span className="profile-info__value">{username}</span>
+
+                                                <IonIcon
+                                                    icon={createOutline}
+                                                    className="edit-username-button"
+                                                    onClick={() => setIsEditingName(true)}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <IonInput
+                                                    value={username}
+                                                    onIonInput={(e) => setUsername(e.detail.value ?? '')}
+                                                />
+
+                                                <IonButton
+                                                    size="small"
+                                                    onClick={async () => {
+                                                        await updateUsername();
+                                                        setIsEditingName(false);
+                                                    }}
+                                                >
+                                                    Speichern
+                                                </IonButton>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    <div className="profile-info__row">
+                                        <span className="profile-info__label">E-Mail</span>
+                                        <span className="profile-info__value">{currentUserEmail}</span>
+                                    </div>
+
+                                    <div className="profile-info__row">
+                                        <span className="profile-info__label">Kontotyp</span>
+                                        <span className="profile-info__value">Benutzer</span>
+                                    </div>
+                                </div>
+
+
+
+
+                                <IonButton expand="block" color="danger" onClick={logout}>
+                                    Abmelden
+                                </IonButton>
+                            </div>
                         </>
                     ) : (
                         <>
