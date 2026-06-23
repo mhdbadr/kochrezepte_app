@@ -18,31 +18,39 @@ export default function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
+    const [username, setUsername] = useState('');
 
     const register = async () => {
+        if (!username || !email || !password || !confirmPassword) {
+            present('Bitte alle Felder ausfüllen', 2000);
+            return;
+        }
+
         if (password !== confirmPassword) {
             present('Passwörter stimmen nicht überein', 2000);
             return;
         }
 
-        const { data, error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
             email,
             password,
+            options: {
+                data: {
+                    username: username,
+                },
+            },
         });
-
-        console.log('Register data:', data);
-        console.log('Register error:', error);
 
         if (error) {
             present(error.message, 2000);
             return;
         }
 
-        present('Registrierung erfolgreich', 2000);
-        router.push('/login', 'forward');
-    };
+        await supabase.auth.signOut();
 
+        present('Registrierung erfolgreich. Bitte anmelden.', 2000);
+        router.push('/login', 'root');
+    };
     return (
         <IonPage>
             <PageHeader title="Registrieren" />
@@ -55,6 +63,17 @@ export default function RegisterPage() {
                             register();
                         }}
                     >
+
+                    <IonItem>
+                        <IonInput
+                            label="Benutzername"
+                            type="text"
+                            placeholder="Dein Name"
+                            value={username}
+                            onIonInput={(e) => setUsername(e.detail.value ?? '')}
+                        />
+                    </IonItem>
+
                     <IonItem>
                         <IonInput
                             label="E-Mail"
