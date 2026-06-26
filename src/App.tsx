@@ -53,15 +53,27 @@ setupIonicReact();
 // Define the type for user roles in the app. It can be 'user', 'guest', or null (no access)
 type AppUserRole = 'user' | 'guest' | null;
 
+/**
+ * Retrieve the stored user role from localStorage
+ */
+function getStoredUserRole(): AppUserRole {
+  const storedRole = localStorage.getItem('userRole');
+
+  if (storedRole === 'user' || storedRole === 'guest') {
+    return storedRole;
+  }
+
+  return null;
+}
+
 export default function App() {
   const [onboardingCompleted] = useState(
       localStorage.getItem('onboardingCompleted') === 'true'
   );
 
   // Authentication state management
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userRole, setUserRole] = useState<AppUserRole>(null);
-  const [isAuthLoading, setIsAuthLoading] = useState(true);
+  const [userRole, setUserRole] = useState<AppUserRole>(getStoredUserRole);
+  const [isLoggedIn, setIsLoggedIn] = useState(getStoredUserRole() !== null);
 
   // Update access state and persist it in localStorage for guest mode.
   const updateAccess = (role: AppUserRole) => {
@@ -111,12 +123,17 @@ export default function App() {
      * Load the current session from Supabase and apply it to the app's access control
      */
     async function loadSession() {
-      const { data } = await supabase.auth.getSession();
+      try {
+        const { data } = await supabase.auth.getSession();
 
-      if (!isMounted) return;
+        if (!isMounted) return;
 
-      applySession(Boolean(data.session));
-      setIsAuthLoading(false);
+        applySession(Boolean(data.session));
+      } catch {
+        if (isMounted) {
+          updateAccess(null);
+        }
+      }
     }
 
     // Listen for authentication state changes and update the app's access control accordingly
@@ -137,8 +154,6 @@ export default function App() {
    * @param page - The ReactNode representing the page to protect
    */
   const protectedPage = (page: ReactNode) => {
-    if (isAuthLoading) return null;
-
     return isAppAccessAllowed ? page : <Redirect to="/login" />;
   };
 
@@ -251,8 +266,6 @@ export default function App() {
                 <Route exact path="/">
                   {!onboardingCompleted ? (
                       <Redirect to="/welcome" />
-                  ) : isAuthLoading ? (
-                      null
                   ) : isLoggedIn ? (
                       <Redirect to="/home" />
                   ) : (
