@@ -23,6 +23,7 @@ alter table public.recipe_steps enable row level security;
 alter table public.favorites enable row level security;
 alter table public.ratings enable row level security;
 alter table public.comments enable row level security;
+alter table public.weekly_planner enable row level security;
 
 -- =========================================================
 -- Profiles
@@ -233,5 +234,28 @@ with check (auth.uid() = user_id);
 drop policy if exists "Users can delete their own comments" on public.comments;
 create policy "Users can delete their own comments"
 on public.comments
+for delete
+using (auth.uid() = user_id);
+
+-- =========================================================
+-- Weekly planner
+-- =========================================================
+-- Planner entries are private. Users can only see and change their own entries.
+
+drop policy if exists "Users can read their own weekly planner" on public.weekly_planner;
+create policy "Users can read their own weekly planner"
+on public.weekly_planner
+for select
+using (auth.uid() = user_id);
+
+drop policy if exists "Users can create their own weekly planner entries" on public.weekly_planner;
+create policy "Users can create their own weekly planner entries"
+on public.weekly_planner
+for insert
+with check (auth.uid() = user_id);
+
+drop policy if exists "Users can delete their own weekly planner entries" on public.weekly_planner;
+create policy "Users can delete their own weekly planner entries"
+on public.weekly_planner
 for delete
 using (auth.uid() = user_id);
