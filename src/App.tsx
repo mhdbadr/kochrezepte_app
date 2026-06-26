@@ -16,6 +16,7 @@ import {
 
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 
 import {
@@ -43,26 +44,41 @@ import SearchPage from './pages/SearchPage';
 import Wochenplaner from './pages/Wochenplaner';
 import ShoppingListPage from './pages/ShoppingListPage';
 import SettingsPage from './pages/SettingsPage';
+import { supabase } from './lib/supabaseClient';
 import { applyTheme, loadAppSettings } from './utils/appSettings';
 import './App.css';
 
 setupIonicReact();
+
+// Define the type for user roles in the app. It can be 'user', 'guest', or null (no access)
+type AppUserRole = 'user' | 'guest' | null;
 
 export default function App() {
   const [onboardingCompleted] = useState(
       localStorage.getItem('onboardingCompleted') === 'true'
   );
 
-  const [isLoggedIn, setIsLoggedIn] = useState(
-      localStorage.getItem('userRole') !== null
-  );
+  // Authentication state management
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState<AppUserRole>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
-  const [userRole, setUserRole] = useState<string | null>(
-      localStorage.getItem('userRole')
-  );
+  // Update access state and persist it in localStorage for guest mode.
+  const updateAccess = (role: AppUserRole) => {
+    setUserRole(role);
+    setIsLoggedIn(role !== null);
 
+    if (role) {
+      localStorage.setItem('userRole', role);
+    } else {
+      localStorage.removeItem('userRole');
+    }
+  };
+
+  // Determine if the user has access to the app based on their role.
   const isAppAccessAllowed = userRole !== null;
 
+  // Keep the app theme in sync with settings and system theme changes.
   useEffect(() => {
     const updateTheme = () => applyTheme(loadAppSettings().themeMode);
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
@@ -72,6 +88,59 @@ export default function App() {
 
     return () => systemTheme.removeEventListener('change', updateTheme);
   }, []);
+
+  // Supabase is the source of truth for real users. localStorage is only used for guest mode.
+  useEffect(() => {
+    let isMounted = true;
+
+    /**
+     * Apply the session state to the app's access control.
+     * @param hasSession - A boolean indicating whether a valid session exists
+     */
+    const applySession = (hasSession: boolean) => {
+      if (hasSession) {
+        updateAccess('user');
+      } else if (localStorage.getItem('userRole') === 'guest') {
+        updateAccess('guest');
+      } else {
+        updateAccess(null);
+      }
+    };
+
+    /**
+     * Load the current session from Supabase and apply it to the app's access control
+     */
+    async function loadSession() {
+      const { data } = await supabase.auth.getSession();
+
+      if (!isMounted) return;
+
+      applySession(Boolean(data.session));
+      setIsAuthLoading(false);
+    }
+
+    // Listen for authentication state changes and update the app's access control accordingly
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      applySession(Boolean(session));
+    });
+
+    loadSession();
+
+    return () => {
+      isMounted = false;
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  /**
+   * Protect a page by checking if the user has access to the app. If not, redirect to the login page
+   * @param page - The ReactNode representing the page to protect
+   */
+  const protectedPage = (page: ReactNode) => {
+    if (isAuthLoading) return null;
+
+    return isAppAccessAllowed ? page : <Redirect to="/login" />;
+  };
 
   return (
       <IonApp>
@@ -131,55 +200,59 @@ export default function App() {
                 <Route exact path="/login">
                   <LoginPage
                       setIsLoggedIn={setIsLoggedIn}
-                      setAppUserRole={setUserRole}
+                      setAppUserRole={(role) => {
+                        updateAccess(role === 'user' || role === 'guest' ? role : null);
+                      }}
                   />
                 </Route>
 
                 <Route exact path="/register" component={RegisterPage} />
 
                 <Route exact path="/home">
-                  {isAppAccessAllowed ? <HomePage /> : <Redirect to="/login" />}
+                  {protectedPage(<HomePage />)}
                 </Route>
 
                 <Route exact path="/search">
-                  {isAppAccessAllowed ? <SearchPage /> : <Redirect to="/login" />}
+                  {protectedPage(<SearchPage />)}
                 </Route>
 
                 <Route exact path="/planner">
-                  {isAppAccessAllowed ? <Wochenplaner /> : <Redirect to="/login" />}
+                  {protectedPage(<Wochenplaner />)}
                 </Route>
 
                 <Route exact path="/favorites">
-                  {isAppAccessAllowed ? <FavoritesPage /> : <Redirect to="/login" />}
+                  {protectedPage(<FavoritesPage />)}
                 </Route>
 
                 <Route exact path="/shopping-list">
-                  {isAppAccessAllowed ? <ShoppingListPage /> : <Redirect to="/login" />}
+                  {protectedPage(<ShoppingListPage />)}
                 </Route>
 
                 <Route exact path="/settings">
-                  {isAppAccessAllowed ? <SettingsPage /> : <Redirect to="/login" />}
+                  {protectedPage(<SettingsPage />)}
                 </Route>
 
                 <Route exact path="/recipes">
-                  {isAppAccessAllowed ? <RecipeListPage /> : <Redirect to="/login" />}
+                  {protectedPage(<RecipeListPage />)}
                 </Route>
 
                 <Route exact path="/recipes/new">
-                  {isAppAccessAllowed ? <RecipeForm /> : <Redirect to="/login" />}
+                  {protectedPage(<RecipeForm />)}
                 </Route>
 
                 <Route exact path="/recipes/:id/edit">
-                  {isAppAccessAllowed ? <EditRecipePage /> : <Redirect to="/login" />}
+                  {protectedPage(<EditRecipePage />)}
                 </Route>
 
                 <Route exact path="/recipes/:id">
-                  {isAppAccessAllowed ? <RecipeDetailPage /> : <Redirect to="/login" />}
+                  {protectedPage(<RecipeDetailPage />)}
                 </Route>
 
                 <Route exact path="/">
                   {!onboardingCompleted ? (
                       <Redirect to="/welcome" />
+                  ) : isAuthLoading ? (
+                      null
                   ) : isLoggedIn ? (
                       <Redirect to="/home" />
                   ) : (
