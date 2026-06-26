@@ -1,4 +1,3 @@
-import React from 'react';
 import { IonButton, IonIcon } from '@ionic/react';
 import { shareOutline } from 'ionicons/icons';
 
@@ -8,29 +7,28 @@ interface ShareButtonProps {
 }
 
 export default function ShareButton({ recipeTitle, recipeId }: ShareButtonProps) {
-  
   const handleShare = async () => {
-    const shareUrl = `${window.location.origin}/recipe/${recipeId}`;
-    
+    const shareUrl = `${window.location.origin}/recipes/${recipeId}`;
+    const shareText = `Schau dir dieses leckere Rezept für "${recipeTitle}" an!\n${shareUrl}`;
+
     if (navigator.share) {
       try {
         await navigator.share({
           title: recipeTitle,
-          text: `Schau dir dieses leckere Rezept für "${recipeTitle}" an!`,
-          url: shareUrl,
+          text: shareText,
         });
-        console.log('Erfolgreich geteilt!');
       } catch (error) {
         console.log('Teilen fehlgeschlagen:', error);
       }
-    } else {
-    
-      try {
-        await navigator.clipboard.writeText(shareUrl);
-        alert('Teilen-Link wurde in die Zwischenablage kopiert!');
-      } catch (err) {
-        console.error('Fehler beim Kopieren des Links:', err);
-      }
+
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareText);
+      alert('Teilen-Link wurde in die Zwischenablage kopiert!');
+    } catch (error) {
+      console.error('Fehler beim Kopieren des Links:', error);
     }
   };
 
