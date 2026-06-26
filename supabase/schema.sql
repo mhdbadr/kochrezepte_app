@@ -107,17 +107,17 @@ create table if not exists public.comments (
 );
 
 -- ---------------------------------------------------------
--- Optional: meal planner table
+-- 9. Weekly planner
 -- ---------------------------------------------------------
--- Keep this commented out until the weekly planner should use Supabase.
--- create table if not exists public.meal_plan (
---   id uuid primary key default gen_random_uuid(),
---   user_id uuid not null references auth.users(id) on delete cascade,
---   recipe_id uuid not null references public.recipes(id) on delete cascade,
---   planned_date date not null,
---   meal_type text,
---   created_at timestamp with time zone default now()
--- );
+-- Stores planned recipes by weekday for each user.
+create table if not exists public.weekly_planner (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  recipe_id uuid not null references public.recipes(id) on delete cascade,
+  day_of_week text not null,
+  created_at timestamp with time zone default now(),
+  unique (user_id, recipe_id, day_of_week)
+);
 
 
 -- ---------------------------------------------------------
