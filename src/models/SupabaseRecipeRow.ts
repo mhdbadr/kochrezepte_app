@@ -10,6 +10,8 @@ export interface SupabaseRecipeRow {
   preparation_time: number;
   created_at: string | null;
   created_by: string | null;
+  rating: number | null;
+  rating_count: number | null
   recipe_categories: { name: string } | { name: string }[] | null;
   recipe_ingredients: Array<{
     name: string;

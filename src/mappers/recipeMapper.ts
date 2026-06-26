@@ -43,6 +43,7 @@ export function mapSupabaseRecipeToRecipe(recipe: SupabaseRecipeRow): Recipe {
     category: toRecipeCategory(getCategoryName(recipe.recipe_categories)),
     imageUrl: recipe.image_url ?? undefined,
     preparationTime: recipe.preparation_time,
+    rating: recipe.rating ?? 0,
     ingredients: [...recipe.recipe_ingredients]
       .sort((a, b) => a.sort_order - b.sort_order)
       .map((ingredient) => ({

@@ -217,3 +217,35 @@
     font-size: 0.82rem;
   }
 }
+/* Container für die Ausrichtung der Karte */
+.recipe-detail-rating-container {
+  padding: 0 16px;
+  margin: 12px 0;
+}
+
+/* Die flache, lange Bewertungs-Karte selbst */
+.recipe-detail-rating-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  margin: 0;
+  width: 100%;
+}
+
+.recipe-detail-rating-text h3 {
+  margin: 0;
+  color: var(--ion-color-dark);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.recipe-detail-rating-text p {
+  margin: 2px 0 0 0;
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.recipe-detail-rating-stars {
+  margin-top: 0;
+}
