@@ -30,10 +30,18 @@ create table if not exists public.recipes (
   category_id uuid references public.recipe_categories(id) on delete set null,
   image_url text,
   preparation_time integer not null default 0,
+  rating numeric not null default 0,
+  rating_count integer not null default 0,
   created_by uuid references auth.users(id) on delete set null,
   created_at timestamp with time zone default now(),
   updated_at timestamp with time zone default now()
 );
+
+alter table public.recipes
+add column if not exists rating numeric not null default 0;
+
+alter table public.recipes
+add column if not exists rating_count integer not null default 0;
 
 -- ---------------------------------------------------------
 -- 4. Recipe ingredients
@@ -180,3 +188,42 @@ create trigger update_comments_updated_at
 before update on public.comments
 for each row
 execute function public.update_updated_at_column();
+
+-- ---------------------------------------------------------
+-- Function 3: Update recipe rating summary
+-- ---------------------------------------------------------
+create or replace function public.update_recipe_rating_summary()
+returns trigger
+language plpgsql
+security definer
+as $$
+declare
+  affected_recipe_id uuid;
+begin
+  /** Get the recipe_id from the new or old row*/
+  affected_recipe_id := coalesce(new.recipe_id, old.recipe_id);
+
+  /** Update the recipe's rating and rating_count based on the ratings table */
+  update public.recipes
+  set
+    rating = coalesce((
+      select round(avg(rating)::numeric, 2)
+      from public.ratings
+      where recipe_id = affected_recipe_id
+    ), 0),
+    rating_count = (
+      select count(*)
+      from public.ratings
+      where recipe_id = affected_recipe_id
+    )
+  where id = affected_recipe_id;
+
+  return coalesce(new, old);
+end;
+$$;
+
+drop trigger if exists update_recipe_rating_summary_after_change on public.ratings;
+create trigger update_recipe_rating_summary_after_change
+after insert or update or delete on public.ratings
+for each row
+execute function public.update_recipe_rating_summary();
