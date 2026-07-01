@@ -15,7 +15,7 @@ import {
 } from '@ionic/react';
 
 import { IonReactRouter } from '@ionic/react-router';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
 import {
@@ -46,7 +46,6 @@ import './App.css';
 setupIonicReact();
 
 export default function App() {
-
   const [onboardingCompleted] = useState(
       localStorage.getItem('onboardingCompleted') === 'true'
   );
@@ -59,17 +58,51 @@ export default function App() {
       localStorage.getItem('userRole')
   );
 
-  const isAppAccessAllowed = userRole !== null;
-
   return (
       <IonApp>
         <IonReactRouter>
+          <AppRoutes
+              isLoggedIn={isLoggedIn}
+              setIsLoggedIn={setIsLoggedIn}
+              userRole={userRole}
+              setUserRole={setUserRole}
+              onboardingCompleted={onboardingCompleted}
+          />
+        </IonReactRouter>
+      </IonApp>
+  );
+}
+
+  interface AppRoutesProps {
+    isLoggedIn: boolean;
+    setIsLoggedIn: (value: boolean) => void;
+    userRole: string | null;
+    setUserRole: (value: string | null) => void;
+    onboardingCompleted: boolean;
+  }
+
+  function AppRoutes({
+                       isLoggedIn,
+                       setIsLoggedIn,
+                       userRole,
+                       setUserRole,
+                       onboardingCompleted
+                     }: AppRoutesProps) {
+    const location = useLocation();
+
+    const isAppAccessAllowed = userRole !== null;
+
+    const hideNavigation =
+        location.pathname === '/welcome' ||
+        location.pathname === '/onboarding';
+  return (
+      <>
           <IonMenu
               contentId="main-content"
               side="start"
               menuId="main-menu"
               className="app-menu"
-              disabled={!isAppAccessAllowed}
+              disabled={!isAppAccessAllowed || hideNavigation}
           >
             <IonContent>
               <section className="app-menu__intro">
@@ -134,10 +167,21 @@ export default function App() {
 
 
                 {/* Recipe pages */}
-                <Route exact path="/recipes" component={RecipeListPage} />
-                <Route exact path="/recipes/new" component={RecipeForm} />
-                <Route exact path="/recipes/:id/edit" component={EditRecipePage} />
-                <Route exact path="/recipes/:id" component={RecipeDetailPage} />
+                <Route exact path="/recipes">
+                  {isAppAccessAllowed ? <RecipeListPage /> : <Redirect to="/login" />}
+                </Route>
+
+                <Route exact path="/recipes/new">
+                  {isAppAccessAllowed ? <RecipeForm /> : <Redirect to="/login" />}
+                </Route>
+
+                <Route exact path="/recipes/:id/edit">
+                  {isAppAccessAllowed ? <EditRecipePage /> : <Redirect to="/login" />}
+                </Route>
+
+                <Route exact path="/recipes/:id">
+                  {isAppAccessAllowed ? <RecipeDetailPage /> : <Redirect to="/login" />}
+                </Route>
 
                 {/* Start page */}
                 <Route exact path="/">
@@ -151,7 +195,7 @@ export default function App() {
                 </Route>
               </Switch>
             </IonRouterOutlet>
-
+          {!hideNavigation && (
             <IonTabBar slot="bottom">
               <IonTabButton tab="home" href="/home" disabled={!isAppAccessAllowed}>
                 <IonIcon icon={homeOutline} />
@@ -173,8 +217,9 @@ export default function App() {
                 <IonLabel>Profil</IonLabel>
               </IonTabButton>
             </IonTabBar>
+          )}
           </IonTabs>
-        </IonReactRouter>
-      </IonApp>
+
+      </>
   );
 }
