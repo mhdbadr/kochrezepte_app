@@ -1,15 +1,5 @@
-import { IonContent, IonIcon, IonPage, IonSearchbar } from '@ionic/react';
+import { IonContent, IonPage, IonSearchbar } from '@ionic/react';
 
-// Importing icons for the category buttons from Ionicons.
-import {
-    appsOutline,
-    flashOutline,
-    iceCreamOutline,
-    leafOutline,
-    nutritionOutline,
-    pizzaOutline,
-    restaurantOutline,
-} from 'ionicons/icons';
 
 import { useEffect, useState } from 'react';
 import { Autoplay, Pagination } from 'swiper/modules';
@@ -26,11 +16,21 @@ import { useHistory } from 'react-router-dom';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
+const categories: Array<{ label: string; value: Recipe['category']; icon: string }> = [
+    { label: 'Vegan', value: 'Vegan', icon: '🌿' },
+    { label: 'Vegetarisch', value: 'Vegetarian', icon: '🥬' },
+    { label: 'Dessert', value: 'Dessert', icon: '🧁' },
+    { label: 'Schnell', value: 'Quick', icon: '⚡' },
+    { label: 'Pasta', value: 'Pasta', icon: '🍕' },
+    { label: 'Hauptgericht', value: 'Main Dish', icon: '🍜' },
+    { label: 'Gesund', value: 'Healthy', icon: '🥗' },
+];
+
 export default function HomePage() {
     const history = useHistory();
     // Local state for recipes, selected category, loading status, and error messages.
     const [recipes, setRecipes] = useState<Recipe[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<Recipe['category'] | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -136,65 +136,38 @@ export default function HomePage() {
 
                 {/* Category buttons update the local filter without leaving the home page. */}
                 <div className="category-grid">
-                    <button className="category-item" onClick={() => setSelectedCategory('Vegan')}>
-                        <div className="category-icon">
-                            <IonIcon icon={leafOutline} />
-                        </div>
-                        <span>Vegan</span>
-                    </button>
+                    {categories.map((category) => (
+                        <button
+                            key={category.value}
+                            className={
+                                selectedCategory === category.value
+                                    ? 'category-item category-item--selected'
+                                    : 'category-item'
+                            }
+                            onClick={() => setSelectedCategory(category.value)}
+                        >
+                            <div className="category-icon">{category.icon}</div>
+                            <span>{category.label}</span>
+                        </button>
+                    ))}
 
-                    <button className="category-item" onClick={() => setSelectedCategory('Vegetarian')}>
-                        <div className="category-icon">
-                            <IonIcon icon={leafOutline} />
-                        </div>
-                        <span>Vegetarisch</span>
-                    </button>
-
-                    <button className="category-item" onClick={() => setSelectedCategory('Dessert')}>
-                        <div className="category-icon">
-                            <IonIcon icon={iceCreamOutline} />
-                        </div>
-                        <span>Desserts</span>
-                    </button>
-
-                    <button className="category-item" onClick={() => setSelectedCategory('Quick')}>
-                        <div className="category-icon">
-                            <IonIcon icon={flashOutline} />
-                        </div>
-                        <span>Schnell</span>
-                    </button>
-
-                    <button className="category-item" onClick={() => setSelectedCategory('Pasta')}>
-                        <div className="category-icon">
-                            <IonIcon icon={pizzaOutline} />
-                        </div>
-                        <span>Pasta</span>
-                    </button>
-
-                    <button className="category-item" onClick={() => setSelectedCategory('Healthy')}>
-                        <div className="category-icon">
-                            <IonIcon icon={nutritionOutline} />
-                        </div>
-                        <span>Gesund</span>
-                    </button>
-
-                    <button className="category-item" onClick={() => setSelectedCategory('Main Dish')}>
-                        <div className="category-icon">
-                            <IonIcon icon={restaurantOutline} />
-                        </div>
-                        <span>Hauptgericht</span>
-                    </button>
-
-                    <button className="category-item" onClick={() => setSelectedCategory(null)}>
-                        <div className="category-icon">
-                            <IonIcon icon={appsOutline} />
-                        </div>
+                    <button
+                        className={
+                            selectedCategory === null
+                                ? 'category-item category-item--selected'
+                                : 'category-item'
+                        }
+                        onClick={() => setSelectedCategory(null)}
+                    >
+                        <div className="category-icon">🍽️</div>
                         <span>Alle</span>
                     </button>
                 </div>
-
                 {selectedCategory && (
-                    <p>Ausgewaehlte Kategorie: {selectedCategory}</p>
+                    <p>
+                        Ausgewählte Kategorie:{' '}
+                        {categories.find((category) => category.value === selectedCategory)?.label}
+                    </p>
                 )}
 
                 <h2>Neue Rezepte</h2>
