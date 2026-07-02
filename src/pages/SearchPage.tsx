@@ -1,10 +1,7 @@
 import {
   IonContent,
-  IonLabel,
   IonPage,
   IonSearchbar,
-  IonSegment,
-  IonSegmentButton,
   IonText,
 } from '@ionic/react';
 import { useEffect,useRef, useState } from 'react';
@@ -18,9 +15,51 @@ const ingredientSynonyms: Record<string, string[]> = {
   tomate: ['tomate', 'tomaten', 'tomato', 'tomatoes', 'toma'],
   basilikum: ['basilikum', 'basil', 'basilic'],
   mozzarella: ['mozzarella', 'käse', 'kaese', 'cheese', 'kase'],
-  haehnchen: ['hähnchen', 'haehnchen', 'huhn', 'chicken'],
-  avocado: ['avocado'],
+
+  haehnchen: ['hähnchen', 'haehnchen', 'huhn', 'chicken', 'poulet'],
+  rindfleisch: ['rindfleisch', 'rind', 'beef'],
+  hackfleisch: ['hackfleisch', 'gehacktes', 'minced meat', 'ground beef'],
+  lachs: ['lachs', 'salmon'],
+  thunfisch: ['thunfisch', 'tuna'],
+
+  kartoffel: ['kartoffel', 'kartoffeln', 'potato', 'potatoes'],
+  reis: ['reis', 'rice'],
+  nudeln: ['nudeln', 'pasta', 'spaghetti', 'macaroni', 'penne'],
+  mehl: ['mehl', 'flour'],
+  zucker: ['zucker', 'sugar'],
+  salz: ['salz', 'salt'],
+  pfeffer: ['pfeffer', 'pepper'],
+  oel: ['öl', 'oel', 'oil', 'olivenöl', 'olivenoel', 'olive oil'],
+
+  ei: ['ei', 'eier', 'egg', 'eggs'],
+  milch: ['milch', 'milk'],
+  butter: ['butter'],
+  sahne: ['sahne', 'cream'],
+  joghurt: ['joghurt', 'yogurt', 'yoghurt'],
+  quark: ['quark'],
+
+  zwiebel: ['zwiebel', 'zwiebeln', 'onion', 'onions'],
+  knoblauch: ['knoblauch', 'garlic'],
+  paprika: ['paprika', 'bell pepper', 'pepper'],
+  karotte: ['karotte', 'karotten', 'möhre', 'moehre', 'carrot', 'carrots'],
+  gurke: ['gurke', 'cucumber'],
   zucchini: ['zucchini', 'courgette'],
+  avocado: ['avocado'],
+  salat: ['salat', 'lettuce', 'salad'],
+  spinat: ['spinat', 'spinach'],
+  brokkoli: ['brokkoli', 'broccoli'],
+  mais: ['mais', 'corn'],
+
+  apfel: ['apfel', 'äpfel', 'aepfel', 'apple', 'apples'],
+  banane: ['banane', 'bananen', 'banana', 'bananas'],
+  zitrone: ['zitrone', 'zitronen', 'lemon', 'lemons'],
+  orange: ['orange', 'orangen'],
+  erdbeere: ['erdbeere', 'erdbeeren', 'strawberry', 'strawberries'],
+
+  schokolade: ['schokolade', 'chocolate'],
+  kakao: ['kakao', 'cocoa'],
+  vanille: ['vanille', 'vanilla'],
+  zimt: ['zimt', 'cinnamon'],
 };
 
 function normalizeText(value: string): string {
@@ -48,23 +87,22 @@ function normalizeIngredient(input: string): string {
 export default function SearchPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [query, setQuery] = useState('');
-  const [searchMode, setSearchMode] = useState<'recipes' | 'ingredients'>('recipes');
   const [selectedCategory, setSelectedCategory] = useState<Recipe['category'] | null>(null);
-  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
   // Referez to searchfield
   const SearchInputRef = useRef<HTMLIonSearchbarElement>(null);
 
-  // after page load wait 3ms for searchButton
+  // After page load, wait 300ms and focus the search field
   useEffect(() => {
     setTimeout(() => {
       SearchInputRef.current?.setFocus();
     }, 300);
   }, []);
 
-  
+
   useEffect(() => {
     async function loadRecipes() {
       try {
@@ -93,22 +131,7 @@ export default function SearchPage() {
     { label: 'Gesund', value: 'Healthy', icon: '🥗' },
   ];
 
-  const ingredientSuggestions = [
-    { label: 'Tomaten', value: 'tomate', icon: '🍅' },
-    { label: 'Basilikum', value: 'basilikum', icon: '☘️' },
-    { label: 'Mozzarella', value: 'mozzarella', icon: '🧀' },
-    { label: 'Haehnchen', value: 'haehnchen', icon: '🍗' },
-    { label: 'Avocado', value: 'avocado', icon: '🥑' },
-    { label: 'Zucchini', value: 'zucchini', icon: '🥒' },
-  ];
 
-  function toggleIngredient(ingredient: string) {
-    setSelectedIngredients((current) =>
-        current.includes(ingredient)
-            ? current.filter((item) => item !== ingredient)
-            : [...current, ingredient]
-    );
-  }
 
   const filteredRecipes = recipes.filter((recipe) => {
     const lowerQuery = normalizeText(query);
@@ -118,30 +141,18 @@ export default function SearchPage() {
         normalizeIngredient(ingredient)
     );
 
-    const matchesRecipeSearch =
+    const matchesSearch =
         query === '' ||
         normalizeText(recipe.title).includes(lowerQuery) ||
-        normalizeText(recipe.description).includes(lowerQuery);
-
-    const matchesIngredientSearch =
-        query === '' ||
+        normalizeText(recipe.description).includes(lowerQuery) ||
         recipeIngredients.some((ingredient) =>
             ingredient.includes(normalizedQueryIngredient)
-        );
-
-    const matchesSearch =
-        searchMode === 'recipes' ? matchesRecipeSearch : matchesIngredientSearch;
-
-    const matchesSelectedIngredients =
-        selectedIngredients.length === 0 ||
-        selectedIngredients.every((ingredient) =>
-            recipeIngredients.includes(ingredient)
         );
 
     const matchesCategory =
         selectedCategory === null || recipe.category === selectedCategory;
 
-    return matchesSearch && matchesSelectedIngredients && matchesCategory;
+    return matchesSearch && matchesCategory;
   });
 
   return (
@@ -149,45 +160,16 @@ export default function SearchPage() {
         <PageHeader title="Suche" />
 
         <IonContent className="ion-padding">
-          <IonSegment value={searchMode} onIonChange={(event) => setSearchMode(event.detail.value as 'recipes' | 'ingredients')}>
-            <IonSegmentButton value="recipes">
-              <IonLabel>Rezepte</IonLabel>
-            </IonSegmentButton>
 
-            <IonSegmentButton value="ingredients">
-              <IonLabel>Zutaten</IonLabel>
-            </IonSegmentButton>
-          </IonSegment>
 
           <IonSearchbar
               ref={SearchInputRef}
-              placeholder={searchMode === 'recipes' ? 'Nach Rezepten suchen' : 'Nach Zutaten suchen'}
+              placeholder="Mit Rezeptname oder Zutat suchen"
               value={query}
               onIonInput={(event) => setQuery(event.detail.value ?? '')}
           />
 
-          {searchMode === 'ingredients' && (
-              <>
-                <h2>Nach Zutaten suchen</h2>
 
-                <div className="ingredient-grid">
-                  {ingredientSuggestions.map((ingredient) => (
-                      <button
-                          key={ingredient.value}
-                          className={
-                            selectedIngredients.includes(ingredient.value)
-                                ? 'ingredient-item ingredient-item--selected'
-                                : 'ingredient-item'
-                          }
-                          onClick={() => toggleIngredient(ingredient.value)}
-                      >
-                        <div className="ingredient-icon">{ingredient.icon}</div>
-                        <span>{ingredient.label}</span>
-                      </button>
-                  ))}
-                </div>
-              </>
-          )}
 
           <h2>Kategorien</h2>
 
