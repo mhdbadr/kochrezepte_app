@@ -7,7 +7,7 @@ import {
   IonSegmentButton,
   IonText,
 } from '@ionic/react';
-import { useEffect, useState } from 'react';
+import { useEffect,useRef, useState } from 'react';
 import PageHeader from '../components/PageHeader';
 import RecipeCard from '../components/RecipeCard';
 import type { Recipe } from '../models/Recipe';
@@ -54,6 +54,17 @@ export default function SearchPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Referez to searchfield
+  const SearchInputRef = useRef<HTMLIonSearchbarElement>(null);
+
+  // after page load wait 3ms for searchButton
+  useEffect(() => {
+    setTimeout(() => {
+      SearchInputRef.current?.setFocus();
+    }, 300);
+  }, []);
+
+  
   useEffect(() => {
     async function loadRecipes() {
       try {
@@ -149,6 +160,7 @@ export default function SearchPage() {
           </IonSegment>
 
           <IonSearchbar
+              ref={SearchInputRef}
               placeholder={searchMode === 'recipes' ? 'Nach Rezepten suchen' : 'Nach Zutaten suchen'}
               value={query}
               onIonInput={(event) => setQuery(event.detail.value ?? '')}
