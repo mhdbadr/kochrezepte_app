@@ -40,6 +40,8 @@ import RecipeForm from './pages/RecipeForm';
 import RecipeListPage from './pages/RecipeListPage';
 import SearchPage from './pages/SearchPage';
 import Wochenplaner from './pages/Wochenplaner';
+import ProfilePage from './pages/ProfilePage';
+
 
 import './App.css';
 
@@ -90,11 +92,14 @@ export default function App() {
                      }: AppRoutesProps) {
     const location = useLocation();
 
-    const isAppAccessAllowed = userRole !== null;
+    const currentUserRole = userRole ?? localStorage.getItem('userRole');
+    const isAppAccessAllowed = currentUserRole !== null;
 
     const hideNavigation =
         location.pathname === '/welcome' ||
-        location.pathname === '/onboarding';
+        location.pathname === '/onboarding' ||
+        location.pathname === '/login' ||
+        location.pathname === '/register';
   return (
       <>
           <IonMenu
@@ -146,7 +151,23 @@ export default function App() {
                       setAppUserRole={setUserRole}
                   />
                 </Route>
-                <Route exact path="/register" component={RegisterPage} />
+                <Route exact path="/profile">
+                  {isAppAccessAllowed ? (
+                      <ProfilePage
+                          setIsLoggedIn={setIsLoggedIn}
+                          setAppUserRole={setUserRole}
+                      />
+                  ) : (
+                      <Redirect to="/login" />
+                  )}
+                </Route>
+
+                <Route exact path="/register">
+                  <RegisterPage
+                      setIsLoggedIn={setIsLoggedIn}
+                      setAppUserRole={setUserRole}
+                  />
+                </Route>
 
                 {/* Main pages */}
                 <Route exact path="/home">
@@ -212,7 +233,7 @@ export default function App() {
                 <IonLabel>Favorites</IonLabel>
               </IonTabButton>
 
-              <IonTabButton tab="profile" href="/login">
+              <IonTabButton tab="profile" href="/profile" disabled={!isAppAccessAllowed}>
                 <IonIcon icon={personCircleOutline} />
                 <IonLabel>Profil</IonLabel>
               </IonTabButton>

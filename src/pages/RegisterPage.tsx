@@ -6,12 +6,17 @@ import {
     IonPage,
     useIonToast,
 } from '@ionic/react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useIonRouter } from '@ionic/react';
 import PageHeader from '../components/PageHeader';
 import { supabase } from '../lib/supabaseClient';
 
-export default function RegisterPage() {
+interface RegisterPageProps {
+    setIsLoggedIn: (value: boolean) => void;
+    setAppUserRole: (value: string | null) => void;
+}
+
+export default function RegisterPage({setIsLoggedIn,setAppUserRole,}: RegisterPageProps) {
     const router = useIonRouter();
     const [present] = useIonToast();
 
@@ -20,18 +25,35 @@ export default function RegisterPage() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [username, setUsername] = useState('');
 
+    const usernameInputRef = useRef<HTMLIonInputElement>(null);
+    useEffect(() => {
+        setTimeout(() => {
+            usernameInputRef.current?.setFocus();
+        }, 300);
+    }, []);
     const register = async () => {
         if (!username || !email || !password || !confirmPassword) {
-            present('Bitte alle Felder ausfüllen', 2000);
+            present({
+                message: 'Bitte alle Felder ausfüllen',
+                duration: 2000,
+                position: 'middle',
+                color: 'danger',
+            });
             return;
         }
 
         if (password !== confirmPassword) {
-            present('Passwörter stimmen nicht überein', 2000);
+            present({
+                message: 'Passwörter stimmen nicht überein',
+                duration: 2000,
+                position: 'middle',
+                color: 'danger',
+            });
             return;
         }
 
-        const { error } = await supabase.auth.signUp({
+
+        const { data, error } = await supabase.auth.signUp({
             email,
             password,
             options: {
@@ -42,15 +64,42 @@ export default function RegisterPage() {
         });
 
         if (error) {
-            present(error.message, 2000);
+            present({
+                message: error.message,
+                duration: 2500,
+                color: 'danger',
+            });
             return;
         }
 
-        await supabase.auth.signOut();
 
-        present('Registrierung erfolgreich. Bitte anmelden.', 2000);
+
+
+        if (data.session) {
+            localStorage.setItem('userRole', 'user');
+            setIsLoggedIn(true);
+            setAppUserRole('user');
+
+            present({
+                message: 'Registrierung erfolgreich.',
+                duration: 2000,
+                color: 'success',
+            });
+
+            window.location.replace('/home');
+
+            return;
+        }
+
+        present({
+            message: 'Registrierung erfolgreich. Bitte anmelden.',
+            duration: 2500,
+            color: 'warning',
+        });
+
         router.push('/login', 'root');
     };
+
     return (
         <IonPage>
             <PageHeader title="Registrieren" />
@@ -66,6 +115,7 @@ export default function RegisterPage() {
 
                     <IonItem>
                         <IonInput
+                            ref={usernameInputRef}
                             label="Benutzername"
                             type="text"
                             placeholder="Dein Name"
