@@ -3,36 +3,17 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import BackLink from "../components/BackLink";
 import PageHeader from "../components/PageHeader";
-import type { Recipe, RecipeIngredient } from "../models/Recipe";
+import type { Recipe, RecipeDifficulty, RecipeIngredient } from "../models/Recipe";
 import type { RecipeCategory } from "../models/RecipeCategory";
 import { getRecipeById, updateRecipe } from "../repositories/recipeRepository";
 // Reuse the create form styles so create and edit flows stay consistent.
 import "./RecipeForm.css";
+import { INGREDIENT_UNITS, type ImageInputMode } from "./recipeFormOptions";
 
 // Define the route parameters used by /recipes/:id/edit.
 interface EditRecipeRouteParams {
   id: string;
 }
-
-type ImageInputMode = "upload" | "url";
-
-const INGREDIENT_UNITS = [
-  { value: "", label: "Keine Einheit" },
-  { value: "g", label: "Gramm (g)" },
-  { value: "kg", label: "Kilogramm (kg)" },
-  { value: "ml", label: "Milliliter (ml)" },
-  { value: "l", label: "Liter (l)" },
-  { value: "TL", label: "Teeloeffel (TL)" },
-  { value: "EL", label: "Essloeffel (EL)" },
-  { value: "Stueck", label: "Stueck" },
-  { value: "Prise", label: "Prise" },
-  { value: "Bund", label: "Bund" },
-  { value: "Dose", label: "Dose" },
-  { value: "Packung", label: "Packung" },
-  { value: "Becher", label: "Becher" },
-  { value: "Tasse", label: "Tasse" },
-  { value: "Scheibe", label: "Scheibe" },
-];
 
 export default function EditRecipePage() {
   const history = useHistory();
@@ -47,7 +28,9 @@ export default function EditRecipePage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState<RecipeCategory>("Quick");
+  const [difficulty, setDifficulty] = useState<RecipeDifficulty>("Einfach");
   const [preparationTime, setPreparationTime] = useState("");
+  const [servings, setServings] = useState("1");
   const [imageUrl, setImageUrl] = useState("");
   const [imageInputMode, setImageInputMode] = useState<ImageInputMode>("upload");
   const [ingredients, setIngredients] = useState<RecipeIngredient[]>([
@@ -77,7 +60,9 @@ export default function EditRecipePage() {
             setTitle(loadedRecipe.title);
             setDescription(loadedRecipe.description);
             setCategory(loadedRecipe.category);
+            setDifficulty(loadedRecipe.difficulty);
             setPreparationTime(String(loadedRecipe.preparationTime || ""));
+            setServings(String(loadedRecipe.servings || 4));
             setImageUrl(loadedRecipe.imageUrl ?? "");
             setIngredients(
               loadedRecipe.ingredients.length
@@ -179,6 +164,13 @@ export default function EditRecipePage() {
       return;
     }
 
+    const servingsCount = Number(servings);
+
+    if (!Number.isInteger(servingsCount) || servingsCount < 1) {
+      setErrorMessage("Bitte gib an, fuer wie viele Personen das Rezept gedacht ist.");
+      return;
+    }
+
     // Keep the existing ID and creation date while replacing editable fields.
     const updatedRecipe: Recipe = {
       ...recipe,
@@ -187,8 +179,10 @@ export default function EditRecipePage() {
       ingredients: cleanedIngredients,
       instructions: cleanedInstructions,
       category,
+      difficulty,
       imageUrl: imageUrl || undefined,
       preparationTime: preparationTimeInMinutes,
+      servings: servingsCount,
     };
 
     try {
@@ -308,6 +302,32 @@ export default function EditRecipePage() {
                     value={preparationTime}
                     onChange={(event) => setPreparationTime(event.target.value)}
                     placeholder="z.B. 15"
+                  />
+                </label>
+
+                <label className="recipe-form-field" htmlFor="difficulty">
+                  <span>Schwierigkeit</span>
+                  <select
+                    id="difficulty"
+                    value={difficulty}
+                    onChange={(event) => setDifficulty(event.target.value as RecipeDifficulty)}
+                  >
+                    <option value="Einfach">Einfach</option>
+                    <option value="Mittel">Mittel</option>
+                    <option value="Schwer">Schwer</option>
+                  </select>
+                </label>
+
+                <label className="recipe-form-field" htmlFor="servings">
+                  <span>Personen</span>
+                  <input
+                    id="servings"
+                    type="number"
+                    min="1"
+                    step="1"
+                    value={servings}
+                    onChange={(event) => setServings(event.target.value)}
+                    placeholder="z.B. 4"
                   />
                 </label>
 

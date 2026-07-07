@@ -3,35 +3,13 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import BackLink from "../components/BackLink";
 import PageHeader from "../components/PageHeader";
-import type { Recipe, RecipeIngredient } from "../models/Recipe";
+import type { Recipe, RecipeDifficulty, RecipeIngredient } from "../models/Recipe";
 import type { RecipeCategory } from "../models/RecipeCategory";
 import { createRecipe } from "../repositories/recipeRepository";
 import "./RecipeForm.css";
 import { isGuest } from '../utils/auth';
 import { useIonToast } from '@ionic/react';
-
-type ImageInputMode = "upload" | "url";
-
-/**
- * A list of common ingredient units for the recipe form, including both metric and non-metric options.
- */
-const INGREDIENT_UNITS = [
-  { value: "", label: "Keine Einheit" },
-  { value: "g", label: "Gramm (g)" },
-  { value: "kg", label: "Kilogramm (kg)" },
-  { value: "ml", label: "Milliliter (ml)" },
-  { value: "l", label: "Liter (l)" },
-  { value: "TL", label: "Teeloeffel (TL)" },
-  { value: "EL", label: "Essloeffel (EL)" },
-  { value: "Stueck", label: "Stueck" },
-  { value: "Prise", label: "Prise" },
-  { value: "Bund", label: "Bund" },
-  { value: "Dose", label: "Dose" },
-  { value: "Packung", label: "Packung" },
-  { value: "Becher", label: "Becher" },
-  { value: "Tasse", label: "Tasse" },
-  { value: "Scheibe", label: "Scheibe" },
-];
+import { INGREDIENT_UNITS, type ImageInputMode } from "./recipeFormOptions";
 
 export default function RecipeForm() {
   const history = useHistory();
@@ -40,7 +18,9 @@ export default function RecipeForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState<RecipeCategory>("Quick");
+  const [difficulty, setDifficulty] = useState<RecipeDifficulty>("Einfach");
   const [preparationTime, setPreparationTime] = useState("");
+  const [servings, setServings] = useState("4");
   const [imageUrl, setImageUrl] = useState("");
   const [imageInputMode, setImageInputMode] = useState<ImageInputMode>("upload");
 
@@ -125,6 +105,13 @@ export default function RecipeForm() {
       return;
     }
 
+    const servingsCount = Number(servings);
+
+    if (!Number.isInteger(servingsCount) || servingsCount < 1) {
+      setErrorMessage("Bitte gib an, fuer wie viele Personen das Rezept gedacht ist.");
+      return;
+    }
+
     if (!finalImageUrl) {
       setErrorMessage("Bitte lade ein Bild hoch oder fuege eine Bild-URL ein.");
       return;
@@ -138,8 +125,10 @@ export default function RecipeForm() {
       ingredients: cleanedIngredients,
       instructions: cleanedInstructions,
       category,
+      difficulty,
       imageUrl: finalImageUrl,
       preparationTime: preparationTimeInMinutes,
+      servings: servingsCount,
       createdAt: new Date().toISOString(),
       isEditable: true,
     };
@@ -218,6 +207,32 @@ export default function RecipeForm() {
                     value={preparationTime}
                     onChange={(event) => setPreparationTime(event.target.value)}
                     placeholder="z.B. 15"
+                  />
+                </label>
+
+                <label className="recipe-form-field" htmlFor="difficulty">
+                  <span>Schwierigkeit</span>
+                  <select
+                    id="difficulty"
+                    value={difficulty}
+                    onChange={(event) => setDifficulty(event.target.value as RecipeDifficulty)}
+                  >
+                    <option value="Einfach">Einfach</option>
+                    <option value="Mittel">Mittel</option>
+                    <option value="Schwer">Schwer</option>
+                  </select>
+                </label>
+
+                <label className="recipe-form-field" htmlFor="servings">
+                  <span>Personen</span>
+                  <input
+                    id="servings"
+                    type="number"
+                    min="1"
+                    step="1"
+                    value={servings}
+                    onChange={(event) => setServings(event.target.value)}
+                    placeholder="z.B. 4"
                   />
                 </label>
 
