@@ -2,8 +2,18 @@ import {
   IonAlert,
   IonButton,
   IonContent,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonModal,
   IonPage,
+  IonTitle,
+  IonToolbar,
+  useIonToast,
 } from "@ionic/react";
+import { calendarOutline, closeOutline, heart, heartOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import BackLink from "../components/BackLink";
@@ -11,23 +21,51 @@ import PageHeader from "../components/PageHeader";
 import RatingComponent from '../components/RatingComponent';
 import type { Recipe } from "../models/Recipe";
 import { deleteRecipe, getRecipeById } from "../repositories/recipeRepository";
+import { addRecipeToPlanner } from "../repositories/plannerRepository";
 import "./RecipeDetailPage.css";
 import CommentSection from '../components/CommentSection';
 import { useRatings } from '../hooks/useRatings';
+import { useFavorites } from '../hooks/useFavorites';
+import { isGuest } from '../utils/auth';
 
 // Define the route parameters used by /recipes/:id.
 interface RecipeDetailRouteParams {
   id: string;
 }
 
+/**
+ * Days of the week in German, used for displaying options in the planner modal.
+ */
+const DAYS_OF_WEEK = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];
+
+/**
+ * Formats a date string into a human-readable format (DD.MM.YYYY) for display in the recipe detail page.
+ * @param dateValue
+ */
+function formatRecipeDate(dateValue?: string): string {
+  if (!dateValue) {
+    return "Datum unbekannt";
+  }
+
+  return new Intl.DateTimeFormat("de-DE", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(new Date(dateValue));
+}
+
 export default function RecipeDetailPage() {
   const history = useHistory();
+  const [present] = useIonToast();
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [isPlannerModalOpen, setIsPlannerModalOpen] = useState(false);
   const [recipe, setRecipe] = useState<Recipe | undefined>();
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [plannerErrorMessage, setPlannerErrorMessage] = useState("");
   const [deleteErrorMessage, setDeleteErrorMessage] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isAddingToPlanner, setIsAddingToPlanner] = useState(false);
   const [portions, setPortions] = useState<number>(4);
 
   // Read the recipe ID from the current URL.
@@ -35,6 +73,7 @@ export default function RecipeDetailPage() {
 
   const { getRecipeRating ,saveRating} = useRatings();
   const currentRating = getRecipeRating(id);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   useEffect(() => {
     let isPageActive = true;
@@ -68,6 +107,52 @@ export default function RecipeDetailPage() {
 
   // Only recipes created through the form should expose edit and delete actions.
   const canModifyRecipe = recipe?.isEditable === true;
+  const canRateRecipe = !canModifyRecipe;
+  const isRecipeFavorite = recipe ? isFavorite(recipe.id) : false;
+
+
+  /**
+    * Handles the toggling of the favorite status for the current recipe.
+   */
+  async function handleToggleDetailFavorite() {
+    if (!recipe) return;
+
+    if (isGuest()) {
+      present("Bitte melde dich an, um Favoriten zu speichern.", 2000);
+      return;
+    }
+
+    await toggleFavorite(recipe.id);
+    present(
+      isRecipeFavorite
+        ? "Rezept wurde aus den Favoriten entfernt."
+        : "Rezept wurde zu den Favoriten hinzugefuegt.",
+      2000,
+    );
+  }
+
+  /**
+   * Handles adding the current recipe to the weekly planner for a specific day of the week.
+   * @param dayOfWeek
+   */
+  async function handleAddRecipeToPlanner(dayOfWeek: string) {
+    if (!recipe) return;
+
+    try {
+      setIsAddingToPlanner(true);
+      setPlannerErrorMessage("");
+
+      await addRecipeToPlanner(dayOfWeek, recipe.id);
+      setIsPlannerModalOpen(false);
+      present(`Rezept wurde fuer ${dayOfWeek} eingeplant.`, 2000);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Recipe could not be added to planner.";
+      setPlannerErrorMessage(message);
+      present(message, 2500);
+    } finally {
+      setIsAddingToPlanner(false);
+    }
+  }
 
   async function handleDeleteRecipe() {
     if (!recipe || !canModifyRecipe) return;
@@ -150,6 +235,7 @@ export default function RecipeDetailPage() {
 
               <div className="recipe-detail-meta">
                 <span>{recipe.preparationTime} Min</span>
+                <span>Erstellt am {formatRecipeDate(recipe.createdAt)}</span>
                 <span>
                   ⭐ {recipe.rating ? recipe.rating.toFixed(1) : '0.0'} / 5
                 </span>
@@ -186,12 +272,42 @@ export default function RecipeDetailPage() {
               This is a sample recipe. Only recipes you create can be edited or deleted.
             </p>
           )}
+
+          <div className="recipe-detail-primary-actions">
+            <IonButton
+              className={`recipe-detail-favorite-button ${isRecipeFavorite ? "recipe-detail-favorite-button--active" : ""}`}
+              expand="block"
+              onClick={() => void handleToggleDetailFavorite()}
+            >
+              <IonIcon icon={isRecipeFavorite ? heart : heartOutline} slot="start" />
+              {isRecipeFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufuegen"}
+            </IonButton>
+
+            <IonButton
+              className="recipe-detail-planner-button"
+              expand="block"
+              fill="outline"
+              onClick={() => setIsPlannerModalOpen(true)}
+            >
+              <IonIcon icon={calendarOutline} slot="start" />
+              Rezept einplanen
+            </IonButton>
+          </div>
+
+          {plannerErrorMessage && (
+            <p className="recipe-detail-readonly-note">Planner error: {plannerErrorMessage}</p>
+          )}
                    
           <div className="recipe-detail-rating-container">
-            <article className="recipe-detail-card recipe-detail-rating-card">
+            <article className={`recipe-detail-card recipe-detail-rating-card ${canRateRecipe ? "" : "recipe-detail-rating-card--readonly"}`}>
               
               <div className="recipe-detail-rating-text">
-                <h3>Wie schmeckt dir dieses Rezept?</h3>
+                <h3>{canRateRecipe ? "Wie schmeckt dir dieses Rezept?" : "Eigenes Rezept"}</h3>
+                {!canRateRecipe && (
+                  <p className="recipe-detail-rating-note">
+                    Eigene Rezepte koennen nicht selbst bewertet werden.
+                  </p>
+                )}
                 <p>Gib deine persönliche Bewertung ab</p>
               </div>
 
@@ -199,6 +315,8 @@ export default function RecipeDetailPage() {
                   <RatingComponent 
                     initialRating={currentRating} 
                     onRatingChange={async (newStars) => {
+                      if (!canRateRecipe) return;
+
                       try {
                         // 1. Speichere die persönliche Bewertung des Nutzers
                         await saveRating(recipe.id, newStars); 
@@ -246,6 +364,47 @@ export default function RecipeDetailPage() {
             onDidDismiss={() => setIsDeleteAlertOpen(false)}
           />
 
+          <IonModal isOpen={isPlannerModalOpen} onDidDismiss={() => setIsPlannerModalOpen(false)}>
+            <IonHeader>
+              <IonToolbar>
+                <IonTitle>Wochentag waehlen</IonTitle>
+                <IonButton slot="end" fill="clear" onClick={() => setIsPlannerModalOpen(false)}>
+                  <IonIcon icon={closeOutline} />
+                </IonButton>
+              </IonToolbar>
+            </IonHeader>
+
+            <IonContent>
+              <div className="recipe-detail-planner-modal">
+                <section className="recipe-detail-planner-modal__intro">
+                  {recipe.imageUrl && (
+                    <img src={recipe.imageUrl} alt={recipe.title} />
+                  )}
+                  <div>
+                    <p>Wochenplanung</p>
+                    <h2>{recipe.title}</h2>
+                    <span>Waehle einen Tag aus, an dem du dieses Rezept kochen moechtest.</span>
+                  </div>
+                </section>
+
+                <IonList className="recipe-detail-day-list" lines="none">
+                  {DAYS_OF_WEEK.map((day) => (
+                    <IonItem
+                      button
+                      className="recipe-detail-day-item"
+                      disabled={isAddingToPlanner}
+                      key={day}
+                      onClick={() => void handleAddRecipeToPlanner(day)}
+                    >
+                      <IonIcon icon={calendarOutline} slot="start" />
+                      <IonLabel>{day}</IonLabel>
+                    </IonItem>
+                  ))}
+                </IonList>
+              </div>
+            </IonContent>
+          </IonModal>
+
           <section className="recipe-detail-content">
             <article className="recipe-detail-card">
               <h2>Ingredients</h2>
@@ -272,7 +431,9 @@ export default function RecipeDetailPage() {
               <h2>Instructions</h2>
               <ol className="recipe-detail-steps">
                 {recipe.instructions.map((step, index) => (
-                  <li key={index}>{step}</li>
+                  <li key={index}>
+                    <span className="recipe-detail-step__text">{step}</span>
+                  </li>
                 ))}
               </ol>
             </article>
