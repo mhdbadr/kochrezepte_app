@@ -71,6 +71,8 @@ export async function createRecipe(recipe: Recipe): Promise<Recipe> {
       category_id: categoryId,
       image_url: recipe.imageUrl ?? null,
       preparation_time: recipe.preparationTime,
+      difficulty: recipe.difficulty,
+      servings: recipe.servings,
       created_by: userId,
     })
     .select("id")
@@ -145,6 +147,8 @@ export async function updateRecipe(recipe: Recipe): Promise<Recipe> {
       category_id: categoryId,
       image_url: recipe.imageUrl ?? null,
       preparation_time: recipe.preparationTime,
+      difficulty: recipe.difficulty,
+      servings: recipe.servings,
     })
     .eq("id", recipe.id)
     .eq("created_by", userId);

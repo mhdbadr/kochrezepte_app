@@ -2,6 +2,7 @@
  * This module provides a mapping function to convert Supabase recipe rows into the Recipe model used by the UI
  */
 import type { Recipe } from "../models/Recipe";
+import type { RecipeDifficulty } from "../models/Recipe";
 import type { RecipeCategory } from "../models/RecipeCategory";
 import type { SupabaseRecipeRow } from "../models/SupabaseRecipeRow";
 
@@ -34,6 +35,14 @@ function toRecipeCategory(categoryName: string | undefined): RecipeCategory {
     : fallbackCategory;
 }
 
+function toRecipeDifficulty(difficulty: string | null): RecipeDifficulty {
+  const allowedDifficulties: RecipeDifficulty[] = ["Einfach", "Mittel", "Schwer"];
+
+  return allowedDifficulties.includes(difficulty as RecipeDifficulty)
+    ? (difficulty as RecipeDifficulty)
+    : "Einfach";
+}
+
 // Converts the normalized Supabase rows into the Recipe model used by the UI.
 export function mapSupabaseRecipeToRecipe(recipe: SupabaseRecipeRow): Recipe {
   return {
@@ -41,8 +50,10 @@ export function mapSupabaseRecipeToRecipe(recipe: SupabaseRecipeRow): Recipe {
     title: recipe.title,
     description: recipe.description,
     category: toRecipeCategory(getCategoryName(recipe.recipe_categories)),
+    difficulty: toRecipeDifficulty(recipe.difficulty),
     imageUrl: recipe.image_url ?? undefined,
     preparationTime: recipe.preparation_time,
+    servings: recipe.servings && recipe.servings > 0 ? recipe.servings : 4,
     rating: recipe.rating ?? 0,
     ingredients: [...recipe.recipe_ingredients]
       .sort((a, b) => a.sort_order - b.sort_order)

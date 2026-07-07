@@ -8,6 +8,8 @@ export const recipeSelectQuery = `
   description,
   image_url,
   preparation_time,
+  difficulty,
+  servings,
   created_at,
   created_by,
   rating,

@@ -8,6 +8,8 @@ export interface SupabaseRecipeRow {
   description: string;
   image_url: string | null;
   preparation_time: number;
+  difficulty: string | null;
+  servings: number | null;
   created_at: string | null;
   created_by: string | null;
   rating: number | null;
