@@ -14,6 +14,26 @@ interface EditRecipeRouteParams {
   id: string;
 }
 
+type ImageInputMode = "upload" | "url";
+
+const INGREDIENT_UNITS = [
+  { value: "", label: "Keine Einheit" },
+  { value: "g", label: "Gramm (g)" },
+  { value: "kg", label: "Kilogramm (kg)" },
+  { value: "ml", label: "Milliliter (ml)" },
+  { value: "l", label: "Liter (l)" },
+  { value: "TL", label: "Teeloeffel (TL)" },
+  { value: "EL", label: "Essloeffel (EL)" },
+  { value: "Stueck", label: "Stueck" },
+  { value: "Prise", label: "Prise" },
+  { value: "Bund", label: "Bund" },
+  { value: "Dose", label: "Dose" },
+  { value: "Packung", label: "Packung" },
+  { value: "Becher", label: "Becher" },
+  { value: "Tasse", label: "Tasse" },
+  { value: "Scheibe", label: "Scheibe" },
+];
+
 export default function EditRecipePage() {
   const history = useHistory();
   const { id } = useParams<EditRecipeRouteParams>();
@@ -27,9 +47,9 @@ export default function EditRecipePage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState<RecipeCategory>("Quick");
-  const [preparationTime, setPreparationTime] = useState(0);
-  const [rating, setRating] = useState(0);
+  const [preparationTime, setPreparationTime] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [imageInputMode, setImageInputMode] = useState<ImageInputMode>("upload");
   const [ingredients, setIngredients] = useState<RecipeIngredient[]>([
     { name: "", amount: null, unit: null },
   ]);
@@ -57,8 +77,7 @@ export default function EditRecipePage() {
             setTitle(loadedRecipe.title);
             setDescription(loadedRecipe.description);
             setCategory(loadedRecipe.category);
-            setPreparationTime(loadedRecipe.preparationTime);
-            setRating(loadedRecipe.rating ?? 0);
+            setPreparationTime(String(loadedRecipe.preparationTime || ""));
             setImageUrl(loadedRecipe.imageUrl ?? "");
             setIngredients(
               loadedRecipe.ingredients.length
@@ -153,6 +172,13 @@ export default function EditRecipePage() {
       return;
     }
 
+    const preparationTimeInMinutes = Number(preparationTime);
+
+    if (!Number.isFinite(preparationTimeInMinutes) || preparationTimeInMinutes < 1) {
+      setErrorMessage("Bitte gib eine Zubereitungszeit von mindestens 1 Minute ein.");
+      return;
+    }
+
     // Keep the existing ID and creation date while replacing editable fields.
     const updatedRecipe: Recipe = {
       ...recipe,
@@ -162,8 +188,7 @@ export default function EditRecipePage() {
       instructions: cleanedInstructions,
       category,
       imageUrl: imageUrl || undefined,
-      preparationTime,
-      rating: rating || undefined,
+      preparationTime: preparationTimeInMinutes,
     };
 
     try {
@@ -279,24 +304,13 @@ export default function EditRecipePage() {
                   <input
                     id="preparationTime"
                     type="number"
-                    min="0"
+                    min="1"
                     value={preparationTime}
-                    onChange={(event) => setPreparationTime(Number(event.target.value))}
+                    onChange={(event) => setPreparationTime(event.target.value)}
+                    placeholder="z.B. 15"
                   />
                 </label>
 
-                <label className="recipe-form-field" htmlFor="rating">
-                  <span>Rating</span>
-                  <input
-                    id="rating"
-                    type="number"
-                    min="0"
-                    max="5"
-                    step="0.1"
-                    value={rating}
-                    onChange={(event) => setRating(Number(event.target.value))}
-                  />
-                </label>
               </div>
 
               <label className="recipe-form-field" htmlFor="description">
@@ -311,25 +325,57 @@ export default function EditRecipePage() {
               </label>
             </fieldset>
 
-            {/* The image section supports both external URLs and uploaded previews. */}
+            {/* Users can either upload a local image or paste an image URL for preview. */}
             <fieldset className="recipe-form-card">
-              <legend>Image</legend>
+              <legend>Bild</legend>
 
-              <label className="recipe-form-field" htmlFor="imageUrl">
-                <span>Image URL</span>
-                <input
-                  id="imageUrl"
-                  type="url"
-                  value={imageUrl.startsWith("data:") ? "" : imageUrl}
-                  onChange={(event) => setImageUrl(event.target.value)}
-                  placeholder="https://example.com/recipe.jpg"
-                />
-              </label>
+              <div className="recipe-form-image-menu" role="tablist" aria-label="Bildquelle waehlen">
+                <button
+                  className={imageInputMode === "upload" ? "recipe-form-image-menu__item recipe-form-image-menu__item--active" : "recipe-form-image-menu__item"}
+                  type="button"
+                  onClick={() => setImageInputMode("upload")}
+                >
+                  Bild hochladen
+                </button>
+                <button
+                  className={imageInputMode === "url" ? "recipe-form-image-menu__item recipe-form-image-menu__item--active" : "recipe-form-image-menu__item"}
+                  type="button"
+                  onClick={() => setImageInputMode("url")}
+                >
+                  URL einfuegen
+                </button>
+              </div>
 
-              <label className="recipe-form-field" htmlFor="imageUpload">
-                <span>Upload image</span>
-                <input id="imageUpload" type="file" accept="image/*" onChange={handleImageUpload} />
-              </label>
+              <div className="recipe-form-image-options">
+                {imageInputMode === "upload" && (
+                  <section className="recipe-form-image-option">
+                    <div>
+                      <h3>Bild hochladen</h3>
+                      <p>Waehle ein Bild von deinem Geraet aus.</p>
+                    </div>
+
+                    <label className="recipe-form-upload-button" htmlFor="imageUpload">
+                      Datei auswaehlen
+                    </label>
+                    <input id="imageUpload" type="file" accept="image/*" onChange={handleImageUpload} />
+                  </section>
+                )}
+
+                {imageInputMode === "url" && (
+                  <section className="recipe-form-image-option">
+                    <label className="recipe-form-field" htmlFor="imageUrl">
+                      <span>Bild per URL einfuegen</span>
+                      <input
+                        id="imageUrl"
+                        type="url"
+                        value={imageUrl.startsWith("data:") ? "" : imageUrl}
+                        onChange={(event) => setImageUrl(event.target.value)}
+                        placeholder="https://example.com/recipe.jpg"
+                      />
+                    </label>
+                  </section>
+                )}
+              </div>
 
               {imageUrl && (
                 <figure className="recipe-form-image-preview">
@@ -373,15 +419,19 @@ export default function EditRecipePage() {
                     />
                   </label>
 
-                  <label className="recipe-form-field" htmlFor={`ingredient-unit-${index}`}>
-                    <span>Unit</span>
-                    <input
+                  <label className="recipe-form-field recipe-form-unit-field" htmlFor={`ingredient-unit-${index}`}>
+                    <span>Einheit</span>
+                    <select
                       id={`ingredient-unit-${index}`}
-                      type="text"
                       value={ingredient.unit ?? ""}
-                      onChange={(event) => updateIngredient(index, { unit: event.target.value })}
-                      placeholder="g, ml, pcs"
-                    />
+                      onChange={(event) => updateIngredient(index, { unit: event.target.value || null })}
+                    >
+                      {INGREDIENT_UNITS.map((unit) => (
+                        <option key={unit.value || "none"} value={unit.value}>
+                          {unit.label}
+                        </option>
+                      ))}
+                    </select>
                   </label>
 
                   <button
