@@ -85,6 +85,7 @@ export default function RecipeDetailPage() {
 
         if (isPageActive) {
           setRecipe(loadedRecipe);
+          setPortions(loadedRecipe?.servings ?? 4);
           setErrorMessage("");
         }
       } catch (error) {
@@ -235,6 +236,8 @@ export default function RecipeDetailPage() {
 
               <div className="recipe-detail-meta">
                 <span>{recipe.preparationTime} Min</span>
+                <span>{recipe.difficulty}</span>
+                <span>Fuer {recipe.servings} {recipe.servings === 1 ? "Person" : "Personen"}</span>
                 <span>Erstellt am {formatRecipeDate(recipe.createdAt)}</span>
                 <span>
                   ⭐ {recipe.rating ? recipe.rating.toFixed(1) : '0.0'} / 5
@@ -248,7 +251,7 @@ export default function RecipeDetailPage() {
                 >
                   -
                 </button>
-                <span className="recipe-detail-portion-count">{portions} Portionen</span>
+                <span className="recipe-detail-portion-count">{portions} {portions === 1 ? "Person" : "Personen"}</span>
                 <button 
                   className="recipe-detail-portion-button"
                   onClick={() => setPortions(portions + 1)}
@@ -416,7 +419,7 @@ export default function RecipeDetailPage() {
               <ul className="recipe-detail-list">
                 {recipe.ingredients.map((ingredient, index) => {
                   const baseAmount = ingredient.amount ?? 0;
-                  const scaledAmount = (baseAmount / 4) * portions;
+                  const scaledAmount = (baseAmount / recipe.servings) * portions;
                   const formattedAmount =
                     baseAmount > 0
                       ? `${scaledAmount % 1 === 0 ? scaledAmount.toFixed(0) : scaledAmount.toFixed(1)} ${ingredient.unit ?? ''}`.trim()

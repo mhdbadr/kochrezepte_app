@@ -88,7 +88,7 @@ export default function FavoritesPage() {
                   title={recipe.title}
                   imageUrl={recipe.imageUrl ?? ''}
                   duration={recipe.preparationTime}
-                  difficulty="Einfach"
+                  difficulty={recipe.difficulty}
                   category={recipe.category}
                   rating={recipe.rating}
                   to={`/recipes/${recipe.id}`}

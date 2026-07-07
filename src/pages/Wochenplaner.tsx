@@ -127,7 +127,7 @@ export default function PlannerPage() {
                                                                 <RecipeCard
                                                                     id={recipe.id} title={recipe.title}
                                                                     imageUrl={recipe.imageUrl ?? ''} duration={recipe.preparationTime}
-                                                                    difficulty="Einfach" category={recipe.category} rating={recipe.rating}
+                                                                    difficulty={recipe.difficulty} category={recipe.category} rating={recipe.rating}
                                                                     compact={true} to={`/recipes/${recipe.id}`}
                                                                 />
                                                             </IonItem>
