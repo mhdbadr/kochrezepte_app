@@ -135,6 +135,108 @@
   resize: vertical;
 }
 
+.recipe-form-unit-field {
+  position: relative;
+}
+
+.recipe-form-unit-field select {
+  min-height: 48px;
+  padding-right: 38px;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--app-primary) 50%),
+    linear-gradient(135deg, var(--app-primary) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 55%,
+    calc(100% - 12px) 55%;
+  background-repeat: no-repeat;
+  background-size: 6px 6px, 6px 6px;
+  cursor: pointer;
+}
+
+.recipe-form-unit-field select:hover {
+  border-color: rgba(var(--ion-color-primary-rgb), 0.55);
+}
+
+.recipe-form-image-menu {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 14px;
+  padding: 5px;
+  border: 1px solid var(--app-border);
+  border-radius: 14px;
+  background: var(--app-surface-muted);
+}
+
+.recipe-form-image-menu__item {
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 10px;
+  color: var(--app-muted);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 850;
+  text-align: center;
+}
+
+.recipe-form-image-menu__item--active {
+  color: #ffffff;
+  background: var(--app-primary);
+  box-shadow: 0 6px 16px rgba(67, 126, 83, 0.18);
+}
+
+.recipe-form-image-options {
+  display: grid;
+  gap: 14px;
+}
+
+.recipe-form-image-option {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--app-border);
+  border-radius: 14px;
+  background: var(--app-surface-muted);
+}
+
+.recipe-form-image-option h3 {
+  margin: 0 0 4px;
+  color: var(--app-text);
+  font-size: 1rem;
+}
+
+.recipe-form-image-option p {
+  margin: 0;
+  color: var(--app-muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.recipe-form-image-option input[type="file"] {
+  display: none;
+}
+
+.recipe-form-upload-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  color: #ffffff;
+  background: var(--app-primary);
+  cursor: pointer;
+  font-weight: 800;
+  text-align: center;
+}
+
+.recipe-form-upload-button:hover {
+  background: #55754e;
+}
+
 .recipe-form-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
