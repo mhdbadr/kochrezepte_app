@@ -13,7 +13,7 @@ import {
   IonToolbar,
   useIonToast,
 } from "@ionic/react";
-import { calendarOutline, closeOutline, heart, heartOutline } from "ionicons/icons";
+import { calendarOutline, closeOutline, createOutline, heart, heartOutline, trashOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import BackLink from "../components/BackLink";
@@ -260,17 +260,27 @@ export default function RecipeDetailPage() {
           </section>
 
           {/* Sample recipes stay read-only, while user-created recipes can be managed. */}
-          {canModifyRecipe ? (
-            <div className="recipe-detail-actions">
-              <IonButton routerLink={`/recipes/${recipe.id}/edit`}>Edit recipe</IonButton>
-              <IonButton color="danger" onClick={() => setIsDeleteAlertOpen(true)} disabled={isDeleting}>
-                {isDeleting ? "Deleting..." : "Delete recipe"}
+          {canModifyRecipe && (
+            <div className="recipe-detail-owner-actions">
+              <IonButton
+                className="recipe-detail-owner-button recipe-detail-owner-button--edit"
+                fill="outline"
+                routerLink={`/recipes/${recipe.id}/edit`}
+              >
+                <IonIcon icon={createOutline} slot="start" />
+                bearbeiten
+              </IonButton>
+
+              <IonButton
+                className="recipe-detail-owner-button recipe-detail-owner-button--delete"
+                fill="outline"
+                onClick={() => setIsDeleteAlertOpen(true)}
+                disabled={isDeleting}
+              >
+                <IonIcon icon={trashOutline} slot="start" />
+                {isDeleting ? "Wird geloescht..." : "loeschen"}
               </IonButton>
             </div>
-          ) : (
-            <p className="recipe-detail-readonly-note">
-              This is a sample recipe. Only recipes you create can be edited or deleted.
-            </p>
           )}
 
           <div className="recipe-detail-primary-actions">
@@ -410,7 +420,7 @@ export default function RecipeDetailPage() {
                   const formattedAmount =
                     baseAmount > 0
                       ? `${scaledAmount % 1 === 0 ? scaledAmount.toFixed(0) : scaledAmount.toFixed(1)} ${ingredient.unit ?? ''}`.trim()
-                      : 'nach Bedarf';
+                      : 'n. B.';
 
                   return (
                     <li className="recipe-detail-ingredient" key={index}>

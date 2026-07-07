@@ -79,6 +79,45 @@
   margin: 20px 0;
 }
 
+.recipe-detail-owner-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0 14px;
+}
+
+.recipe-detail-owner-button {
+  --background: transparent;
+  --border-radius: 16px;
+  --border-style: solid;
+  --border-width: 1px;
+  --box-shadow: none;
+  --padding-bottom: 16px;
+  --padding-top: 16px;
+  min-height: 56px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 800;
+}
+
+.recipe-detail-owner-button::part(native) {
+  gap: 8px;
+}
+
+.recipe-detail-owner-button--edit {
+  --background-activated: rgba(107, 142, 98, 0.08);
+  --background-hover: rgba(107, 142, 98, 0.06);
+  --border-color: var(--app-primary);
+  --color: var(--app-primary);
+}
+
+.recipe-detail-owner-button--delete {
+  --background-activated: rgba(167, 55, 55, 0.08);
+  --background-hover: rgba(167, 55, 55, 0.06);
+  --border-color: rgba(167, 55, 55, 0.55);
+  --color: #a73737;
+}
+
 .recipe-detail-primary-actions {
   display: grid;
   gap: 12px;
