@@ -237,7 +237,6 @@ export default function RecipeDetailPage() {
               <div className="recipe-detail-meta">
                 <span>{recipe.preparationTime} Min</span>
                 <span>{recipe.difficulty}</span>
-                <span>Fuer {recipe.servings} {recipe.servings === 1 ? "Person" : "Personen"}</span>
                 <span>Erstellt am {formatRecipeDate(recipe.createdAt)}</span>
                 <span>
                   ⭐ {recipe.rating ? recipe.rating.toFixed(1) : '0.0'} / 5
