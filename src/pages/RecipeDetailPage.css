@@ -435,16 +435,6 @@
   font-size: 0.8rem;
 }
 
-.recipe-detail-rating-note {
-  color: var(--app-muted);
-  font-weight: 600;
-}
-
-.recipe-detail-rating-card--readonly .recipe-detail-rating-text > p:not(.recipe-detail-rating-note),
-.recipe-detail-rating-card--readonly .recipe-detail-rating-stars {
-  display: none;
-}
-
 .recipe-detail-rating-stars {
   margin-top: 0;
   flex-shrink: 0;

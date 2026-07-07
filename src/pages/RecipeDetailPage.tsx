@@ -298,16 +298,12 @@ export default function RecipeDetailPage() {
             <p className="recipe-detail-readonly-note">Planner error: {plannerErrorMessage}</p>
           )}
                    
+          {canRateRecipe && (
           <div className="recipe-detail-rating-container">
-            <article className={`recipe-detail-card recipe-detail-rating-card ${canRateRecipe ? "" : "recipe-detail-rating-card--readonly"}`}>
+            <article className="recipe-detail-card recipe-detail-rating-card">
               
               <div className="recipe-detail-rating-text">
-                <h3>{canRateRecipe ? "Wie schmeckt dir dieses Rezept?" : "Eigenes Rezept"}</h3>
-                {!canRateRecipe && (
-                  <p className="recipe-detail-rating-note">
-                    Eigene Rezepte koennen nicht selbst bewertet werden.
-                  </p>
-                )}
+                <h3>Wie schmeckt dir dieses Rezept?</h3>
                 <p>Gib deine persönliche Bewertung ab</p>
               </div>
 
@@ -315,8 +311,6 @@ export default function RecipeDetailPage() {
                   <RatingComponent 
                     initialRating={currentRating} 
                     onRatingChange={async (newStars) => {
-                      if (!canRateRecipe) return;
-
                       try {
                         // 1. Speichere die persönliche Bewertung des Nutzers
                         await saveRating(recipe.id, newStars); 
@@ -336,6 +330,7 @@ export default function RecipeDetailPage() {
 
             </article>
           </div>
+          )}
 
           
           {deleteErrorMessage && (
