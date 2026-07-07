@@ -30,6 +30,8 @@ create table if not exists public.recipes (
   category_id uuid references public.recipe_categories(id) on delete set null,
   image_url text,
   preparation_time integer not null default 0,
+  difficulty text not null default 'Einfach' check (difficulty in ('Einfach', 'Mittel', 'Schwer')),
+  servings integer not null default 1 check (servings >= 1),
   rating numeric not null default 0,
   rating_count integer not null default 0,
   created_by uuid references auth.users(id) on delete set null,
@@ -42,6 +44,24 @@ add column if not exists rating numeric not null default 0;
 
 alter table public.recipes
 add column if not exists rating_count integer not null default 0;
+
+alter table public.recipes
+add column if not exists difficulty text not null default 'Einfach';
+
+alter table public.recipes
+drop constraint if exists recipes_difficulty_check;
+
+alter table public.recipes
+add constraint recipes_difficulty_check check (difficulty in ('Einfach', 'Mittel', 'Schwer'));
+
+alter table public.recipes
+add column if not exists servings integer not null default 1;
+
+alter table public.recipes
+drop constraint if exists recipes_servings_check;
+
+alter table public.recipes
+add constraint recipes_servings_check check (servings >= 1);
 
 -- ---------------------------------------------------------
 -- 4. Recipe ingredients
