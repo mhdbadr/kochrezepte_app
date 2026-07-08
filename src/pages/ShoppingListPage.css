@@ -5,3 +5,19 @@
   background-size: cover;
   background-position: center;
 }
+.shopping-guest-banner {
+  background-color: #fff3cd; 
+  color: #856404;            
+  padding: 16px;
+  border-radius: 12px;
+  margin: 16px;              
+  text-align: center;
+  font-weight: 500;
+  border: 1px solid #ffeeba; 
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); 
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}

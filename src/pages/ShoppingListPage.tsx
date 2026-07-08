@@ -8,6 +8,7 @@ import { getPlannerEntries } from '../repositories/plannerRepository';
 import { loadAppSettings } from '../utils/appSettings';
 import './RecipeForm.css';
 import './ShoppingListPage.css';
+import { isGuest } from '../utils/auth';
 
 const CHECKED_ITEMS_STORAGE_KEY = 'bitebook_checked_shopping_items';
 
@@ -75,6 +76,9 @@ const ShoppingListPage: React.FC = () => {
 
 useEffect(() => {
   const fetchPlannedRecipes = async () => {
+    
+    if (isGuest()) return;
+
     try {
       const entries = await getPlannerEntries();
       
@@ -126,7 +130,12 @@ const toggleCheck = (index: number) => {
             <h1>Deine Einkaufsliste</h1>
             <span>Alle benötigten Zutaten für deine geplanten Rezepte im Überblick.</span>
           </section>
-
+          {/* Show a friendly notice if the user is a guest using a clean CSS class */}
+                          {isGuest() && (
+                              <div className="shopping-guest-banner">
+                                   Du bist als Gast angemeldet. Bitte melde dich an, um deine persönliche Einkaufsliste zu nutzen!
+                              </div>
+                          )}
           <div className="recipe-form">
             <fieldset className="recipe-form-card">
               <legend>Zutaten zum Einkaufen</legend>
