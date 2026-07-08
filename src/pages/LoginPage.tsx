@@ -13,6 +13,7 @@ import { supabase } from '../lib/supabaseClient';
 import { useEffect, useRef, useState } from 'react';
 import './LoginPage.css';
 
+
 interface LoginPageProps {
     setIsLoggedIn: (value: boolean) => void;
     setAppUserRole: (value: string | null) => void;
@@ -76,7 +77,7 @@ export default function LoginPage({ setIsLoggedIn, setAppUserRole }: LoginPagePr
     };
 
     return (
-        <IonPage>
+         <IonPage>
             <PageHeader title="Anmelden" />
 
             <IonContent className="ion-padding">

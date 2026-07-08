@@ -8,6 +8,7 @@ import {
 } from '@ionic/react';
 import { useEffect, useRef, useState } from 'react';
 import { useIonRouter } from '@ionic/react';
+// Stift Symbol.
 import { createOutline } from 'ionicons/icons';
 
 import PageHeader from '../components/PageHeader';
@@ -79,10 +80,10 @@ export default function ProfilePage({
 
         present('Name wurde gespeichert', 2000);
     };
-
     const uploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        // take first selected file
         const file = event.target.files?.[0];
-
+        // if no file is selected, return
         if (!file) return;
 
         const { data: userData } = await supabase.auth.getUser();
@@ -92,9 +93,10 @@ export default function ProfilePage({
             present('Kein Benutzer angemeldet', 2000);
             return;
         }
-
+        // create filepath
         const filePath = `${user.id}/avatar.jpg`;
-
+        // upload image to Supabase Storage
+        // Supabase Storage ceats than publicurl
         const { error: uploadError } = await supabase.storage
             .from('avatars')
             .upload(filePath, file, {
@@ -105,13 +107,13 @@ export default function ProfilePage({
             present(uploadError.message, 2000);
             return;
         }
-
+        // get publicurl from Supabase Storage
         const { data } = supabase.storage
             .from('avatars')
             .getPublicUrl(filePath);
 
         const publicUrl = data.publicUrl;
-
+        // save publicurl in supabase
         const { error: updateError } = await supabase.auth.updateUser({
             data: {
                 username,

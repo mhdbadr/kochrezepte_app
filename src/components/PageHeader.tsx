@@ -81,7 +81,7 @@ export default function PageHeader({ title, subtitle = 'BiteBook' }: PageHeaderP
             <IonButtons
                 slot="end"
                 className="header-profile"
-                onClick={() => router.push('/login', 'forward')}
+                onClick={() => router.push('/profile', 'forward')}
             >
               <IonAvatar className="header-avatar">
                 {avatarUrl ? (

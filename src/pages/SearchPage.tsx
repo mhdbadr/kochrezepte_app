@@ -10,7 +10,7 @@ import RecipeCard from '../components/RecipeCard';
 import type { Recipe } from '../models/Recipe';
 import { getAllRecipes } from '../repositories/recipeRepository';
 import './SearchPage.css';
-
+// Zutaten-Synonyme
 const ingredientSynonyms: Record<string, string[]> = {
   tomate: ['tomate', 'tomaten', 'tomato', 'tomatoes', 'toma'],
   basilikum: ['basilikum', 'basil', 'basilic'],
@@ -61,7 +61,8 @@ const ingredientSynonyms: Record<string, string[]> = {
   vanille: ['vanille', 'vanilla'],
   zimt: ['zimt', 'cinnamon'],
 };
-
+// Converts text to a searchable format:
+// lowercase, no spaces, and German special characters replaced
 function normalizeText(value: string): string {
   return value
       .toLowerCase()
@@ -71,11 +72,14 @@ function normalizeText(value: string): string {
       .replace(/ü/g, 'ue')
       .replace(/ß/g, 'ss');
 }
-
+// Converts an ingredient or search input to the main ingredient key
 function normalizeIngredient(input: string): string {
   const value = normalizeText(input);
 
+  // go through all Ingredients
   for (const [key, words] of Object.entries(ingredientSynonyms)) {
+    // 1-case word(tomaten) includes value (tomat)
+    // 2-case value(tomatensuppe) includes word(tomaten)
     if (words.some((word) => normalizeText(word).includes(value) || value.includes(normalizeText(word)))) {
       return key;
     }
@@ -85,8 +89,13 @@ function normalizeIngredient(input: string): string {
 }
 
 export default function SearchPage() {
+  // recipes is current list
+  // Stores all loaded recipes
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  // query is the text that is searched for
+  // Stores the current search text
   const [query, setQuery] = useState('');
+  // Stores the selected category filter
   const [selectedCategory, setSelectedCategory] = useState<Recipe['category'] | null>(null);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -102,7 +111,7 @@ export default function SearchPage() {
     }, 300);
   }, []);
 
-
+// Load all recipes once when the page opens
   useEffect(() => {
     async function loadRecipes() {
       try {
@@ -131,16 +140,21 @@ export default function SearchPage() {
     { label: 'Gesund', value: 'Healthy', icon: '🥗' },
   ];
 
-
-
+// new filteredRicipes List
+// Filter recipes by search text and selected category
   const filteredRecipes = recipes.filter((recipe) => {
+    // normalze input
     const lowerQuery = normalizeText(query);
+    // Converts an search input to the main ingredient key
     const normalizedQueryIngredient = normalizeIngredient(query);
-
+    // normlize all recipe ingredient
     const recipeIngredients = recipe.ingredients.map((ingredient) =>
         normalizeIngredient(ingredient)
     );
-
+    // 4 Cases 1- searchfild is empty Check title, description, and ingredients
+    // 2- normlized Recipetitle includes input
+    // 3- normlized Recipedescription includes input
+    // 4- min one of normlized recipeingredients includes input
     const matchesSearch =
         query === '' ||
         normalizeText(recipe.title).includes(lowerQuery) ||
@@ -148,7 +162,9 @@ export default function SearchPage() {
         recipeIngredients.some((ingredient) =>
             ingredient.includes(normalizedQueryIngredient)
         );
-
+    // Categorien-Filter 2 Cases
+    // 1- selectedCategory is null -> all recipes
+    // 2- selectedCategory is not null -> only recipes with selectedCategory
     const matchesCategory =
         selectedCategory === null || recipe.category === selectedCategory;
 
