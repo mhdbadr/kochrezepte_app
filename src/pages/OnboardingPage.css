@@ -1,0 +1,80 @@
+.onboarding-content {
+    --background: #f8faf6;
+}
+
+.onboarding-swiper {
+    width: 100%;
+    height: 100%;
+}
+
+.onboarding-slide {
+    min-height: 100%;
+    padding: 10px 22px 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.media-box {
+    width: 280px;
+    height: 620px;
+    border-radius: 28px;
+    overflow: hidden;
+    background: #eaf4e8;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    margin-bottom: 35px;
+}
+
+.onboarding-video,
+.onboarding-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Falls dein Video nicht abgeschnitten werden soll, nimm statt cover: contain */
+/*
+.onboarding-video {
+    object-fit: contain;
+    background: #eaf4e8;
+}
+*/
+
+.onboarding-slide h1 {
+    font-size: 26px;
+    font-weight: 800;
+    color: #12351f;
+    margin: 0 0 12px;
+}
+
+.onboarding-slide p {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #4f5f54;
+    margin: 0;
+    max-width: 310px;
+}
+
+.start-button {
+    margin-top: 25px;
+    transform: translateY(-22px);
+    --background: #2f7d32;
+    --background-hover: #256528;
+    --border-radius: 14px;
+    width: 260px;
+}
+
+/* Swiper Punkte */
+.swiper-pagination-bullet {
+    background: #cfd8cf;
+    opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+    background: #2f7d32;
+    width: 20px;
+    border-radius: 20px;
+}
