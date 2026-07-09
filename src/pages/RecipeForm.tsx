@@ -71,7 +71,7 @@ export default function RecipeForm() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (isGuest()) {
-      showValidationToast("Bitte melde dich an, um ein Rezept zu erstellen.");
+      showErrorToast("Bitte melde dich an, um ein Rezept zu erstellen.");
       return;
     }
 
