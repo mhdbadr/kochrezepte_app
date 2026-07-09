@@ -80,7 +80,12 @@ function BottomTabBar({ isAppAccessAllowed }: { isAppAccessAllowed: boolean }) {
   // We exclude the 'new' and 'edit' routes so the layout behaves correctly there
   const hideTabBar = location.pathname.startsWith('/recipes/') && 
                        !location.pathname.endsWith('/new') && 
-                       !location.pathname.includes('/edit')||location.pathname === '/shopping-list';
+                       !location.pathname.includes('/edit')||
+                       location.pathname === '/shopping-list'||
+                      location.pathname === '/welcome' ||
+                      location.pathname === '/login' ||
+                      location.pathname === '/register' ||
+                      location.pathname === '/onboarding';
 
   return (
     <IonTabBar slot="bottom" style={{ display: hideTabBar ? 'none' : 'flex' }}>
