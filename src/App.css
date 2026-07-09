@@ -99,3 +99,19 @@ ion-tab-button {
   max-width: 120px !important;
   flex: 0 1 120px !important; 
 }
+ion-tab-button.tab-selected {
+  color: var(--app-primary, #6b8e62);
+  background: rgba(107, 142, 98, 0.15); 
+  border-radius: 16px; 
+  margin: 6px 4px; /
+  max-height: 48px;
+}
+
+
+ion-tab-button.tab-btn-create.tab-selected {
+  background: var(--app-primary, #6b8e62) !important;
+  color: #ffffff !important;
+  border-radius: 50% !important;
+  margin: 0 12px !important;
+  max-height: 56px !important;
+}
