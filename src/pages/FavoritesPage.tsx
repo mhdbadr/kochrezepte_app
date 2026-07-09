@@ -2,7 +2,7 @@ import {
   IonAlert,
   IonContent,
   IonPage,
-  IonText,IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonList, IonItem, IonLabel,IonFab, IonFabButton
+  IonText,
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import PageHeader from '../components/PageHeader';
@@ -11,8 +11,6 @@ import { useFavorites } from '../hooks/useFavorites';
 import type { Recipe } from '../models/Recipe';
 import { getAllRecipes } from '../repositories/recipeRepository';
 import './FavoritesPage.css';
-import { calendarOutline, closeOutline } from 'ionicons/icons';
-import { addRecipeToPlanner } from '../repositories/plannerRepository';
 import { isGuest } from '../utils/auth';
 import { useHistory} from "react-router-dom";
 
@@ -139,11 +137,7 @@ export default function FavoritesPage() {
           />
 
         </main>
-                <IonFab slot="fixed" vertical="bottom" horizontal="end">
-                                <IonFabButton onClick={() => history.push('/planner')}>
-                                  <IonIcon icon={calendarOutline} />
-                                </IonFabButton>
-                  </IonFab>
+                
                  
       </IonContent>
     </IonPage>
