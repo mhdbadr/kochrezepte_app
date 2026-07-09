@@ -77,8 +77,8 @@
 }
 
 .header-avatar {
-  width: 38px;
-  height: 38px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   border: 1px solid rgba(107, 142, 98, 0.2);
   background: var(--app-surface-muted);
@@ -91,4 +91,11 @@
   color: var(--app-primary);
   font-weight: 800;
   font-size: 1.1rem;
+}
+.page-header ion-title {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
