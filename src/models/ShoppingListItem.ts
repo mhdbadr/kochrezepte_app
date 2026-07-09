@@ -7,5 +7,6 @@ export interface ShoppingListItem {
   amount: number;
   unit: string | null;
   recipeTitle?: string;
+  dayOfWeek?: string;
   isChecked: boolean; 
 }
