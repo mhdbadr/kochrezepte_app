@@ -70,3 +70,25 @@
   border-radius: 12px;
   margin-right: 8px;
 }
+.header-profile-btn {
+  --padding-start: 0;
+  --padding-end: 0;
+  margin-left: 8px; 
+}
+
+.header-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(107, 142, 98, 0.2);
+  background: var(--app-surface-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-initial {
+  color: var(--app-primary);
+  font-weight: 800;
+  font-size: 1.1rem;
+}

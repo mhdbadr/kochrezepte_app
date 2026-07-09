@@ -238,7 +238,7 @@ export default function App() {
                 </IonMenuToggle>
 
                 <IonMenuToggle autoHide={true}>
-                  <IonItem routerLink="/login" button>
+                  <IonItem routerLink="/profile" button>
                     <IonIcon icon={personCircleOutline} slot="start" />
                     <IonLabel>Profil</IonLabel>
                   </IonItem>
