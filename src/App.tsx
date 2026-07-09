@@ -131,7 +131,7 @@ export default function App() {
       localStorage.removeItem('userRole');
     }
   };
-  
+
   const setAppUserRole = (role: string | null) => {
         updateAccess(role === 'user' || role === 'guest' ? role : null);
     };
@@ -211,7 +211,7 @@ export default function App() {
         <IonReactRouter>
           <IonMenu
               contentId="main-content"
-              side="start"
+              side="end"
               menuId="main-menu"
               className="app-menu"
               disabled={!isAppAccessAllowed}

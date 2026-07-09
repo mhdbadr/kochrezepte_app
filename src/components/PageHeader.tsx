@@ -8,8 +8,10 @@ import {
   IonMenuButton,
   IonTitle,
   IonToolbar,
-  IonBackButton
+  IonButton,
+  IonIcon
 } from '@ionic/react';
+import { chevronBackOutline } from 'ionicons/icons';
 import './PageHeader.css';
 import { useLocation } from 'react-router-dom';
 
@@ -36,11 +38,14 @@ export default function PageHeader({ title, subtitle = 'BiteBook' }: PageHeaderP
         {/* The menu button opens secondary actions without duplicating the bottom tab navigation. */}
         <IonButtons slot="start">
           {!isHomePage && (
-            <IonBackButton 
-              defaultHref="/home" 
-              text="" 
-              className="page-header__back-button" 
-            />
+            <IonButton 
+              routerLink="/home" 
+              routerDirection="back"
+              className="page-header__back-button"
+            >
+              <IonIcon icon={chevronBackOutline} />
+            </IonButton>
+            
           )}
         </IonButtons>
 

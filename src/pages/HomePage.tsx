@@ -1,10 +1,9 @@
-import { IonContent, IonPage,IonSearchbar, IonFab, IonFabButton, IonIcon } from '@ionic/react';
+import { IonContent, IonPage,IonSearchbar } from '@ionic/react';
 
 
 import { useEffect, useState } from 'react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { restaurantOutline } from 'ionicons/icons';
 import RecipeCard from '../components/RecipeCard';
 import PageHeader from '../components/PageHeader';
 import type { Recipe } from '../models/Recipe';
@@ -196,11 +195,7 @@ export default function HomePage() {
                         />
                     ))}
                 </div>
-                <IonFab slot="fixed" vertical="bottom" horizontal="end">
-                    <IonFabButton onClick={() => history.push('/recipes/new')}>
-                        <IonIcon icon={restaurantOutline} />
-                    </IonFabButton>
-                </IonFab>
+                
             </IonContent>
         </IonPage>
     );
