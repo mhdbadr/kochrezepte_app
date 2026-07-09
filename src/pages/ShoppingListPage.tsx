@@ -123,8 +123,7 @@ const toggleCheck = (index: number) => {
 
       <IonContent fullscreen>
         <main className="recipe-form-page">
-          <BackLink to="/home" label="Zurück zur Übersicht" />
-
+         
           <section className="recipe-form-hero shopping-list-hero">
             <p>Einkaufs-Assistent</p>
             <h1>Deine Einkaufsliste</h1>

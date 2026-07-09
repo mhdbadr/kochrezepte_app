@@ -129,7 +129,7 @@ export default function RecipeForm() {
 
       <IonContent fullscreen>
         <main className="recipe-form-page">
-          <BackLink to="/home" label="Zurück zur Übersicht" />
+          
 
           {/* The form hero keeps the create flow visually aligned with the rest of the app. */}
           <section className="recipe-form-hero">

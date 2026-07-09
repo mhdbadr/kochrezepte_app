@@ -30,8 +30,7 @@ const SettingsPage: React.FC = () => {
 
       <IonContent fullscreen>
         <main className="recipe-form-page">
-          <BackLink to="/home" label="Zurück zur Übersicht" />
-
+          
           <section className="recipe-form-hero">
             <p>App-Einstellungen</p>
             <h1>Deine Einstellungen</h1>

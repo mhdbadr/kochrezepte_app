@@ -15,7 +15,7 @@ import {
 } from '@ionic/react';
 
 import { IonReactRouter } from '@ionic/react-router';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 
@@ -25,7 +25,7 @@ import {
   heartOutline,
   homeOutline,
   personCircleOutline,
-  restaurantOutline,
+  addOutline,
   searchOutline,
   settingsOutline,
 } from 'ionicons/icons';
@@ -65,6 +65,49 @@ function getStoredUserRole(): AppUserRole {
 
   return null;
 }
+/**
+ * Dynamic bottom navigation bar component.
+ * Automatically hides itself when the user navigates to a recipe detail page.
+ */
+
+function BottomTabBar({ isAppAccessAllowed }: { isAppAccessAllowed: boolean }) {
+  const location = useLocation();
+  
+  // Check if the current route is a recipe detail page.
+  // We exclude the 'new' and 'edit' routes so the layout behaves correctly there
+  const hideTabBar = location.pathname.startsWith('/recipes/') && 
+                       !location.pathname.endsWith('/new') && 
+                       !location.pathname.includes('/edit')||location.pathname === '/shopping-list';
+
+  return (
+    <IonTabBar slot="bottom" style={{ display: hideTabBar ? 'none' : 'flex' }}>
+      <IonTabButton tab="home" href="/home" disabled={!isAppAccessAllowed}>
+        <IonIcon icon={homeOutline} />
+        <IonLabel>Home</IonLabel>
+      </IonTabButton>
+
+      <IonTabButton tab="search" href="/search" disabled={!isAppAccessAllowed}>
+        <IonIcon icon={searchOutline} />
+        <IonLabel>Search</IonLabel>
+      </IonTabButton>
+
+      <IonTabButton tab="recipes-new" href="/recipes/new" disabled={!isAppAccessAllowed} className="tab-btn-create">
+        <IonIcon icon={addOutline} />
+      </IonTabButton>
+            
+      <IonTabButton tab="favorites" href="/favorites" disabled={!isAppAccessAllowed}>
+        <IonIcon icon={heartOutline} />
+        <IonLabel>Favorites</IonLabel>
+      </IonTabButton>
+
+      <IonTabButton tab="planner" href="/planner" disabled={!isAppAccessAllowed}>
+        <IonIcon icon={calendarOutline} />
+        <IonLabel>Planer</IonLabel>
+      </IonTabButton>
+    </IonTabBar>
+  );
+}
+
 
 export default function App() {
   const [onboardingCompleted] = useState(
@@ -171,28 +214,22 @@ export default function App() {
               <section className="app-menu__intro">
                 <span>BiteBook</span>
                 <h2>Menü</h2>
-                <p>Bereiche für Rezepterstellung, Wochenplaner und Einstellungen</p>
+                <p>Bereiche für Profil und Einstellungen</p>
               </section>
 
               <IonList lines="none">
-                <IonMenuToggle autoHide={true}>
-                  <IonItem routerLink="/recipes/new" button>
-                    <IonIcon icon={restaurantOutline} slot="start" />
-                    <IonLabel>Neues Rezept</IonLabel>
-                  </IonItem>
-                </IonMenuToggle>
-
-                <IonMenuToggle autoHide={true}>
-                  <IonItem routerLink="/planner" button>
-                    <IonIcon icon={calendarOutline} slot="start" />
-                    <IonLabel>Wochenplaner</IonLabel>
-                  </IonItem>
-                </IonMenuToggle>
 
                 <IonMenuToggle autoHide={true}>
                   <IonItem routerLink="/shopping-list" button>
                     <IonIcon icon={cartOutline} slot="start" />
                     <IonLabel>Einkaufsliste</IonLabel>
+                  </IonItem>
+                </IonMenuToggle>
+
+                <IonMenuToggle autoHide={true}>
+                  <IonItem routerLink="/login" button>
+                    <IonIcon icon={personCircleOutline} slot="start" />
+                    <IonLabel>Profil</IonLabel>
                   </IonItem>
                 </IonMenuToggle>
 
@@ -275,27 +312,8 @@ export default function App() {
               </Switch>
             </IonRouterOutlet>
 
-            <IonTabBar slot="bottom">
-              <IonTabButton tab="home" href="/home" disabled={!isAppAccessAllowed}>
-                <IonIcon icon={homeOutline} />
-                <IonLabel>Home</IonLabel>
-              </IonTabButton>
-
-              <IonTabButton tab="search" href="/search" disabled={!isAppAccessAllowed}>
-                <IonIcon icon={searchOutline} />
-                <IonLabel>Search</IonLabel>
-              </IonTabButton>
-
-              <IonTabButton tab="favorites" href="/favorites" disabled={!isAppAccessAllowed}>
-                <IonIcon icon={heartOutline} />
-                <IonLabel>Favorites</IonLabel>
-              </IonTabButton>
-
-              <IonTabButton tab="profile" href="/login">
-                <IonIcon icon={personCircleOutline} />
-                <IonLabel>Profil</IonLabel>
-              </IonTabButton>
-            </IonTabBar>
+            <BottomTabBar isAppAccessAllowed={isAppAccessAllowed} />      
+            
           </IonTabs>
         </IonReactRouter>
       </IonApp>

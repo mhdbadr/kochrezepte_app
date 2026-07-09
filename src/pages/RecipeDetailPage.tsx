@@ -136,7 +136,7 @@ export default function RecipeDetailPage() {
 
       <IonContent fullscreen>
         <main className="recipe-detail-page">
-          <BackLink to="/home" label="Zurück zur Übersicht" />
+          
 
           <section className="recipe-detail-hero">
             {recipe.imageUrl && (
