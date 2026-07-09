@@ -3,16 +3,25 @@ import {
     IonContent,
     IonPage
 } from '@ionic/react';
-import welcomeImage from '../assets/1bild.png';
+
+import welcomeVideo from '../assets/Welcome_video.mp4';
 import './WelcomePage.css';
+
 export default function WelcomePage() {
     return (
         <IonPage>
             <IonContent fullscreen>
-                <section
-                    className="welcome-hero"
-                    style={{ backgroundImage: `url(${welcomeImage})` }}
-                >
+                <section className="welcome-hero">
+                    <video
+                        className="welcome-video"
+                        src={welcomeVideo}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        controls
+                    />
+
                     <div className="welcome-overlay">
                         <h1>Kochrezepte</h1>
 
