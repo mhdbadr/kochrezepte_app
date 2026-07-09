@@ -8,6 +8,7 @@ import { loadAppSettings } from '../utils/appSettings';
 import { buildShoppingListSections, type ShoppingListRecipeSection } from '../utils/shoppingListBuilder';
 import './RecipeForm.css';
 import './ShoppingListPage.css';
+import { isGuest } from '../utils/auth';
 
 const CHECKED_ITEMS_STORAGE_KEY = 'bitebook_checked_shopping_items';
 
@@ -80,15 +81,17 @@ const ShoppingListPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
-  useEffect(() => {
-    async function fetchPlannedRecipes() {
-      try {
-        setIsLoading(true);
-        setErrorMessage('');
+useEffect(() => {
+  const fetchPlannedRecipes = async () => {
+    
+    if (isGuest()) return;
 
-        const entries = await getPlannerEntries();
-        const settings = loadAppSettings();
-        const checkedItems = settings.saveCheckedItems ? loadCheckedItems() : {};
+    try {
+      const entries = await getPlannerEntries();
+      
+      const realPlannedRecipes = entries.map(entry => entry.recipe);
+      const settings = loadAppSettings();
+      const checkedItems = settings.saveCheckedItems ? loadCheckedItems() : {};
 
         const generatedSections = buildShoppingListSections(entries).map((section) => ({
           ...section,
@@ -108,7 +111,7 @@ const ShoppingListPage: React.FC = () => {
         setIsLoading(false);
       }
     }
-
+  
     void fetchPlannedRecipes();
   }, []);
 
@@ -164,7 +167,17 @@ const ShoppingListPage: React.FC = () => {
             <span>Alle Zutaten sind nach den Rezepten aus deinem Wochenplan sortiert.</span>
           </section>
 
-          {errorMessage && <p className="app-error-message">{errorMessage}</p>}
+          {/* Show a friendly notice if the user is a guest using a clean CSS class */}
+                          {isGuest() && (
+                              <div className="shopping-guest-banner">
+                                   Du bist als Gast angemeldet. Bitte melde dich an, um deine persönliche Einkaufsliste zu nutzen!
+                              </div>
+                          )}
+
+
+          <div className="recipe-form">
+            <fieldset className="recipe-form-card">
+              <legend>Zutaten zum Einkaufen</legend>
 
           <section className="shopping-list-summary">
             <div>
@@ -224,6 +237,8 @@ const ShoppingListPage: React.FC = () => {
               </article>
             ))}
           </div>
+          </fieldset>
+         </div> 
         </main>
       </IonContent>
     </IonPage>

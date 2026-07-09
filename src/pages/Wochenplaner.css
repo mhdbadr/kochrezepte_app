@@ -57,3 +57,42 @@
     padding: 22px;
   }
 }
+.planner-recipe-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.planner-recipe-card-wrapper {
+  flex: 1;
+  min-width: 0; 
+}
+
+.planner-delete-button {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  margin: 0;
+  height: 44px; 
+  flex-shrink: 0;
+}
+/* Styling for the guest warning banner in the weekly planner */
+.planner-guest-banner {
+  background-color: #fff3cd; 
+  color: #856404;            
+  padding: 16px;
+  border-radius: 12px;
+  margin: 16px;              
+  text-align: center;
+  font-weight: 500;
+  border: 1px solid #ffeeba; 
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); 
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+
