@@ -2,9 +2,9 @@ import {
     IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCard,
     IonCardHeader, IonCardTitle, IonCardContent, IonText, IonGrid,
     IonRow, IonCol, IonButton, IonIcon, IonModal, IonList, IonItem,
-    IonLabel, IonThumbnail, useIonViewWillEnter,IonSearchbar,IonAlert
+    IonLabel, IonThumbnail, useIonViewWillEnter,IonSearchbar,IonAlert,IonFab, IonFabButton,
 } from '@ionic/react';
-import { addOutline, closeOutline,trashOutline } from 'ionicons/icons';
+import { addOutline, closeOutline,trashOutline,cartOutline } from 'ionicons/icons';
 import { useState } from 'react';
 import RecipeCard from '../components/RecipeCard';
 import './Wochenplaner.css';
@@ -13,6 +13,8 @@ import type { Recipe } from '../models/Recipe';
 import { getAllRecipes } from '../repositories/recipeRepository';
 import { getPlannerEntries, addRecipeToPlanner,removeRecipeFromPlanner } from '../repositories/plannerRepository';
 import { isGuest } from '../utils/auth';
+
+
 interface WeeklyPlan {
     [key: string]: Recipe[];
 }
@@ -299,6 +301,14 @@ export default function PlannerPage() {
                 ]}
                 onDidDismiss={() => setRecipeToRemove(null)}
             />
+
+              {/* Floating Action Button navigating to the shopping list, positioned at the bottom right */}
+                <IonFab slot="fixed" vertical="bottom" horizontal="end">
+                <IonFabButton routerLink="/shopping-list">
+                    <IonIcon icon={cartOutline} />
+                </IonFabButton>
+                </IonFab>
+      
         </IonContent>
     </IonPage>
 );

@@ -20,14 +20,14 @@ import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 
 import {
-    calendarOutline,
-    cartOutline,
-    heartOutline,
-    homeOutline,
-    personCircleOutline,
-    restaurantOutline,
-    searchOutline,
-    settingsOutline,
+  calendarOutline,
+  cartOutline,
+  heartOutline,
+  homeOutline,
+  personCircleOutline,
+  addOutline,
+  searchOutline,
+  settingsOutline,
 } from 'ionicons/icons';
 
 import EditRecipePage from './pages/EditRecipePage';
@@ -68,32 +68,136 @@ function getStoredUserRole(): AppUserRole {
     return null;
 }
 
-interface AppRoutesProps {
-    onboardingCompleted: boolean;
-    isLoggedIn: boolean;
-    isAppAccessAllowed: boolean;
-    setIsLoggedIn: (value: boolean) => void;
-    updateAccess: (role: AppUserRole) => void;
+/**
+ * Dynamic bottom navigation bar component.
+ * Automatically hides itself when the user navigates to a recipe detail page.
+ */
+
+function BottomTabBar({ isAppAccessAllowed }: { isAppAccessAllowed: boolean }) {
+  const location = useLocation();
+  
+  // Check if the current route is a recipe detail page.
+  // We exclude the 'new' and 'edit' routes so the layout behaves correctly there
+  const hideTabBar = location.pathname.startsWith('/recipes/') && 
+                       !location.pathname.endsWith('/new') && 
+                       !location.pathname.includes('/edit')||location.pathname === '/shopping-list';
+
+  return (
+    <IonTabBar slot="bottom" style={{ display: hideTabBar ? 'none' : 'flex' }}>
+      <IonTabButton tab="home" href="/home" disabled={!isAppAccessAllowed}>
+        <IonIcon icon={homeOutline} />
+        <IonLabel>Home</IonLabel>
+      </IonTabButton>
+
+      <IonTabButton tab="search" href="/search" disabled={!isAppAccessAllowed}>
+        <IonIcon icon={searchOutline} />
+        <IonLabel>Search</IonLabel>
+      </IonTabButton>
+
+      <IonTabButton tab="recipes-new" href="/recipes/new" disabled={!isAppAccessAllowed} className="tab-btn-create">
+        <IonIcon icon={addOutline} />
+      </IonTabButton>
+            
+      <IonTabButton tab="favorites" href="/favorites" disabled={!isAppAccessAllowed}>
+        <IonIcon icon={heartOutline} />
+        <IonLabel>Favorites</IonLabel>
+      </IonTabButton>
+
+      <IonTabButton tab="planner" href="/planner" disabled={!isAppAccessAllowed}>
+        <IonIcon icon={calendarOutline} />
+        <IonLabel>Planer</IonLabel>
+      </IonTabButton>
+    </IonTabBar>
+  );
 }
 
-function AppRoutes({
-                       onboardingCompleted,
-                       isLoggedIn,
-                       isAppAccessAllowed,
-                       setIsLoggedIn,
-                       updateAccess,
-                   }: AppRoutesProps) {
-    const location = useLocation();
+export default function App() {
+  const [onboardingCompleted] = useState(
+      localStorage.getItem('onboardingCompleted') === 'true'
+  );
 
-    const hideNavigation =
-        location.pathname === '/welcome' ||
-        location.pathname === '/onboarding' ||
-        location.pathname === '/login' ||
-        location.pathname === '/register';
+  // Authentication state management
+  const [userRole, setUserRole] = useState<AppUserRole>(getStoredUserRole);
+  const [isLoggedIn, setIsLoggedIn] = useState(getStoredUserRole() !== null);
 
-    const setAppUserRole = (role: string | null) => {
+  // Update access state and persist it in localStorage for guest mode.
+  const updateAccess = (role: AppUserRole) => {
+    setUserRole(role);
+    setIsLoggedIn(role !== null);
+
+    if (role) {
+      localStorage.setItem('userRole', role);
+    } else {
+      localStorage.removeItem('userRole');
+    }
+  };
+  
+  const setAppUserRole = (role: string | null) => {
         updateAccess(role === 'user' || role === 'guest' ? role : null);
     };
+
+  // Determine if the user has access to the app based on their role.
+  const isAppAccessAllowed = userRole !== null;
+
+  // Keep the app theme in sync with settings and system theme changes.
+  useEffect(() => {
+    const updateTheme = () => applyTheme(loadAppSettings().themeMode);
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+    updateTheme();
+    systemTheme.addEventListener('change', updateTheme);
+
+    return () => systemTheme.removeEventListener('change', updateTheme);
+  }, []);
+
+  // Supabase is the source of truth for real users. localStorage is only used for guest mode.
+  useEffect(() => {
+    let isMounted = true;
+
+    /**
+     * Apply the session state to the app's access control.
+     * @param hasSession - A boolean indicating whether a valid session exists
+     */
+    const applySession = (hasSession: boolean) => {
+      if (hasSession) {
+        updateAccess('user');
+      } else if (localStorage.getItem('userRole') === 'guest') {
+        updateAccess('guest');
+      } else {
+        updateAccess(null);
+      }
+    };
+
+    /**
+     * Load the current session from Supabase and apply it to the app's access control
+     */
+    async function loadSession() {
+      try {
+        const { data } = await supabase.auth.getSession();
+
+        if (!isMounted) return;
+
+        applySession(Boolean(data.session));
+      } catch {
+        if (isMounted) {
+          updateAccess(null);
+        }
+      }
+    }
+
+    // Listen for authentication state changes and update the app's access control accordingly
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      applySession(Boolean(session));
+    });
+
+    loadSession();
+
+    return () => {
+      isMounted = false;
+      authListener.subscription.unsubscribe();
+    };
+
+    }, []);
     /**
      * Protect a page by checking if the user has access to the app. If not, redirect to the login page
      * @param page - The ReactNode representing the page to protect
@@ -102,43 +206,38 @@ function AppRoutes({
         return isAppAccessAllowed ? page : <Redirect to="/login" />;
     };
 
-    return (
-        <>
-            <IonMenu
-                contentId="main-content"
-                side="start"
-                menuId="main-menu"
-                className="app-menu"
-                disabled={!isAppAccessAllowed || hideNavigation}
-            >
-                <IonContent>
-                    <section className="app-menu__intro">
-                        <span>BiteBook</span>
-                        <h2>Menü</h2>
-                        <p>Bereiche für Rezepterstellung, Wochenplaner und Einstellungen</p>
-                    </section>
+  return (
+      <IonApp>
+        <IonReactRouter>
+          <IonMenu
+              contentId="main-content"
+              side="start"
+              menuId="main-menu"
+              className="app-menu"
+              disabled={!isAppAccessAllowed}
+          >
+            <IonContent>
+              <section className="app-menu__intro">
+                <span>BiteBook</span>
+                <h2>Menü</h2>
+                <p>Bereiche für Profil und Einstellungen</p>
+              </section>
 
-                    <IonList lines="none">
-                        <IonMenuToggle autoHide={true}>
-                            <IonItem routerLink="/recipes/new" button>
-                                <IonIcon icon={restaurantOutline} slot="start" />
-                                <IonLabel>Neues Rezept</IonLabel>
-                            </IonItem>
-                        </IonMenuToggle>
+              <IonList lines="none">
 
-                        <IonMenuToggle autoHide={true}>
-                            <IonItem routerLink="/planner" button>
-                                <IonIcon icon={calendarOutline} slot="start" />
-                                <IonLabel>Wochenplaner</IonLabel>
-                            </IonItem>
-                        </IonMenuToggle>
+                <IonMenuToggle autoHide={true}>
+                  <IonItem routerLink="/shopping-list" button>
+                    <IonIcon icon={cartOutline} slot="start" />
+                    <IonLabel>Einkaufsliste</IonLabel>
+                  </IonItem>
+                </IonMenuToggle>
 
-                        <IonMenuToggle autoHide={true}>
-                            <IonItem routerLink="/shopping-list" button>
-                                <IonIcon icon={cartOutline} slot="start" />
-                                <IonLabel>Einkaufsliste</IonLabel>
-                            </IonItem>
-                        </IonMenuToggle>
+                <IonMenuToggle autoHide={true}>
+                  <IonItem routerLink="/login" button>
+                    <IonIcon icon={personCircleOutline} slot="start" />
+                    <IonLabel>Profil</IonLabel>
+                  </IonItem>
+                </IonMenuToggle>
 
                         <IonMenuToggle autoHide={true}>
                             <IonItem routerLink="/settings" button>
@@ -231,120 +330,10 @@ function AppRoutes({
                     </Switch>
                 </IonRouterOutlet>
 
-                {!hideNavigation && (
-                    <IonTabBar slot="bottom">
-                        <IonTabButton tab="home" href="/home" disabled={!isAppAccessAllowed}>
-                            <IonIcon icon={homeOutline} />
-                            <IonLabel>Home</IonLabel>
-                        </IonTabButton>
-
-                        <IonTabButton tab="search" href="/search" disabled={!isAppAccessAllowed}>
-                            <IonIcon icon={searchOutline} />
-                            <IonLabel>Search</IonLabel>
-                        </IonTabButton>
-
-                        <IonTabButton tab="favorites" href="/favorites" disabled={!isAppAccessAllowed}>
-                            <IonIcon icon={heartOutline} />
-                            <IonLabel>Favorites</IonLabel>
-                        </IonTabButton>
-
-                        <IonTabButton tab="profile" href="/profile" disabled={!isAppAccessAllowed}>
-                            <IonIcon icon={personCircleOutline} />
-                            <IonLabel>Profil</IonLabel>
-                        </IonTabButton>
-                    </IonTabBar>
-                )}
-            </IonTabs>
-        </>
-    );
-}
-
-export default function App() {
-    const [onboardingCompleted] = useState(
-        localStorage.getItem('onboardingCompleted') === 'true'
-    );
-    // Authentication state management
-    const [userRole, setUserRole] = useState<AppUserRole>(getStoredUserRole);
-    const [isLoggedIn, setIsLoggedIn] = useState(getStoredUserRole() !== null);
-    // Update access state and persist it in localStorage for guest mode.
-    const updateAccess = (role: AppUserRole) => {
-        setUserRole(role);
-        setIsLoggedIn(role !== null);
-
-        if (role) {
-            localStorage.setItem('userRole', role);
-        } else {
-            localStorage.removeItem('userRole');
-        }
-    };
-    // Determine if the user has access to the app based on their role.
-    const isAppAccessAllowed = userRole !== null;
-
-    useEffect(() => {
-        const updateTheme = () => applyTheme(loadAppSettings().themeMode);
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
-
-        updateTheme();
-        systemTheme.addEventListener('change', updateTheme);
-
-        return () => systemTheme.removeEventListener('change', updateTheme);
-    }, []);
-    // Supabase is the source of truth for real users. localStorage is only used for guest mode.
-    useEffect(() => {
-        let isMounted = true;
-        /**
-         * Apply the session state to the app's access control.
-         * @param hasSession - A boolean indicating whether a valid session exists
-         */
-        const applySession = (hasSession: boolean) => {
-            if (hasSession) {
-                updateAccess('user');
-            } else if (localStorage.getItem('userRole') === 'guest') {
-                updateAccess('guest');
-            } else {
-                updateAccess(null);
-            }
-        };
-        /**
-         * Load the current session from Supabase and apply it to the app's access control
-         */
-        async function loadSession() {
-            try {
-                const { data } = await supabase.auth.getSession();
-
-                if (!isMounted) return;
-
-                applySession(Boolean(data.session));
-            } catch {
-                if (isMounted) {
-                    updateAccess(null);
-                }
-            }
-        }
-        // Listen for authentication state changes and update the app's access control accordingly
-        const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-            applySession(Boolean(session));
-        });
-
-        loadSession();
-
-        return () => {
-            isMounted = false;
-            authListener.subscription.unsubscribe();
-        };
-    }, []);
-
-    return (
-        <IonApp>
-            <IonReactRouter>
-                <AppRoutes
-                    onboardingCompleted={onboardingCompleted}
-                    isLoggedIn={isLoggedIn}
-                    isAppAccessAllowed={isAppAccessAllowed}
-                    setIsLoggedIn={setIsLoggedIn}
-                    updateAccess={updateAccess}
-                />
-            </IonReactRouter>
-        </IonApp>
-    );
+            <BottomTabBar isAppAccessAllowed={isAppAccessAllowed} />      
+            
+          </IonTabs>
+        </IonReactRouter>
+      </IonApp>
+  );
 }

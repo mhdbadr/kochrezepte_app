@@ -179,8 +179,7 @@ const ShoppingListPage: React.FC = () => {
 
       <IonContent fullscreen>
         <main className="recipe-form-page">
-          <BackLink to="/home" label="Zurueck zur Uebersicht" />
-
+         
           <section className="recipe-form-hero shopping-list-hero">
             <p>Einkaufs-Assistent</p>
             <h1>Deine Einkaufsliste</h1>
