@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonToast } from "@ionic/react";
+import { IonContent, IonPage } from "@ionic/react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import BackLink from "../components/BackLink";
@@ -9,6 +9,7 @@ import { createRecipe } from "../repositories/recipeRepository";
 import "./RecipeForm.css";
 import { isGuest } from '../utils/auth';
 import { INGREDIENT_UNITS, type ImageInputMode } from "./recipeFormOptions";
+import { useFeedbackToast } from "../hooks/useFeedbackToast";
 
 export default function RecipeForm() {
   const history = useHistory();
@@ -30,27 +31,7 @@ export default function RecipeForm() {
   const [instructions, setInstructions] = useState([""]);
   const [isSaving, setIsSaving] = useState(false);
 
-  const [present] = useIonToast();
-
-  // Show a toast message for validation errors with a specific style and duration.
-  function showValidationToast(message: string) {
-    void present({
-      message,
-      duration: 2600,
-      position: "top",
-      cssClass: "recipe-form-toast recipe-form-toast--validation",
-    });
-  }
-
-  // Show a toast message for general errors with a specific style and duration.
-  function showErrorToast(message: string) {
-    void present({
-      message,
-      duration: 3200,
-      position: "top",
-      cssClass: "recipe-form-toast recipe-form-toast--error",
-    });
-  }
+  const { showValidationToast, showErrorToast, showSuccessToast } = useFeedbackToast();
 
   function updateIngredient(index: number, changes: Partial<RecipeIngredient>) {
     const updatedIngredients = ingredients.map((ingredient, ingredientIndex) =>
@@ -173,6 +154,7 @@ export default function RecipeForm() {
       setIsSaving(true);
 
       const createdRecipe = await createRecipe(newRecipe);
+      showSuccessToast("Rezept wurde erfolgreich erstellt.");
       history.push(`/recipes/${createdRecipe.id}`);
     } catch (error) {
       console.error("Recipe could not be saved:", error);

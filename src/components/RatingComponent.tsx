@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { IonButton, IonIcon, useIonToast } from '@ionic/react';
+import { IonButton, IonIcon } from '@ionic/react';
 import { star, starOutline } from 'ionicons/icons';
 import { isGuest } from '../utils/auth';
+import { useFeedbackToast } from '../hooks/useFeedbackToast';
 interface RatingComponentProps {
   initialRating?: number;
   onRatingChange?: (rating: number) => void;
@@ -18,7 +19,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({
 }) => {
  
   const [rating, setRating] = useState<number>(initialRating);
-  const [present] = useIonToast();
+  const { showValidationToast } = useFeedbackToast();
   /**
      * Handles clicks on individual stars to update the score.
      * Blocks action for guest users. Includes a toggle mechanic to decrease the rating 
@@ -32,7 +33,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({
 
     // Block guests from rating and show a warning toast
     if (isGuest()) {
-      present('Bitte melde dich an, um Rezepte zu bewerten.', 2000);
+      showValidationToast('Bitte melde dich an, um Rezepte zu bewerten.');
       return;
     }
 

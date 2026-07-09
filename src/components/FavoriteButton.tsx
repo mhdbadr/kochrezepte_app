@@ -2,8 +2,8 @@ import React from 'react';
 import { IonButton, IonIcon } from '@ionic/react';
 import { heart, heartOutline } from 'ionicons/icons';
 import { useFavorites } from '../hooks/useFavorites';
-import { useIonToast } from '@ionic/react';
 import { isGuest } from '../utils/auth';
+import { useFeedbackToast } from '../hooks/useFeedbackToast';
 
 interface FavoriteButtonProps {
   recipeId: string;
@@ -23,11 +23,11 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   // get the favorite status, using the override if provided
   const isFav = isFavoriteOverride ?? isFavorite(recipeId);
 
-  const [present] = useIonToast();
+  const { showValidationToast } = useFeedbackToast();
   // handle the button click to toggle the favorite status
   function handleToggleFavorite() {
     if (isGuest()) {
-      present('Bitte melde dich an, um Favoriten zu speichern.', 2000);
+      showValidationToast('Bitte melde dich an, um Favoriten zu speichern.');
       return;
     }
     if (onToggle) {

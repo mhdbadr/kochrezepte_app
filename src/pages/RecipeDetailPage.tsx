@@ -11,7 +11,6 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  useIonToast,
 } from "@ionic/react";
 import { calendarOutline, closeOutline, createOutline, heart, heartOutline, trashOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
@@ -27,6 +26,7 @@ import CommentSection from '../components/CommentSection';
 import { useRatings } from '../hooks/useRatings';
 import { useFavorites } from '../hooks/useFavorites';
 import { isGuest } from '../utils/auth';
+import { useFeedbackToast } from '../hooks/useFeedbackToast';
 
 // Define the route parameters used by /recipes/:id.
 interface RecipeDetailRouteParams {
@@ -56,7 +56,7 @@ function formatRecipeDate(dateValue?: string): string {
 
 export default function RecipeDetailPage() {
   const history = useHistory();
-  const [present] = useIonToast();
+  const { showValidationToast, showErrorToast, showSuccessToast, showInfoToast } = useFeedbackToast();
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isPlannerModalOpen, setIsPlannerModalOpen] = useState(false);
   const [recipe, setRecipe] = useState<Recipe | undefined>();
@@ -119,16 +119,15 @@ export default function RecipeDetailPage() {
     if (!recipe) return;
 
     if (isGuest()) {
-      present("Bitte melde dich an, um Favoriten zu speichern.", 2000);
+      showValidationToast("Bitte melde dich an, um Favoriten zu speichern.");
       return;
     }
 
     await toggleFavorite(recipe.id);
-    present(
+    showInfoToast(
       isRecipeFavorite
         ? "Rezept wurde aus den Favoriten entfernt."
         : "Rezept wurde zu den Favoriten hinzugefuegt.",
-      2000,
     );
   }
 
@@ -145,11 +144,11 @@ export default function RecipeDetailPage() {
 
       await addRecipeToPlanner(dayOfWeek, recipe.id);
       setIsPlannerModalOpen(false);
-      present(`Rezept wurde fuer ${dayOfWeek} eingeplant.`, 2000);
+      showSuccessToast(`Rezept wurde fuer ${dayOfWeek} eingeplant.`);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Recipe could not be added to planner.";
       setPlannerErrorMessage(message);
-      present(message, 2500);
+      showErrorToast(message);
     } finally {
       setIsAddingToPlanner(false);
     }
@@ -163,9 +162,12 @@ export default function RecipeDetailPage() {
       setDeleteErrorMessage("");
 
       await deleteRecipe(recipe.id); // Delete the recipe from Supabase
+      showSuccessToast("Rezept wurde erfolgreich geloescht.");
       history.push("/home"); // Navigate back to the main recipe overview after deletion
     } catch (error) {
-      setDeleteErrorMessage(error instanceof Error ? error.message : "Recipe could not be deleted.");
+      const message = error instanceof Error ? error.message : "Recipe could not be deleted.";
+      setDeleteErrorMessage(message);
+      showErrorToast(message);
     } finally {
       setIsDeleting(false);
     }
@@ -306,10 +308,6 @@ export default function RecipeDetailPage() {
             </IonButton>
           </div>
 
-          {plannerErrorMessage && (
-            <p className="recipe-detail-readonly-note">Planner error: {plannerErrorMessage}</p>
-          )}
-                   
           {canRateRecipe && (
           <div className="recipe-detail-rating-container">
             <article className="recipe-detail-card recipe-detail-rating-card">
@@ -344,10 +342,6 @@ export default function RecipeDetailPage() {
           </div>
           )}
 
-          
-          {deleteErrorMessage && (
-            <p className="recipe-detail-readonly-note">Delete error: {deleteErrorMessage}</p>
-          )}
 
           {/* Confirm destructive actions before removing a recipe. */}
           <IonAlert

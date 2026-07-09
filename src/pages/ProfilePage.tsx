@@ -4,7 +4,6 @@ import {
     IonIcon,
     IonInput,
     IonPage,
-    useIonToast,
 } from '@ionic/react';
 import { useEffect, useRef, useState } from 'react';
 import { useIonRouter } from '@ionic/react';
@@ -14,6 +13,7 @@ import { createOutline } from 'ionicons/icons';
 import PageHeader from '../components/PageHeader';
 import { supabase } from '../lib/supabaseClient';
 import './ProfilePage.css';
+import { useFeedbackToast } from '../hooks/useFeedbackToast';
 
 interface ProfilePageProps {
     setIsLoggedIn: (value: boolean) => void;
@@ -25,7 +25,7 @@ export default function ProfilePage({
                                         setAppUserRole,
                                     }: ProfilePageProps) {
     const router = useIonRouter();
-    const [present] = useIonToast();
+    const { showValidationToast, showErrorToast, showSuccessToast } = useFeedbackToast();
 
     const [userRole, setUserRole] = useState<string | null>(
         localStorage.getItem('userRole')
@@ -74,11 +74,11 @@ export default function ProfilePage({
         });
 
         if (error) {
-            present(error.message, 2000);
+            showErrorToast(error.message);
             return;
         }
 
-        present('Name wurde gespeichert', 2000);
+        showSuccessToast('Name wurde gespeichert');
     };
     const uploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
         // take first selected file
@@ -90,7 +90,7 @@ export default function ProfilePage({
         const user = userData.user;
 
         if (!user) {
-            present('Kein Benutzer angemeldet', 2000);
+            showValidationToast('Kein Benutzer angemeldet');
             return;
         }
         // create filepath
@@ -104,7 +104,7 @@ export default function ProfilePage({
             });
 
         if (uploadError) {
-            present(uploadError.message, 2000);
+            showErrorToast(uploadError.message);
             return;
         }
         // get publicurl from Supabase Storage
@@ -122,12 +122,12 @@ export default function ProfilePage({
         });
 
         if (updateError) {
-            present(updateError.message, 2000);
+            showErrorToast(updateError.message);
             return;
         }
 
         setAvatarUrl(publicUrl);
-        present('Profilbild wurde gespeichert', 2000);
+        showSuccessToast('Profilbild wurde gespeichert');
     };
 
     return (

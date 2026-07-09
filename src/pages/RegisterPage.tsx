@@ -4,12 +4,12 @@ import {
     IonInput,
     IonItem,
     IonPage,
-    useIonToast,
 } from '@ionic/react';
 import { useEffect, useRef, useState } from 'react';
 import { useIonRouter } from '@ionic/react';
 import PageHeader from '../components/PageHeader';
 import { supabase } from '../lib/supabaseClient';
+import { useFeedbackToast } from '../hooks/useFeedbackToast';
 
 interface RegisterPageProps {
     setIsLoggedIn: (value: boolean) => void;
@@ -18,7 +18,7 @@ interface RegisterPageProps {
 
 export default function RegisterPage({setIsLoggedIn,setAppUserRole,}: RegisterPageProps) {
     const router = useIonRouter();
-    const [present] = useIonToast();
+    const { showValidationToast, showErrorToast, showSuccessToast, showInfoToast } = useFeedbackToast();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -33,22 +33,12 @@ export default function RegisterPage({setIsLoggedIn,setAppUserRole,}: RegisterPa
     }, []);
     const register = async () => {
         if (!username || !email || !password || !confirmPassword) {
-            present({
-                message: 'Bitte alle Felder ausfüllen',
-                duration: 2000,
-                position: 'middle',
-                color: 'danger',
-            });
+            showValidationToast('Bitte alle Felder ausfuellen');
             return;
         }
 
         if (password !== confirmPassword) {
-            present({
-                message: 'Passwörter stimmen nicht überein',
-                duration: 2000,
-                position: 'middle',
-                color: 'danger',
-            });
+            showValidationToast('Passwoerter stimmen nicht ueberein');
             return;
         }
 
@@ -64,11 +54,7 @@ export default function RegisterPage({setIsLoggedIn,setAppUserRole,}: RegisterPa
         });
 
         if (error) {
-            present({
-                message: error.message,
-                duration: 2500,
-                color: 'danger',
-            });
+            showErrorToast(error.message);
             return;
         }
 
@@ -80,22 +66,14 @@ export default function RegisterPage({setIsLoggedIn,setAppUserRole,}: RegisterPa
             setIsLoggedIn(true);
             setAppUserRole('user');
 
-            present({
-                message: 'Registrierung erfolgreich.',
-                duration: 2000,
-                color: 'success',
-            });
+            showSuccessToast('Registrierung erfolgreich.');
 
             window.location.replace('/home');
 
             return;
         }
 
-        present({
-            message: 'Registrierung erfolgreich. Bitte anmelden.',
-            duration: 2500,
-            color: 'warning',
-        });
+        showInfoToast('Registrierung erfolgreich. Bitte anmelden.');
 
         router.push('/login', 'root');
     };
@@ -165,3 +143,4 @@ export default function RegisterPage({setIsLoggedIn,setAppUserRole,}: RegisterPa
         </IonPage>
     );
 }
+
