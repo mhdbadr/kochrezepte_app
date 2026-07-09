@@ -1,4 +1,4 @@
-import { IonContent, IonPage } from "@ionic/react";
+import { IonContent, IonPage, useIonToast } from "@ionic/react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import BackLink from "../components/BackLink";
@@ -8,7 +8,6 @@ import type { RecipeCategory } from "../models/RecipeCategory";
 import { createRecipe } from "../repositories/recipeRepository";
 import "./RecipeForm.css";
 import { isGuest } from '../utils/auth';
-import { useIonToast } from '@ionic/react';
 import { INGREDIENT_UNITS, type ImageInputMode } from "./recipeFormOptions";
 
 export default function RecipeForm() {
@@ -29,11 +28,29 @@ export default function RecipeForm() {
     { name: "", amount: null, unit: null },
   ]);
   const [instructions, setInstructions] = useState([""]);
-  const [errorMessage, setErrorMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
   const [present] = useIonToast();
 
+  // Show a toast message for validation errors with a specific style and duration.
+  function showValidationToast(message: string) {
+    void present({
+      message,
+      duration: 2600,
+      position: "top",
+      cssClass: "recipe-form-toast recipe-form-toast--validation",
+    });
+  }
+
+  // Show a toast message for general errors with a specific style and duration.
+  function showErrorToast(message: string) {
+    void present({
+      message,
+      duration: 3200,
+      position: "top",
+      cssClass: "recipe-form-toast recipe-form-toast--error",
+    });
+  }
 
   function updateIngredient(index: number, changes: Partial<RecipeIngredient>) {
     const updatedIngredients = ingredients.map((ingredient, ingredientIndex) =>
@@ -73,7 +90,7 @@ export default function RecipeForm() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (isGuest()) {
-      present('Bitte melde dich an, um diese Funktion zu nutzen.', 2000);
+      showValidationToast("Bitte melde dich an, um ein Rezept zu erstellen.");
       return;
     }
 
@@ -88,32 +105,51 @@ export default function RecipeForm() {
     const cleanedInstructions = instructions.map((instruction) => instruction.trim()).filter(Boolean);
     const finalImageUrl = imageUrl.trim();
 
-    if (!title.trim() || !description.trim()) {
-      setErrorMessage("Please enter a title and description.");
-      return;
-    }
-
-    if (cleanedIngredients.length === 0 || cleanedInstructions.length === 0) {
-      setErrorMessage("Please add at least one ingredient and one instruction.");
+    if (!title.trim()) {
+      showValidationToast("Bitte gib einen Rezepttitel ein.");
       return;
     }
 
     const preparationTimeInMinutes = Number(preparationTime);
 
     if (!Number.isFinite(preparationTimeInMinutes) || preparationTimeInMinutes < 1) {
-      setErrorMessage("Bitte gib eine Zubereitungszeit von mindestens 1 Minute ein.");
+      showValidationToast("Bitte gib eine Zubereitungszeit von mindestens 1 Minute ein.");
       return;
     }
 
     const servingsCount = Number(servings);
 
     if (!Number.isInteger(servingsCount) || servingsCount < 1) {
-      setErrorMessage("Bitte gib an, fuer wie viele Personen das Rezept gedacht ist.");
+      showValidationToast("Bitte gib die Anzahl der Personen ein.");
+      return;
+    }
+
+    if (!description.trim()) {
+      showValidationToast("Bitte gib eine Beschreibung ein.");
       return;
     }
 
     if (!finalImageUrl) {
-      setErrorMessage("Bitte lade ein Bild hoch oder fuege eine Bild-URL ein.");
+      showValidationToast("Bitte lade ein Bild hoch oder fuege eine Bild-URL ein.");
+      return;
+    }
+
+    if (cleanedIngredients.length === 0) {
+      showValidationToast("Bitte fuege mindestens eine Zutat hinzu.");
+      return;
+    }
+
+    const hasInvalidIngredientAmount = cleanedIngredients.some(
+      (ingredient) => ingredient.amount !== null && (!Number.isFinite(ingredient.amount) || ingredient.amount < 0),
+    );
+
+    if (hasInvalidIngredientAmount) {
+      showValidationToast("Zutatenmengen duerfen nicht negativ sein.");
+      return;
+    }
+
+    if (cleanedInstructions.length === 0) {
+      showValidationToast("Bitte fuege mindestens einen Zubereitungsschritt hinzu.");
       return;
     }
 
@@ -135,12 +171,12 @@ export default function RecipeForm() {
 
     try {
       setIsSaving(true);
-      setErrorMessage("");
 
       const createdRecipe = await createRecipe(newRecipe);
       history.push(`/recipes/${createdRecipe.id}`);
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Recipe could not be saved.");
+      console.error("Recipe could not be saved:", error);
+      showErrorToast("Das Rezept konnte nicht gespeichert werden. Bitte versuche es erneut.");
     } finally {
       setIsSaving(false);
     }
@@ -162,8 +198,6 @@ export default function RecipeForm() {
           </section>
 
           <form className="recipe-form" onSubmit={handleSubmit}>
-
-            {errorMessage && <p className="recipe-form-error">{errorMessage}</p>}
 
             {/* Basic fields are grouped first so the recipe has clear metadata before details. */}
             <fieldset className="recipe-form-card">
