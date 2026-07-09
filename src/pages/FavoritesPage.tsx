@@ -2,7 +2,7 @@ import {
   IonAlert,
   IonContent,
   IonPage,
-  IonText,
+  IonText,IonModal, IonHeader, IonToolbar, IonTitle, IonButton, IonIcon, IonList, IonItem, IonLabel,IonFab, IonFabButton
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import PageHeader from '../components/PageHeader';
@@ -11,6 +11,10 @@ import { useFavorites } from '../hooks/useFavorites';
 import type { Recipe } from '../models/Recipe';
 import { getAllRecipes } from '../repositories/recipeRepository';
 import './FavoritesPage.css';
+import { calendarOutline, closeOutline } from 'ionicons/icons';
+import { addRecipeToPlanner } from '../repositories/plannerRepository';
+import { isGuest } from '../utils/auth';
+import { useHistory} from "react-router-dom";
 
 export default function FavoritesPage() {
   const { favorites, toggleFavorite } = useFavorites();
@@ -18,6 +22,7 @@ export default function FavoritesPage() {
   const [recipeToRemove, setRecipeToRemove] = useState<Recipe | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
+  const history = useHistory();
 
   useEffect(() => {
     async function loadRecipes() {
@@ -48,6 +53,8 @@ export default function FavoritesPage() {
     setRecipeToRemove(null);
   }
 
+  
+
   return (
     <IonPage>
       <PageHeader title="Meine Favoriten" />
@@ -60,6 +67,11 @@ export default function FavoritesPage() {
             <span>Alle Rezepte, die du mit dem Herz markierst, erscheinen hier als schnelle Sammlung.</span>
           </section>
 
+          {isGuest() && (
+              <div className="favorites-guest-banner">
+                  Du bist als Gast angemeldet. Bitte melde dich an, um deine persönliche Favoritenliste zu nutzen!
+              </div>
+          )}
           {isLoading && (
             <IonText color="medium">
               <p>Favoriten werden geladen...</p>
@@ -82,6 +94,7 @@ export default function FavoritesPage() {
           ) : (
             <div className="favorites-grid">
               {favoriteRecipes.map((recipe) => (
+                <div key={recipe.id} className="favorite-item-container">
                 <RecipeCard
                   id={recipe.id}
                   key={recipe.id}
@@ -95,7 +108,9 @@ export default function FavoritesPage() {
                   isFavorite={true}
                   onFavoriteToggle={() => setRecipeToRemove(recipe)}
                 />
-              ))}
+              
+                </div>
+              ))} 
             </div>
           )}
 
@@ -122,7 +137,14 @@ export default function FavoritesPage() {
             ]}
             onDidDismiss={() => setRecipeToRemove(null)}
           />
+
         </main>
+                <IonFab slot="fixed" vertical="bottom" horizontal="end">
+                                <IonFabButton onClick={() => history.push('/planner')}>
+                                  <IonIcon icon={calendarOutline} />
+                                </IonFabButton>
+                  </IonFab>
+                 
       </IonContent>
     </IonPage>
   );

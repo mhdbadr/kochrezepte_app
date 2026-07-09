@@ -291,6 +291,40 @@
   font-weight: 700;
 }
 
+ion-toast.recipe-form-toast {
+  --width: min(440px, calc(100vw - 32px));
+  --border-radius: 14px;
+  --box-shadow: 0 12px 30px rgba(36, 48, 37, 0.14);
+  --color: var(--app-text);
+  --button-color: var(--app-text);
+  font-weight: 750;
+}
+
+ion-toast.recipe-form-toast::part(container) {
+  border: 1px solid var(--app-border);
+  border-left-width: 4px;
+}
+
+ion-toast.recipe-form-toast--validation {
+  --background: #fff5f5;
+}
+
+ion-toast.recipe-form-toast--validation::part(container) {
+  border-left-color: #b42318;
+}
+
+ion-toast.recipe-form-toast--error {
+  --background: #b42318;
+  --color: #ffffff;
+  --button-color: #ffffff;
+  --box-shadow: 0 14px 34px rgba(180, 35, 24, 0.28);
+}
+
+ion-toast.recipe-form-toast--error::part(container) {
+  border-color: #8f1f16;
+  border-left-color: #5f120d;
+}
+
 .recipe-form-actions {
   display: flex;
   align-items: center;

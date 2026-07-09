@@ -6,10 +6,8 @@ const SETTINGS_STORAGE_KEY = 'bitebook_settings';
  * Default application settings used when no user-defined settings are found in localStorage
  */
 export const defaultAppSettings: AppSettings = {
-  shoppingListSortMode: 'alphabetical',
   moveCheckedItemsDown: true,
   saveCheckedItems: true,
-  groupShoppingListItems: true,
   themeMode: 'system',
 };
 
@@ -53,4 +51,3 @@ export function applyTheme(themeMode: ThemeMode) {
 
   document.documentElement.dataset.theme = shouldUseDarkTheme ? 'dark' : 'light';
 }
-

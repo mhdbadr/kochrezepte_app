@@ -4,7 +4,7 @@ import { IonContent,  IonItem, IonLabel,  IonList,  IonPage,  IonSelect,
 import BackLink from '../components/BackLink';
 import PageHeader from '../components/PageHeader';
 import { applyTheme, loadAppSettings, saveAppSettings, } from '../utils/appSettings';
-import { type AppSettings,  type ShoppingListSortMode,  type ThemeMode, } from '../models/AppSettings';
+import { type AppSettings, type ThemeMode } from '../models/AppSettings';
 import './RecipeForm.css';
 
 const SettingsPage: React.FC = () => {
@@ -35,7 +35,7 @@ const SettingsPage: React.FC = () => {
           <section className="recipe-form-hero">
             <p>App-Einstellungen</p>
             <h1>Deine Einstellungen</h1>
-            <span>Lege fest, wie Einkaufsliste und Darstellung in BiteBook funktionieren.</span>
+            <span>Pass die App an deine Nutzung an.</span>
           </section>
 
           <div className="recipe-form">
@@ -44,23 +44,10 @@ const SettingsPage: React.FC = () => {
 
               <IonList lines="full">
                 <IonItem>
-                  <IonLabel>Sortierung</IonLabel>
-                  <IonSelect
-                    value={settings.shoppingListSortMode}
-                    interface="popover"
-                    onIonChange={(event) =>
-                      updateSettings({
-                        shoppingListSortMode: event.detail.value as ShoppingListSortMode,
-                      })
-                    }
-                  >
-                    <IonSelectOption value="alphabetical">Alphabetisch</IonSelectOption>
-                    <IonSelectOption value="recipe">Nach Rezept</IonSelectOption>
-                  </IonSelect>
-                </IonItem>
-
-                <IonItem>
-                  <IonLabel>Abgehakte Zutaten nach unten</IonLabel>
+                  <IonLabel>
+                    <h3>Erledigtes nach unten</h3>
+                    <p>Abgehakte Zutaten wandern nach unten.</p>
+                  </IonLabel>
                   <IonToggle
                     checked={settings.moveCheckedItemsDown}
                     onIonChange={(event) =>
@@ -70,21 +57,14 @@ const SettingsPage: React.FC = () => {
                 </IonItem>
 
                 <IonItem>
-                  <IonLabel>Abgehakte Zutaten speichern</IonLabel>
+                  <IonLabel>
+                    <h3>Haken merken</h3>
+                    <p>Erledigte Zutaten bleiben abgehakt.</p>
+                  </IonLabel>
                   <IonToggle
                     checked={settings.saveCheckedItems}
                     onIonChange={(event) =>
                       updateSettings({ saveCheckedItems: event.detail.checked })
-                    }
-                  />
-                </IonItem>
-
-                <IonItem>
-                  <IonLabel>Einkaufsliste automatisch zusammenfassen</IonLabel>
-                  <IonToggle
-                    checked={settings.groupShoppingListItems}
-                    onIonChange={(event) =>
-                      updateSettings({ groupShoppingListItems: event.detail.checked })
                     }
                   />
                 </IonItem>
@@ -96,7 +76,10 @@ const SettingsPage: React.FC = () => {
 
               <IonList lines="full">
                 <IonItem>
-                  <IonLabel>Theme</IonLabel>
+                  <IonLabel>
+                    <h3>Darstellung</h3>
+                    <p>Hell, dunkel oder Systemstandard.</p>
+                  </IonLabel>
                   <IonSelect
                     value={settings.themeMode}
                     interface="popover"
@@ -119,4 +102,3 @@ const SettingsPage: React.FC = () => {
 };
 
 export default SettingsPage;
-
