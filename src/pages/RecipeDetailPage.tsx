@@ -62,8 +62,6 @@ export default function RecipeDetailPage() {
   const [recipe, setRecipe] = useState<Recipe | undefined>();
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
-  const [plannerErrorMessage, setPlannerErrorMessage] = useState("");
-  const [deleteErrorMessage, setDeleteErrorMessage] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [isAddingToPlanner, setIsAddingToPlanner] = useState(false);
   const [portions, setPortions] = useState<number>(4);
@@ -99,7 +97,7 @@ export default function RecipeDetailPage() {
       }
     }
 
-    loadRecipe();
+    void loadRecipe(); // Load the recipe when the component mounts or when the ID changes.
 
     return () => {
       isPageActive = false;
@@ -140,14 +138,12 @@ export default function RecipeDetailPage() {
 
     try {
       setIsAddingToPlanner(true);
-      setPlannerErrorMessage("");
 
       await addRecipeToPlanner(dayOfWeek, recipe.id);
       setIsPlannerModalOpen(false);
       showSuccessToast(`Rezept wurde fuer ${dayOfWeek} eingeplant.`);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Recipe could not be added to planner.";
-      setPlannerErrorMessage(message);
       showErrorToast(message);
     } finally {
       setIsAddingToPlanner(false);
@@ -159,14 +155,12 @@ export default function RecipeDetailPage() {
 
     try {
       setIsDeleting(true);
-      setDeleteErrorMessage("");
 
       await deleteRecipe(recipe.id); // Delete the recipe from Supabase
       showSuccessToast("Rezept wurde erfolgreich geloescht.");
       history.push("/home"); // Navigate back to the main recipe overview after deletion
     } catch (error) {
       const message = error instanceof Error ? error.message : "Recipe could not be deleted.";
-      setDeleteErrorMessage(message);
       showErrorToast(message);
     } finally {
       setIsDeleting(false);
