@@ -9,6 +9,7 @@ import { getRecipeById, updateRecipe } from "../repositories/recipeRepository";
 // Reuse the create form styles so create and edit flows stay consistent.
 import "./RecipeForm.css";
 import { INGREDIENT_UNITS, type ImageInputMode } from "./recipeFormOptions";
+import { useFeedbackToast } from "../hooks/useFeedbackToast";
 
 // Define the route parameters used by /recipes/:id/edit.
 interface EditRecipeRouteParams {
@@ -18,6 +19,7 @@ interface EditRecipeRouteParams {
 export default function EditRecipePage() {
   const history = useHistory();
   const { id } = useParams<EditRecipeRouteParams>();
+  const { showSuccessToast } = useFeedbackToast();
 
   // Local state for the loaded recipe, form fields, loading status, and error messages.
   const [recipe, setRecipe] = useState<Recipe | undefined>();
@@ -190,6 +192,7 @@ export default function EditRecipePage() {
       setErrorMessage("");
 
       const savedRecipe = await updateRecipe(updatedRecipe);
+      showSuccessToast("Rezept wurde erfolgreich aktualisiert.");
       history.push(`/recipes/${savedRecipe.id}`);
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Recipe could not be updated.");

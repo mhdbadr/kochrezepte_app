@@ -4,7 +4,6 @@ import {
     IonInput,
     IonItem,
     IonPage,
-    useIonToast,
 } from '@ionic/react';
 
 
@@ -12,6 +11,7 @@ import PageHeader from '../components/PageHeader';
 import { supabase } from '../lib/supabaseClient';
 import { useEffect, useRef, useState } from 'react';
 import './LoginPage.css';
+import { useFeedbackToast } from '../hooks/useFeedbackToast';
 
 
 interface LoginPageProps {
@@ -20,7 +20,7 @@ interface LoginPageProps {
 }
 
 export default function LoginPage({ setIsLoggedIn, setAppUserRole }: LoginPageProps) {
-    const [present] = useIonToast();
+    const { showValidationToast, showErrorToast } = useFeedbackToast();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -35,12 +35,7 @@ export default function LoginPage({ setIsLoggedIn, setAppUserRole }: LoginPagePr
 
     const login = async () => {
         if (!email || !password) {
-            present({
-                message: 'Bitte E-Mail und Passwort eingeben',
-                duration: 2000,
-                position: 'middle',
-                color: 'danger',
-            });
+            showValidationToast('Bitte E-Mail und Passwort eingeben');
             return;
         }
 
@@ -50,12 +45,7 @@ export default function LoginPage({ setIsLoggedIn, setAppUserRole }: LoginPagePr
         });
 
         if (error) {
-            present({
-                message: 'E-Mail oder Passwort ist falsch',
-                duration: 2000,
-                position: 'middle',
-                color: 'danger',
-            });
+            showErrorToast('E-Mail oder Passwort ist falsch');
             return;
         }
 

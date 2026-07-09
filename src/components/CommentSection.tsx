@@ -8,13 +8,13 @@ import {
     IonList,
     IonNote,
     IonText,
-    useIonToast,
     IonAlert,
 } from '@ionic/react';
 import { send, trashOutline } from 'ionicons/icons';
 import { useComments } from '../hooks/useComments';
 import { isGuest } from '../utils/auth';
 import './CommentSection.css';
+import { useFeedbackToast } from '../hooks/useFeedbackToast';
 
 interface CommentSectionProps {
     recipeId: string;
@@ -28,7 +28,7 @@ interface CommentSectionProps {
 export default function CommentSection({ recipeId }: CommentSectionProps) {
     const { comments, currentUserId, addComment, deleteComment, isLoading, errorMessage } = useComments(recipeId);
     const [inputText, setInputText] = useState<string>('');
-    const [present] = useIonToast();
+    const { showValidationToast } = useFeedbackToast();
     const [commentIdToDelete, setCommentIdToDelete] = useState<string | null>(null);
 
     /**
@@ -40,7 +40,7 @@ export default function CommentSection({ recipeId }: CommentSectionProps) {
 
         // Block guests from commenting and show a warning toast
         if (isGuest()) {
-            present('Bitte melde dich an, um Kommentare zu schreiben.', 2000);
+            showValidationToast('Bitte melde dich an, um Kommentare zu schreiben.');
             return;
         }
 
