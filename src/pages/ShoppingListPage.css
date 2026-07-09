@@ -5,19 +5,138 @@
   background-size: cover;
   background-position: center;
 }
+
+.shopping-list-form {
+  display: block;
+}
+
 .shopping-guest-banner {
-  background-color: #fff3cd; 
-  color: #856404;            
-  padding: 16px;
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border: 1px solid #f1d48b;
   border-radius: 12px;
-  margin: 16px;              
+  color: #7a5600;
+  background: #fff6dc;
+  font-weight: 700;
   text-align: center;
-  font-weight: 500;
-  border: 1px solid #ffeeba; 
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); 
-  
-  display: flex;
-  align-items: center;
-  justify-content: center;
+}
+
+.shopping-list-progress {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: var(--app-primary);
+  background: var(--app-surface-muted);
+  font-weight: 800;
+}
+
+.shopping-list-status,
+.shopping-list-empty {
+  margin: 0;
+  padding: 20px 12px;
+  color: var(--app-muted);
+  text-align: center;
+}
+
+.shopping-list-empty h2 {
+  margin: 0 0 6px;
+  color: var(--app-text);
+  font-size: 1.1rem;
+}
+
+.shopping-list-empty p {
+  margin: 0;
+}
+
+.shopping-list-sections {
+  display: grid;
+  gap: 18px;
+}
+
+.shopping-list-section {
+  display: grid;
   gap: 8px;
+}
+
+.shopping-list-section__title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 0 4px 6px;
+  border-bottom: 1px solid var(--app-border);
+  color: var(--app-text);
+  font-size: 1rem;
+}
+
+.shopping-list-section__title span {
+  color: var(--app-muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.shopping-list-section__items {
+  display: grid;
+}
+
+.shopping-list-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 4px;
+  border: 0;
+  border-bottom: 1px solid var(--app-border);
+  color: var(--app-text);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.shopping-list-item:hover {
+  background: var(--app-surface-muted);
+}
+
+.shopping-list-item__name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-weight: 700;
+}
+
+.shopping-list-item__amount {
+  color: var(--app-muted);
+  font-size: 0.92rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.shopping-list-item--checked {
+  opacity: 0.55;
+}
+
+.shopping-list-item--checked .shopping-list-item__name {
+  text-decoration: line-through;
+}
+
+@media (max-width: 640px) {
+  .shopping-list-section__title {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .shopping-list-item {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .shopping-list-item__amount {
+    grid-column: 2;
+    justify-self: start;
+  }
 }
