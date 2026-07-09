@@ -118,11 +118,10 @@ export default function FavoritesPage() {
                   onFavoriteToggle={() => setRecipeToRemove(recipe)}
                 />
               <div className="favorite-action-bar">
-                    <IonButton 
-                      fill="clear"
-                      size="small"
+                    <IonButton
+                      className="recipe-detail-planner-button"
                       expand="block"
-                      className="favorite-plan-link-button"
+                      fill="outline"
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation(); 
@@ -130,7 +129,8 @@ export default function FavoritesPage() {
                         setIsPlanModalOpen(true);
                       }}
                     >
-                      <IonIcon icon={calendarOutline} className="favorite-plan-icon" />
+                      <IonIcon icon={calendarOutline} slot="start" />
+                      Rezept einplanen
                     </IonButton>
                   </div>
                 </div>
@@ -164,26 +164,46 @@ export default function FavoritesPage() {
 
         <IonModal 
               isOpen={isPlanModalOpen} 
-              onDidDismiss={() => setIsPlanModalOpen(false)}
-              initialBreakpoint={0.55} 
-              breakpoints={[0, 0.55, 0.75]}
-            >
-              <IonHeader>
+              onDidDismiss={() => setIsPlanModalOpen(false)}>
+              
+
+             <IonHeader>
                 <IonToolbar>
-                  <IonTitle>Tag für "{recipeToPlan?.title}" wählen</IonTitle>
+                  <IonTitle>Wochentag waehlen</IonTitle>
                   <IonButton slot="end" fill="clear" onClick={() => setIsPlanModalOpen(false)}>
                     <IonIcon icon={closeOutline} />
                   </IonButton>
                 </IonToolbar>
               </IonHeader>
               
-              <IonContent className="ion-padding-bottom">
-            {['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'].map((day) => (
-                <IonItem button key={day} onClick={() => handleAddIntoPlanner(day)}>
-                  <IonLabel className="plan-day-item">{day}</IonLabel>
-                </IonItem>
-              ))}
-         </IonContent>
+              <IonContent>
+                      <div className="recipe-detail-planner-modal">
+                        <section className="recipe-detail-planner-modal__intro">
+                          {recipeToPlan?.imageUrl && (
+                            <img src={recipeToPlan.imageUrl} alt={recipeToPlan.title} />
+                          )}
+                          <div>
+                            <p>Wochenplanung</p>
+                            <h2>{recipeToPlan?.title}</h2>
+                            <span>Waehle einen Tag aus, an dem du dieses Rezept kochen moechtest.</span>
+                          </div>
+                        </section>
+
+                        <IonList className="recipe-detail-day-list" lines="none">
+                          {['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'].map((day) => (
+                            <IonItem
+                              button
+                              className="recipe-detail-day-item"
+                              key={day}
+                              onClick={() => handleAddIntoPlanner(day)}
+                            >
+                              <IonIcon icon={calendarOutline} slot="start" />
+                              <IonLabel>{day}</IonLabel>
+                            </IonItem>
+                          ))}
+                        </IonList>
+                      </div>
+                  </IonContent>
          
          </IonModal>
 
