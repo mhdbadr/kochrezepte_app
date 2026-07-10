@@ -312,7 +312,7 @@
 }
 
 .recipe-detail-steps li::before {
-  content: "Step " counter(recipe-step);
+  content: "Schritt " counter(recipe-step);
   display: flex;
   align-items: center;
   justify-content: center;
