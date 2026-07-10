@@ -17,12 +17,12 @@ import 'swiper/css/pagination';
 
 const categories: Array<{ label: string; value: Recipe['category']; icon: string }> = [
     { label: 'Vegan', value: 'Vegan', icon: '🌿' },
-    { label: 'Vegetarisch', value: 'Vegetarian', icon: '🥬' },
+    { label: 'Vegetarisch', value: 'Vegetarisch', icon: '🥬' },
     { label: 'Dessert', value: 'Dessert', icon: '🧁' },
-    { label: 'Schnell', value: 'Quick', icon: '⚡' },
+    { label: 'Schnell', value: 'Schnell', icon: '⚡' },
     { label: 'Pasta', value: 'Pasta', icon: '🍕' },
-    { label: 'Hauptgericht', value: 'Main Dish', icon: '🍜' },
-    { label: 'Gesund', value: 'Healthy', icon: '🥗' },
+    { label: 'Hauptgericht', value: 'Hauptgericht', icon: '🍜' },
+    { label: 'Gesund', value: 'Gesund', icon: '🥗' },
 ];
 
 export default function HomePage() {

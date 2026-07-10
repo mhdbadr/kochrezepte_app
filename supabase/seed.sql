@@ -9,14 +9,14 @@
 -- 1. Default categories
 -- ---------------------------------------------------------
 insert into public.recipe_categories (name) values
-  ('Vegan'),
-  ('Vegetarian'),
-  ('Dessert'),
-  ('Quick'),
-  ('Pasta'),
-  ('Main Dish'),
-  ('Healthy')
-on conflict (name) do nothing;
+                                                ('Vegan'),
+                                                ('Vegetarisch'),
+                                                ('Dessert'),
+                                                ('Schnell'),
+                                                ('Pasta'),
+                                                ('Hauptgericht'),
+                                                ('Gesund')
+    on conflict (name) do nothing;
 
 -- ---------------------------------------------------------
 -- 2. Remove old sample recipes before inserting them again
@@ -61,7 +61,7 @@ insert into public.recipes (
   (
     'Pizza Margherita',
     'Simple pizza with tomato sauce, mozzarella, and basil.',
-    (select id from public.recipe_categories where name = 'Main Dish'),
+    (select id from public.recipe_categories where name = 'Hauptgericht'),
     'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800',
     30,
     null,
@@ -70,7 +70,7 @@ insert into public.recipes (
   (
     'Caesar Salad',
     'Fresh salad with chicken, parmesan, and croutons.',
-    (select id from public.recipe_categories where name = 'Healthy'),
+    (select id from public.recipe_categories where name = 'Gesund'),
     'https://images.unsplash.com/photo-1546793665-c74683f339c1?w=800',
     15,
     null,
@@ -79,7 +79,7 @@ insert into public.recipes (
   (
     'Chicken Curry',
     'Creamy chicken curry served with rice.',
-    (select id from public.recipe_categories where name = 'Main Dish'),
+    (select id from public.recipe_categories where name = 'Hauptgericht'),
     'https://img.chefkoch-cdn.de/rezepte/1582261265704130/bilder/1573472/crop-960x540/chicken-curry.jpg',
     40,
     null,
@@ -106,7 +106,7 @@ insert into public.recipes (
   (
     'Vegetable Stir Fry',
     'Quick stir-fried vegetables with soy sauce.',
-    (select id from public.recipe_categories where name = 'Vegetarian'),
+    (select id from public.recipe_categories where name = 'Vegetarisch'),
     'https://images.unsplash.com/photo-1543352634-a1c51d9f1fa7?w=800',
     15,
     null,
@@ -115,7 +115,7 @@ insert into public.recipes (
   (
     'Pancakes',
     'Fluffy breakfast pancakes.',
-    (select id from public.recipe_categories where name = 'Quick'),
+    (select id from public.recipe_categories where name = 'Schnell'),
     'https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=800',
     20,
     null,

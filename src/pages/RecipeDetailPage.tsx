@@ -402,7 +402,7 @@ export default function RecipeDetailPage() {
 
           <section className="recipe-detail-content">
             <article className="recipe-detail-card">
-              <h2>Ingredients</h2>
+              <h2>Zutaten</h2>
               <ul className="recipe-detail-list">
                 {recipe.ingredients.map((ingredient, index) => {
                   const baseAmount = ingredient.amount ?? 0;
@@ -423,7 +423,7 @@ export default function RecipeDetailPage() {
             </article>
 
             <article className="recipe-detail-card">
-              <h2>Instructions</h2>
+              <h2>Zubereitung</h2>
               <ol className="recipe-detail-steps">
                 {recipe.instructions.map((step, index) => (
                   <li key={index}>

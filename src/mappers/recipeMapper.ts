@@ -7,7 +7,7 @@ import type { RecipeCategory } from "../models/RecipeCategory";
 import type { SupabaseRecipeRow } from "../models/SupabaseRecipeRow";
 
 // Fallback category used when the Supabase category is missing or invalid.
-const fallbackCategory: RecipeCategory = "Quick";
+const fallbackCategory: RecipeCategory = "Schnell";
 
 // Extracts the category name from the Supabase recipe row.
 function getCategoryName(category: SupabaseRecipeRow["recipe_categories"]): string | undefined {
@@ -22,12 +22,12 @@ function getCategoryName(category: SupabaseRecipeRow["recipe_categories"]): stri
 function toRecipeCategory(categoryName: string | undefined): RecipeCategory {
   const allowedCategories: RecipeCategory[] = [
     "Vegan",
-    "Vegetarian",
+    "Vegetarisch",
     "Dessert",
-    "Quick",
+    "Schnell",
     "Pasta",
-    "Main Dish",
-    "Healthy",
+    "Hauptgericht",
+    "Gesund",
   ];
 
   return allowedCategories.includes(categoryName as RecipeCategory)

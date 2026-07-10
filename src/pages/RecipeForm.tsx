@@ -17,7 +17,7 @@ export default function RecipeForm() {
   // Basic recipe fields controlled by React state.
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState<RecipeCategory>("Quick");
+  const [category, setCategory] = useState<RecipeCategory>("Schnell");
   const [difficulty, setDifficulty] = useState<RecipeDifficulty>("Einfach");
   const [preparationTime, setPreparationTime] = useState("");
   const [servings, setServings] = useState("4");
@@ -166,7 +166,7 @@ export default function RecipeForm() {
 
   return (
     <IonPage>
-      <PageHeader title="Create Recipe" />
+      <PageHeader title="Rezept erstellen" />
 
       <IonContent fullscreen>
         <main className="recipe-form-page">
@@ -174,48 +174,48 @@ export default function RecipeForm() {
 
           {/* The form hero keeps the create flow visually aligned with the rest of the app. */}
           <section className="recipe-form-hero">
-            <p>Recipe Core</p>
-            <h1>Create your own recipe</h1>
-            <span>Add ingredients, instructions, timing and an image.</span>
+            <p>Rezept erstellen</p>
+            <h1>Erstelle dein eigenes Rezept</h1>
+            <span>Fuege Zutaten, Zubereitungsschritte, Zeit und ein Bild hinzu.</span>
           </section>
 
           <form className="recipe-form" onSubmit={handleSubmit}>
 
             {/* Basic fields are grouped first so the recipe has clear metadata before details. */}
             <fieldset className="recipe-form-card">
-              <legend>Basic information</legend>
+              <legend>Grundinformationen</legend>
 
               <div className="recipe-form-grid">
                 <label className="recipe-form-field" htmlFor="title">
-                  <span>Title</span>
+                  <span>Titel</span>
                   <input
                     id="title"
                     type="text"
                     value={title}
                     onChange={(event) => setTitle(event.target.value)}
-                    placeholder="Recipe title"
+                    placeholder="Rezepttitel"
                   />
                 </label>
 
                 <label className="recipe-form-field" htmlFor="category">
-                  <span>Category</span>
+                  <span>Kategorie</span>
                   <select
                     id="category"
                     value={category}
                     onChange={(event) => setCategory(event.target.value as RecipeCategory)}
                   >
                     <option value="Vegan">Vegan</option>
-                    <option value="Vegetarian">Vegetarian</option>
+                    <option value="Vegetarisch">Vegetarisch</option>
                     <option value="Dessert">Dessert</option>
-                    <option value="Quick">Quick</option>
+                    <option value="Schnell">Schnell</option>
                     <option value="Pasta">Pasta</option>
-                    <option value="Main Dish">Main Dish</option>
-                    <option value="Healthy">Healthy</option>
+                    <option value="Hauptgericht">Hauptgericht</option>
+                    <option value="Gesund">Gesund</option>
                   </select>
                 </label>
 
                 <label className="recipe-form-field" htmlFor="preparationTime">
-                  <span>Preparation time in minutes</span>
+                  <span>Zubereitungszeit in Minuten</span>
                   <input
                     id="preparationTime"
                     type="number"
@@ -255,12 +255,12 @@ export default function RecipeForm() {
               </div>
 
               <label className="recipe-form-field" htmlFor="description">
-                <span>Description</span>
+                <span>Beschreibung</span>
                 <textarea
                   id="description"
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
-                  placeholder="Recipe description"
+                  placeholder="Beschreibung des Rezepts"
                   rows={4}
                 />
               </label>
@@ -320,7 +320,7 @@ export default function RecipeForm() {
 
               {imageUrl && (
                 <figure className="recipe-form-image-preview">
-                  <img src={imageUrl} alt="Recipe preview" width="240" />
+                  <img src={imageUrl} alt="Vorschau des Rezepts" width="240" />
                   <figcaption>Image preview</figcaption>
                 </figure>
               )}
@@ -328,23 +328,23 @@ export default function RecipeForm() {
 
             {/* Ingredient rows are dynamic so users can add as many entries as needed. */}
             <fieldset className="recipe-form-card">
-              <legend>Ingredients</legend>
+              <legend>Zutaten</legend>
 
               {ingredients.map((ingredient, index) => (
                 <div className="recipe-form-ingredient-row" key={index}>
                   <label className="recipe-form-field" htmlFor={`ingredient-${index}`}>
-                    <span>Ingredient {index + 1}</span>
+                    <span>Zutat  {index + 1}</span>
                     <input
                       id={`ingredient-${index}`}
                       type="text"
                       value={ingredient.name}
                       onChange={(event) => updateIngredient(index, { name: event.target.value })}
-                      placeholder="e.g. Tomatoes"
+                      placeholder="z. B. Tomaten"
                     />
                   </label>
 
                   <label className="recipe-form-field" htmlFor={`ingredient-amount-${index}`}>
-                    <span>Amount</span>
+                    <span>Menge</span>
                     <input
                       id={`ingredient-amount-${index}`}
                       type="number"
@@ -356,7 +356,7 @@ export default function RecipeForm() {
                           amount: event.target.value === "" ? null : Number(event.target.value),
                         })
                       }
-                      placeholder="e.g. 250"
+                      placeholder="z. B. 250"
                     />
                   </label>
 
@@ -381,7 +381,7 @@ export default function RecipeForm() {
                     onClick={() => removeIngredient(index)}
                     disabled={ingredients.length === 1}
                   >
-                    Remove ingredient
+                    Zutat entfernen
                   </button>
                 </div>
               ))}
@@ -391,23 +391,23 @@ export default function RecipeForm() {
                 type="button"
                 onClick={() => setIngredients([...ingredients, { name: "", amount: null, unit: null }])}
               >
-                Add ingredient
+                Zutat hinzufügen
               </button>
             </fieldset>
 
             {/* Instruction rows are dynamic and saved as ordered recipe steps. */}
             <fieldset className="recipe-form-card">
-              <legend>Instructions</legend>
+              <legend>Zubereitung</legend>
 
               {instructions.map((instruction, index) => (
                 <div className="recipe-form-row" key={index}>
                   <label className="recipe-form-field" htmlFor={`instruction-${index}`}>
-                    <span>Step {index + 1}</span>
+                    <span>Schritt  {index + 1}</span>
                     <textarea
                       id={`instruction-${index}`}
                       value={instruction}
                       onChange={(event) => updateInstruction(index, event.target.value)}
-                      placeholder="Describe this step"
+                      placeholder="Beschreibe diesen Zubereitungsschritt"
                       rows={3}
                     />
                   </label>
@@ -418,21 +418,21 @@ export default function RecipeForm() {
                     onClick={() => removeInstruction(index)}
                     disabled={instructions.length === 1}
                   >
-                    Remove step
+                    Schritt entfernen
                   </button>
                 </div>
               ))}
 
               <button className="recipe-form-secondary-button" type="button" onClick={() => setInstructions([...instructions, ""])}>
-                Add instruction
+                Schritt hinzufügen
               </button>
             </fieldset>
 
             {/* The action row separates navigation from the final save action. */}
             <div className="recipe-form-actions">
-              <Link to="/home">Cancel</Link>
+              <Link to="/home">Abbrechen</Link>
               <button className="recipe-form-submit-button" type="submit" disabled={isSaving}>
-                {isSaving ? "Saving..." : "Save recipe"}
+                {isSaving ? "Wird gespeichert..." : "Rezept speichern"}
               </button>
             </div>
           </form>

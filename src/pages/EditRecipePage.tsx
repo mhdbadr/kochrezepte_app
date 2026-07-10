@@ -29,7 +29,7 @@ export default function EditRecipePage() {
   // Prefill the form with existing recipe data so users only change what they need.
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState<RecipeCategory>("Quick");
+  const [category, setCategory] = useState<RecipeCategory>("Schnell");
   const [difficulty, setDifficulty] = useState<RecipeDifficulty>("Einfach");
   const [preparationTime, setPreparationTime] = useState("");
   const [servings, setServings] = useState("1");
