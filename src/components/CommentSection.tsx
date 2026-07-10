@@ -49,6 +49,20 @@ export default function CommentSection({ recipeId }: CommentSectionProps) {
     }
 
     /**
+     * Handles the keydown event for the comment input.
+     * Submits the comment when the Enter key is pressed.
+     * @param event - The keyboard event triggered by the input field.
+     */
+    function handleCommentKeyDown(event: React.KeyboardEvent<HTMLIonInputElement>) {
+        if (event.key !== 'Enter') return;
+
+        // Prevents the default behavior of the Enter key
+        event.preventDefault();
+        // Calls the comment submission function
+        void handleSendComment();
+    }
+
+    /**
      * Confirms the deletion of the selected comment.
      * Triggered by the confirmation alert.
      */
@@ -77,6 +91,7 @@ export default function CommentSection({ recipeId }: CommentSectionProps) {
                     placeholder="Schreibe einen Kommentar..."
                     value={inputText}
                     onIonInput={(event) => setInputText(event.detail.value || '')}
+                    onKeyDown={handleCommentKeyDown}
                 />
                 <IonButton fill="clear" onClick={handleSendComment} disabled={!inputText.trim()}>
                     <IonIcon slot="icon-only" icon={send} color="primary" />
