@@ -5,7 +5,7 @@ import {
     IonLabel, IonThumbnail, useIonViewWillEnter,IonSearchbar,IonAlert,IonFab, IonFabButton,
 } from '@ionic/react';
 import { addOutline, closeOutline,trashOutline,cartOutline } from 'ionicons/icons';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import RecipeCard from '../components/RecipeCard';
 import './Wochenplaner.css';
 import PageHeader from '../components/PageHeader'; 
@@ -31,6 +31,8 @@ export default function PlannerPage() {
     const dynamicDays = getNextSevenDays();
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [recipeToRemove, setRecipeToRemove] = useState<{ day: string; recipeId: string } | null>(null);
+    // Reference to the search bar for focusing when the modal opens
+    const searchbarRef = useRef<HTMLIonSearchbarElement>(null);
     
 
     const filteredRecipes = allRecipes.filter(recipe => 
@@ -88,7 +90,15 @@ export default function PlannerPage() {
      */
     const openPlanModal = (day: string) => {
         setActiveDay(day);
+        setSearchQuery('');
         setIsModalOpen(true);
+    };
+
+    /**
+     * Focuses the search bar inside the modal when it is opened.
+     */
+    const focusRecipeSearch = () => {
+        void searchbarRef.current?.setFocus();
     };
 
     /**
@@ -244,7 +254,11 @@ export default function PlannerPage() {
                 
             </main>
 
-            <IonModal isOpen={isModalOpen} onDidDismiss={() => setIsModalOpen(false)}>
+            <IonModal
+                isOpen={isModalOpen}
+                onDidPresent={focusRecipeSearch}
+                onDidDismiss={() => setIsModalOpen(false)}
+            >
                 <IonHeader>
                     <IonToolbar>
                         <IonTitle>Rezept für {activeDay} wählen</IonTitle>
@@ -253,6 +267,7 @@ export default function PlannerPage() {
                         </IonButton>
                     </IonToolbar>
                     <IonSearchbar 
+                        ref={searchbarRef}
                         value={searchQuery} 
                         onIonInput={(e) => setSearchQuery(e.detail.value!)} 
                         placeholder="Nach Rezept oder Kategorie suchen..."
