@@ -39,7 +39,6 @@ import WelcomePage from './pages/WelcomePage';
 import OnboardingPage from './pages/OnboardingPage';
 import RecipeDetailPage from './pages/RecipeDetailPage';
 import RecipeForm from './pages/RecipeForm';
-import RecipeListPage from './pages/RecipeListPage';
 import SearchPage from './pages/SearchPage';
 import Wochenplaner from './pages/Wochenplaner';
 import ShoppingListPage from './pages/ShoppingListPage';
@@ -307,9 +306,6 @@ export default function App() {
                             {protectedPage(<SettingsPage />)}
                         </Route>
 
-                        <Route exact path="/recipes">
-                            {protectedPage(<RecipeListPage />)}
-                        </Route>
 
                         <Route exact path="/recipes/new">
                             {protectedPage(<RecipeForm />)}
