@@ -214,7 +214,7 @@ export default function RecipeDetailPage() {
 
   return (
     <IonPage>
-      <PageHeader title={recipe.title} />
+      <PageHeader title="Rezept-Details" />
 
       <IonContent fullscreen>
         <main className="recipe-detail-page">
