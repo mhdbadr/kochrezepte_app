@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="860" viewBox="0 130 1600 860" role="img" aria-labelledby="title desc">
+  <title id="title">Professionelle Funktionsübersicht der Kochrezepte-App</title>
+  <desc id="desc">Gast und registrierter Benutzer verwenden die App. Die App stellt öffentliche und durch Anmeldung geschützte Funktionen bereit.</desc>
+  <defs>
+    <linearGradient id="client" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#718a99"/><stop offset="1" stop-color="#526d7c"/></linearGradient>
+    <linearGradient id="protected" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#789578"/><stop offset="1" stop-color="#5e7e61"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#21303a" flood-opacity="0.10"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#667681"/></marker>
+    <style>
+      .t{font-family:Inter,Segoe UI,Arial,sans-serif}.h{font-size:35px;font-weight:750;fill:#fff}.sub{font-size:17px;fill:#dce9d8}.eyebrow{font-size:13px;font-weight:750;letter-spacing:1.2px;fill:#607785}.role{font-size:24px;font-weight:750;fill:#243039}.rolew{font-size:24px;font-weight:750;fill:#fff}.group{font-size:22px;font-weight:750;fill:#243039}.name{font-size:17px;font-weight:750;fill:#243039}.body{font-size:13.5px;fill:#56636b}.rel{font-size:13.5px;font-weight:700;fill:#4e5b64}.line{stroke:#667681;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#arrow)}
+    </style>
+  </defs>
+
+  <rect x="0" y="130" width="1600" height="860" fill="#fff"/>
+
+  <!-- Role: Guest -->
+  <rect x="75" y="185" width="300" height="130" rx="18" fill="#ffffff" stroke="#9aaab3" stroke-width="2" filter="url(#shadow)"/>
+  <text class="t eyebrow" x="225" y="225" text-anchor="middle">ROLLE</text>
+  <text class="t role" x="225" y="265" text-anchor="middle">Gast</text>
+  <text class="t body" x="225" y="293" text-anchor="middle">Nutzung ohne Anmeldung</text>
+
+  <!-- Application -->
+  <rect x="575" y="165" width="450" height="170" rx="20" fill="url(#client)" stroke="#526d7c" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="615" y="190" width="160" height="34" rx="8" fill="#ffffff" fill-opacity="0.18"/>
+  <text class="t" x="695" y="212" text-anchor="middle" font-size="12.5" font-weight="750" letter-spacing="1.1" fill="#eef3f5">ANWENDUNG</text>
+  <text class="t" x="800" y="266" text-anchor="middle" font-size="30" font-weight="750" fill="#fff">Kochrezepte-App</text>
+  <text class="t" x="800" y="302" text-anchor="middle" font-size="15" fill="#eef5ec">Ionic React · TypeScript · Supabase</text>
+
+  <!-- Role: Registered user -->
+  <rect x="1225" y="185" width="300" height="130" rx="18" fill="url(#client)" filter="url(#shadow)"/>
+  <text class="t" x="1375" y="225" text-anchor="middle" font-size="13" font-weight="750" letter-spacing="1.2" fill="#dce9d8">ROLLE</text>
+  <text class="t" x="1375" y="263" text-anchor="middle" font-size="19.5" font-weight="750" fill="#fff">Registrierter Benutzer</text>
+  <text class="t" x="1375" y="292" text-anchor="middle" font-size="13.5" fill="#eef5ec">Anmeldung über Supabase Auth</text>
+
+  <!-- Role to app arrows -->
+  <path class="line" d="M375 250H555"/>
+  <rect x="418" y="217" width="94" height="26" rx="6" fill="#fff"/>
+  <text class="t rel" x="465" y="235" text-anchor="middle">verwendet</text>
+
+  <path class="line" d="M1225 250H1045"/>
+  <rect x="1088" y="217" width="94" height="26" rx="6" fill="#fff"/>
+  <text class="t rel" x="1135" y="235" text-anchor="middle">verwendet</text>
+
+  <!-- Central branch: one source, two clear targets -->
+  <path d="M800 335V382" stroke="#667681" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="800" cy="390" r="7" fill="#667681"/>
+  <path class="line" d="M792 390H405V440"/>
+  <path class="line" d="M808 390H1195V440"/>
+
+  <rect x="493" y="360" width="166" height="28" rx="7" fill="#fff"/>
+  <text class="t rel" x="576" y="379" text-anchor="middle">für beide Rollen</text>
+  <rect x="945" y="360" width="184" height="28" rx="7" fill="#fff"/>
+  <text class="t rel" x="1037" y="379" text-anchor="middle">nur mit Anmeldung</text>
+
+  <!-- Public feature group -->
+  <rect x="70" y="450" width="700" height="500" rx="22" fill="#ffffff" stroke="#c4ced3" stroke-width="2.2" stroke-dasharray="10 7"/>
+  <rect x="100" y="478" width="300" height="46" rx="10" fill="#eef2f4"/>
+  <text class="t group" x="120" y="509">Öffentliche Funktionen</text>
+  <text class="t body" x="430" y="507">Gast und registrierter Benutzer</text>
+
+  <rect x="110" y="560" width="290" height="150" rx="14" fill="#ffffff" stroke="#d1d8dc" filter="url(#shadow)"/>
+  <text class="t name" x="255" y="599" text-anchor="middle">Rezepte entdecken</text>
+  <text class="t body" x="255" y="631" text-anchor="middle">Startseite und Rezeptkarten</text>
+  <text class="t body" x="255" y="655" text-anchor="middle">Kategorien durchsuchen</text>
+  <text class="t body" x="255" y="679" text-anchor="middle">öffentliche Rezepte anzeigen</text>
+
+  <rect x="440" y="560" width="290" height="150" rx="14" fill="#ffffff" stroke="#d1d8dc" filter="url(#shadow)"/>
+  <text class="t name" x="585" y="599" text-anchor="middle">Suchen und filtern</text>
+  <text class="t body" x="585" y="631" text-anchor="middle">Titel und Beschreibung</text>
+  <text class="t body" x="585" y="655" text-anchor="middle">Zutaten und Synonyme</text>
+  <text class="t body" x="585" y="679" text-anchor="middle">Kategorie-Filter</text>
+
+  <rect x="110" y="750" width="290" height="150" rx="14" fill="#ffffff" stroke="#d1d8dc" filter="url(#shadow)"/>
+  <text class="t name" x="255" y="789" text-anchor="middle">Rezeptdetails</text>
+  <text class="t body" x="255" y="821" text-anchor="middle">Zutaten und Zubereitung</text>
+  <text class="t body" x="255" y="845" text-anchor="middle">Dauer und Schwierigkeit</text>
+  <text class="t body" x="255" y="869" text-anchor="middle">dynamische Portionsmengen</text>
+
+  <rect x="440" y="750" width="290" height="150" rx="14" fill="#ffffff" stroke="#d1d8dc" filter="url(#shadow)"/>
+  <text class="t name" x="585" y="789" text-anchor="middle">Teilen und Darstellung</text>
+  <text class="t body" x="585" y="821" text-anchor="middle">Rezeptlink teilen</text>
+  <text class="t body" x="585" y="845" text-anchor="middle">Clipboard-Fallback</text>
+  <text class="t body" x="585" y="869" text-anchor="middle">Hell-, Dunkel- oder Systemmodus</text>
+
+  <!-- Authenticated feature group -->
+  <rect x="830" y="450" width="700" height="500" rx="22" fill="#f8faf8" stroke="#789578" stroke-width="2.2"/>
+  <rect x="860" y="478" width="300" height="46" rx="10" fill="#e7eee5"/>
+  <text class="t group" x="880" y="509">Geschützte Funktionen</text>
+  <text class="t body" x="1190" y="507">Session erforderlich · RLS-geschützt</text>
+
+  <rect x="870" y="560" width="290" height="150" rx="14" fill="#ffffff" stroke="#aabaaa" filter="url(#shadow)"/>
+  <text class="t name" x="1015" y="599" text-anchor="middle">Rezeptverwaltung</text>
+  <text class="t body" x="1015" y="631" text-anchor="middle">Rezept erstellen</text>
+  <text class="t body" x="1015" y="655" text-anchor="middle">eigene Rezepte bearbeiten</text>
+  <text class="t body" x="1015" y="679" text-anchor="middle">eigene Rezepte löschen und bebildern</text>
+
+  <rect x="1200" y="560" width="290" height="150" rx="14" fill="#ffffff" stroke="#aabaaa" filter="url(#shadow)"/>
+  <text class="t name" x="1345" y="599" text-anchor="middle">Favoriten und Profil</text>
+  <text class="t body" x="1345" y="631" text-anchor="middle">Favoriten speichern</text>
+  <text class="t body" x="1345" y="655" text-anchor="middle">Benutzername bearbeiten</text>
+  <text class="t body" x="1345" y="679" text-anchor="middle">Profilbild hochladen</text>
+
+  <rect x="870" y="750" width="290" height="150" rx="14" fill="#ffffff" stroke="#aabaaa" filter="url(#shadow)"/>
+  <text class="t name" x="1015" y="789" text-anchor="middle">Community</text>
+  <text class="t body" x="1015" y="821" text-anchor="middle">Bewertungen abgeben</text>
+  <text class="t body" x="1015" y="845" text-anchor="middle">Kommentare schreiben</text>
+  <text class="t body" x="1015" y="869" text-anchor="middle">eigene Kommentare löschen</text>
+
+  <rect x="1200" y="750" width="290" height="150" rx="14" fill="#ffffff" stroke="#aabaaa" filter="url(#shadow)"/>
+  <text class="t name" x="1345" y="789" text-anchor="middle">Planung</text>
+  <text class="t body" x="1345" y="821" text-anchor="middle">Wochenplan verwalten</text>
+  <text class="t body" x="1345" y="845" text-anchor="middle">Rezepte Wochentagen zuordnen</text>
+  <text class="t body" x="1345" y="869" text-anchor="middle">Einkaufsliste automatisch erzeugen</text>
+
+</svg>
