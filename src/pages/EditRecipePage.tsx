@@ -80,7 +80,7 @@ export default function EditRecipePage() {
         }
       } catch (error) {
         if (isPageActive) {
-          setLoadErrorMessage(error instanceof Error ? error.message : "Recipe could not be loaded.");
+          setLoadErrorMessage(error instanceof Error ? error.message : "Das Rezept konnte nicht geladen werden.");
         }
       } finally {
         if (isPageActive) {
@@ -150,12 +150,12 @@ export default function EditRecipePage() {
     const cleanedInstructions = instructions.map((instruction) => instruction.trim()).filter(Boolean);
 
     if (!title.trim() || !description.trim()) {
-      setErrorMessage("Please enter a title and description.");
+      setErrorMessage("Bitte gib einen Titel und eine Beschreibung ein.");
       return;
     }
 
     if (cleanedIngredients.length === 0 || cleanedInstructions.length === 0) {
-      setErrorMessage("Please add at least one ingredient and one instruction.");
+      setErrorMessage("Bitte füge mindestens eine Zutat und einen Zubereitungsschritt hinzu.");
       return;
     }
 
@@ -169,7 +169,7 @@ export default function EditRecipePage() {
     const servingsCount = Number(servings);
 
     if (!Number.isInteger(servingsCount) || servingsCount < 1) {
-      setErrorMessage("Bitte gib an, fuer wie viele Personen das Rezept gedacht ist.");
+      setErrorMessage("Bitte gib an, für wie viele Personen das Rezept gedacht ist.");
       return;
     }
 
@@ -195,7 +195,7 @@ export default function EditRecipePage() {
       showSuccessToast("Rezept wurde erfolgreich aktualisiert.");
       history.push(`/recipes/${savedRecipe.id}`);
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Recipe could not be updated.");
+      setErrorMessage(error instanceof Error ? error.message : "Das Rezept konnte nicht aktualisiert werden.");
     } finally {
       setIsSaving(false);
     }
@@ -204,11 +204,11 @@ export default function EditRecipePage() {
   if (isLoading) {
     return (
       <IonPage>
-        <PageHeader title="Loading recipe" />
+        <PageHeader title="Rezept wird geladen" />
 
         <IonContent fullscreen>
           <main className="recipe-form-page">
-            <p>Loading recipe...</p>
+            <p>Rezept wird geladen...</p>
           </main>
         </IonContent>
       </IonPage>
@@ -218,12 +218,12 @@ export default function EditRecipePage() {
   if (loadErrorMessage) {
     return (
       <IonPage>
-        <PageHeader title="Recipe error" />
+        <PageHeader title="Fehler beim Laden" />
 
         <IonContent fullscreen>
           <main className="recipe-form-page">
-            <p>Supabase error: {loadErrorMessage}</p>
-            <IonButton routerLink="/home">Back to recipes</IonButton>
+            <p>Fehler beim Laden des Rezepts: {loadErrorMessage}</p>
+            <IonButton routerLink="/home">Zurück zu den Rezepten</IonButton>
           </main>
         </IonContent>
       </IonPage>
@@ -234,12 +234,12 @@ export default function EditRecipePage() {
   if (!recipe || !canEditRecipe) {
     return (
       <IonPage>
-        <PageHeader title="Recipe cannot be edited" />
+        <PageHeader title="Rezept kann nicht bearbeitet werden" />
 
         <IonContent fullscreen>
           <main className="recipe-form-page">
-            <p>This recipe does not exist or cannot be edited.</p>
-            <IonButton routerLink="/home">Back to recipes</IonButton>
+            <p>Dieses Rezept existiert nicht oder kann nicht bearbeitet werden.</p>
+            <IonButton routerLink="/home">Zurück zu den Rezepten</IonButton>
           </main>
         </IonContent>
       </IonPage>
@@ -248,16 +248,16 @@ export default function EditRecipePage() {
 
   return (
     <IonPage>
-      <PageHeader title="Edit Recipe" />
+      <PageHeader title="Rezept bearbeiten" />
 
       <IonContent fullscreen>
         <main className="recipe-form-page">
           <BackLink to={`/recipes/${recipe.id}`} label="Zurück zum Rezept" />
 
           <section className="recipe-form-hero">
-            <p>Recipe Core</p>
-            <h1>Edit your recipe</h1>
-            <span>Update the image, ingredients, instructions and cooking details.</span>
+            <p>Rezept bearbeiten</p>
+            <h1>Bearbeite dein Rezept</h1>
+            <span>Aktualisiere Bild, Zutaten, Zubereitungsschritte und Kochdetails.</span>
           </section>
 
           <form className="recipe-form" onSubmit={handleSubmit}>
@@ -265,39 +265,39 @@ export default function EditRecipePage() {
 
             {/* Keep the edit form structure aligned with the create recipe form. */}
             <fieldset className="recipe-form-card">
-              <legend>Basic information</legend>
+              <legend>Grundinformationen</legend>
 
               <div className="recipe-form-grid">
                 <label className="recipe-form-field" htmlFor="title">
-                  <span>Title</span>
+                  <span>Titel</span>
                   <input
                     id="title"
                     type="text"
                     value={title}
                     onChange={(event) => setTitle(event.target.value)}
-                    placeholder="Recipe title"
+                    placeholder="Rezepttitel"
                   />
                 </label>
 
                 <label className="recipe-form-field" htmlFor="category">
-                  <span>Category</span>
+                  <span>Kategorie</span>
                   <select
                     id="category"
                     value={category}
                     onChange={(event) => setCategory(event.target.value as RecipeCategory)}
                   >
                     <option value="Vegan">Vegan</option>
-                    <option value="Vegetarian">Vegetarian</option>
+                    <option value="Vegetarisch">Vegetarisch</option>
                     <option value="Dessert">Dessert</option>
-                    <option value="Quick">Quick</option>
+                    <option value="Schnell">Schnell</option>
                     <option value="Pasta">Pasta</option>
-                    <option value="Main Dish">Main Dish</option>
-                    <option value="Healthy">Healthy</option>
+                    <option value="Hauptgericht">Hauptgericht</option>
+                    <option value="Gesund">Gesund</option>
                   </select>
                 </label>
 
                 <label className="recipe-form-field" htmlFor="preparationTime">
-                  <span>Preparation time in minutes</span>
+                  <span>Zubereitungszeit in Minuten</span>
                   <input
                     id="preparationTime"
                     type="number"
@@ -337,13 +337,13 @@ export default function EditRecipePage() {
               </div>
 
               <label className="recipe-form-field" htmlFor="description">
-                <span>Description</span>
+                <span>Beschreibung</span>
                 <textarea
                   id="description"
                   rows={4}
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
-                  placeholder="Recipe description"
+                  placeholder="Beschreibung des Rezepts"
                 />
               </label>
             </fieldset>
@@ -352,7 +352,7 @@ export default function EditRecipePage() {
             <fieldset className="recipe-form-card">
               <legend>Bild</legend>
 
-              <div className="recipe-form-image-menu" role="tablist" aria-label="Bildquelle waehlen">
+              <div className="recipe-form-image-menu" role="tablist" aria-label="Bildquelle wählen">
                 <button
                   className={imageInputMode === "upload" ? "recipe-form-image-menu__item recipe-form-image-menu__item--active" : "recipe-form-image-menu__item"}
                   type="button"
@@ -365,7 +365,7 @@ export default function EditRecipePage() {
                   type="button"
                   onClick={() => setImageInputMode("url")}
                 >
-                  URL einfuegen
+                  URL einfügen
                 </button>
               </div>
 
@@ -374,11 +374,11 @@ export default function EditRecipePage() {
                   <section className="recipe-form-image-option">
                     <div>
                       <h3>Bild hochladen</h3>
-                      <p>Waehle ein Bild von deinem Geraet aus.</p>
+                      <p>Wähle ein Bild von deinem Gerät aus.</p>
                     </div>
 
                     <label className="recipe-form-upload-button" htmlFor="imageUpload">
-                      Datei auswaehlen
+                      Datei auswählen
                     </label>
                     <input id="imageUpload" type="file" accept="image/*" onChange={handleImageUpload} />
                   </section>
@@ -387,7 +387,7 @@ export default function EditRecipePage() {
                 {imageInputMode === "url" && (
                   <section className="recipe-form-image-option">
                     <label className="recipe-form-field" htmlFor="imageUrl">
-                      <span>Bild per URL einfuegen</span>
+                      <span>Bild per URL einfügen</span>
                       <input
                         id="imageUrl"
                         type="url"
@@ -402,31 +402,31 @@ export default function EditRecipePage() {
 
               {imageUrl && (
                 <figure className="recipe-form-image-preview">
-                  <img src={imageUrl} alt="Recipe preview" />
-                  <figcaption>Image preview</figcaption>
+                  <img src={imageUrl} alt="Vorschau des Rezepts" />
+                  <figcaption>Bildvorschau</figcaption>
                 </figure>
               )}
             </fieldset>
 
             {/* Existing ingredients are editable and additional rows can be added. */}
             <fieldset className="recipe-form-card">
-              <legend>Ingredients</legend>
+              <legend>Zutaten</legend>
 
               {ingredients.map((ingredient, index) => (
                 <div className="recipe-form-ingredient-row" key={index}>
                   <label className="recipe-form-field" htmlFor={`ingredient-${index}`}>
-                    <span>Ingredient {index + 1}</span>
+                    <span>Zutat {index + 1}</span>
                     <input
                       id={`ingredient-${index}`}
                       type="text"
                       value={ingredient.name}
                       onChange={(event) => updateIngredient(index, { name: event.target.value })}
-                      placeholder="e.g. Tomatoes"
+                      placeholder="z. B. Tomaten"
                     />
                   </label>
 
                   <label className="recipe-form-field" htmlFor={`ingredient-amount-${index}`}>
-                    <span>Amount</span>
+                    <span>Menge</span>
                     <input
                       id={`ingredient-amount-${index}`}
                       type="number"
@@ -438,7 +438,7 @@ export default function EditRecipePage() {
                           amount: event.target.value === "" ? null : Number(event.target.value),
                         })
                       }
-                      placeholder="e.g. 250"
+                      placeholder="z. B. 250"
                     />
                   </label>
 
@@ -463,7 +463,7 @@ export default function EditRecipePage() {
                     onClick={() => removeIngredient(index)}
                     disabled={ingredients.length === 1}
                   >
-                    Remove ingredient
+                    Zutat entfernen
                   </button>
                 </div>
               ))}
@@ -473,24 +473,24 @@ export default function EditRecipePage() {
                 type="button"
                 onClick={() => setIngredients([...ingredients, { name: "", amount: null, unit: null }])}
               >
-                Add ingredient
+                Zutat hinzufügen
               </button>
             </fieldset>
 
             {/* Existing instructions keep their order while users can add or remove steps. */}
             <fieldset className="recipe-form-card">
-              <legend>Instructions</legend>
+              <legend>Zubereitung</legend>
 
               {instructions.map((instruction, index) => (
                 <div className="recipe-form-row" key={index}>
                   <label className="recipe-form-field" htmlFor={`instruction-${index}`}>
-                    <span>Step {index + 1}</span>
+                    <span>Schritt {index + 1}</span>
                     <textarea
                       id={`instruction-${index}`}
                       rows={3}
                       value={instruction}
                       onChange={(event) => updateInstruction(index, event.target.value)}
-                      placeholder="Describe this step"
+                      placeholder="Beschreibe diesen Zubereitungsschritt"
                     />
                   </label>
 
@@ -500,7 +500,7 @@ export default function EditRecipePage() {
                     onClick={() => removeInstruction(index)}
                     disabled={instructions.length === 1}
                   >
-                    Remove step
+                    Schritt entfernen
                   </button>
                 </div>
               ))}
@@ -510,14 +510,14 @@ export default function EditRecipePage() {
                 type="button"
                 onClick={() => setInstructions([...instructions, ""])}
               >
-                Add instruction
+                Schritt hinzufügen
               </button>
             </fieldset>
 
             <div className="recipe-form-actions">
-              <Link to={`/recipes/${recipe.id}`}>Cancel</Link>
+              <Link to={`/recipes/${recipe.id}`}>Abbrechen</Link>
               <button className="recipe-form-submit-button" type="submit" disabled={isSaving}>
-                {isSaving ? "Saving..." : "Save changes"}
+                {isSaving ? "Wird gespeichert..." : "Änderungen speichern"}
               </button>
             </div>
           </form>
