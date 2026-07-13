@@ -1,339 +1,426 @@
-# Kochrezepte App
+# Kochrezepte-App
 
-Mobile Rezept-App fuer das Modul **Entwicklung mobiler Applikationen**.
-
-Die App wurde mit **Ionic React**, **TypeScript**, **Capacitor** und **Supabase** umgesetzt. Sie unterstuetzt das Suchen, Erstellen, Bewerten und Planen von Rezepten. Aus geplanten Rezepten kann automatisch eine Einkaufsliste erzeugt werden.
+Mobile Kochrezepte-App, entwickelt im Rahmen des Moduls **Entwicklung mobiler Applikationen** an der Technischen Hochschule Mittelhessen (THM).
 
 ## Inhaltsverzeichnis
 
-- [Projektueberblick](#projektueberblick)
-- [Hauptfunktionen und Seiten](#hauptfunktionen-und-seiten)
-- [Technologien](#technologien)
-- [Projekt starten](#projekt-starten)
-- [Supabase einrichten](#supabase-einrichten)
-- [Android starten](#android-starten)
-- [Projektstruktur](#projektstruktur)
-- [Datenbank](#datenbank)
+- [Projektübersicht](#projektübersicht)
+- [Projektziele](#projektziele)
+- [Funktionen](#funktionen)
+- [Technische Umsetzung](#technische-umsetzung)
+- [Systemarchitektur](#systemarchitektur)
+- [Anforderungen](#anforderungen)
+- [Zusätzliche Hinweise](#zusätzliche-hinweise)
 
-## Projektueberblick
+## Projektübersicht
 
-Die Kochrezepte App ist eine mobile Anwendung zur Verwaltung und Planung von Rezepten. Nutzer koennen Rezepte durchsuchen, eigene Rezepte erstellen, Favoriten speichern, Bewertungen abgeben und Kommentare schreiben.
+Die Kochrezepte-App ist eine mobile Anwendung zur Verwaltung, Suche und Organisation von Kochrezepten. Ziel des Projekts ist die Entwicklung einer benutzerfreundlichen Plattform, auf der Anwender Rezepte entdecken, eigene Rezepte verwalten und ihre Mahlzeiten planen können.
 
-Ein besonderer Teil der App ist der Wochenplaner: Rezepte koennen einzelnen Wochentagen zugeordnet werden. Aus diesen geplanten Rezepten wird anschliessend eine Einkaufsliste erzeugt.
+Benutzer können Rezepte nach Namen oder vorhandenen Zutaten durchsuchen, eigene Rezepte erstellen und persönliche Favoriten verwalten. Zusätzlich unterstützt die Anwendung eine Wochenplanung sowie die automatische Erstellung einer Einkaufsliste aus den eingeplanten Rezepten.
+
+Die Anwendung kann sowohl von Gästen als auch von registrierten Benutzern verwendet werden. Gäste können öffentliche Rezepte aufrufen und durchsuchen. Registrierte Benutzer erhalten zusätzliche Funktionen:
+
+- eigene Rezepte erstellen, bearbeiten und löschen
+- Favoriten dauerhaft speichern
+- Kommentare schreiben und eigene Kommentare löschen
+- Rezepte bewerten
+- Rezepte einem Wochenplan zuordnen
+- eine automatische Einkaufsliste erzeugen
+- Benutzername und Profilbild verwalten
+
+Die Anwendungsdaten werden zentral über Supabase gespeichert und stehen dadurch geräteübergreifend zur Verfügung.
+
+## Projektziele
+
+Mit der Entwicklung der Kochrezepte-App wurden folgende Ziele verfolgt:
+
+- Entwicklung einer modernen mobilen Anwendung mit Ionic React
+- Umsetzung einer intuitiven und übersichtlichen Benutzeroberfläche
+- zentrale Speicherung der Anwendungsdaten in einer Cloud-Datenbank
+- sichere Benutzerverwaltung durch Authentifizierung und Zugriffsregeln
+- Aufbau einer wiederverwendbaren und wartbaren Softwarearchitektur
+- einfache Erweiterbarkeit für zukünftige Funktionen
+- klare Trennung zwischen Benutzeroberfläche und Datenzugriff
+- Einsatz moderner Softwareentwicklungsstandards
+
+## Funktionen
+
+Die Anwendung stellt unterschiedliche Funktionen für Gäste und registrierte Benutzer bereit.
+
+### Allgemeine Funktionen
+
+| Funktion | Beschreibung |
+|:---|:---|
+| Rezeptsuche | Suche nach Rezepten über Titel, Beschreibung oder Zutaten |
+| Zutatensuche | Ermittlung passender Rezepte anhand vorhandener Zutaten und bekannter Synonyme |
+| Kategorien | Filterung der Rezepte nach Kategorien wie Vegan, Pasta oder Dessert |
+| Rezeptdetails | Anzeige von Zutaten, Zubereitungsschritten, Dauer, Schwierigkeit und Portionsanzahl |
+| Portionsanpassung | Automatische Anpassung der Zutatenmengen an die ausgewählte Personenzahl |
+| Gastmodus | Nutzung der öffentlichen Bereiche ohne Benutzerkonto |
+| Registrierung | Erstellung eines persönlichen Benutzerkontos |
+| Anmeldung | Anmeldung mit E-Mail-Adresse und Passwort |
+
+### Rezeptverwaltung
+
+| Funktion | Beschreibung |
+|:---|:---|
+| Rezept erstellen | Eigene Rezepte mit Grunddaten, Zutaten und Zubereitungsschritten anlegen |
+| Rezept bearbeiten | Selbst erstellte Rezepte aktualisieren |
+| Rezept löschen | Eigene, nicht mehr benötigte Rezepte entfernen |
+| Bild hinzufügen | Rezeptbild über eine Bilddatei oder eine Bild-URL hinzufügen |
+
+### Personalisierung
+
+| Funktion | Beschreibung |
+|:---|:---|
+| Favoriten speichern | Rezepte dauerhaft in der persönlichen Favoritenliste speichern |
+| Bewertungen abgeben | Rezepte mit einem bis fünf Sternen bewerten |
+| Kommentare schreiben | Kommentare unter Rezepten veröffentlichen |
+| Rezept teilen | Rezeptlink über die native Teilen-Funktion oder die Zwischenablage weitergeben |
+| Profil verwalten | Benutzername und Profilbild bearbeiten |
+| Darstellung anpassen | Helles, dunkles oder systemabhängiges Design auswählen |
 
-Die App bietet zwei Nutzungsarten:
+### Planung
 
-| Modus | Beschreibung |
-| --- | --- |
-| Gastmodus | Rezepte ansehen und suchen ohne Anmeldung |
-| Angemeldeter Nutzer | Rezepte erstellen, Favoriten speichern, bewerten, kommentieren und planen |
+| Funktion | Beschreibung |
+|:---|:---|
+| Wochenplan erstellen | Rezepte einzelnen Wochentagen zuweisen |
+| Wochenplan verwalten | Eingeplante Rezepte anzeigen und wieder entfernen |
+| Einkaufsliste | Benötigte Zutaten aus den eingeplanten Rezepten automatisch zusammenstellen |
+| Einkaufsstatus speichern | Bereits erledigte Zutaten markieren und optional lokal speichern |
 
-Der Gastmodus ist fuer Nutzer gedacht, die die App ohne Registrierung ausprobieren moechten. Sobald Daten dauerhaft gespeichert werden sollen, wird ein angemeldeter Nutzer benoetigt. Dadurch koennen Favoriten, Bewertungen, Kommentare und Wochenplaene eindeutig einem Benutzerkonto zugeordnet werden.
+<center>
+<img src="docs/images/feature-overview.svg" alt="Funktionsübersicht der Anwendung" width="700" height="400" />
+</center>
 
-## Hauptfunktionen und Seiten
+## Technische Umsetzung
 
-### Startseite
+Die Anwendung wurde als **hybride mobile Applikation** entwickelt. Für die Benutzeroberfläche kommt **Ionic React** zum Einsatz. Dadurch kann dieselbe Codebasis sowohl als Webanwendung als auch als mobile Android-Anwendung verwendet werden.
 
-| Route | Beschreibung |
-| --- | --- |
-| `http://localhost:8100/home` | Uebersicht mit Rezeptkarten und Kategorien |
+Die Anwendungslogik wurde in **TypeScript** implementiert. Der Datenzugriff ist in einer Repository-Schicht gekapselt. Die Seiten und UI-Komponenten kommunizieren dadurch nicht direkt mit der Datenbank, sondern verwenden klar definierte Repository-Funktionen.
 
-Auf der Startseite werden Rezepte als Karten angezeigt. Jede Karte zeigt Rezeptbild, Titel, Kategorie, Dauer, Bewertung sowie Buttons fuer Favoriten und Teilen.
+Die Authentifizierung und Datenhaltung erfolgen über **Supabase**. Der Dienst stellt eine PostgreSQL-Datenbank, Benutzerverwaltung, eine REST-Schnittstelle und Cloud Storage bereit. Serverseitige Row-Level-Security-Regeln schützen benutzerbezogene Datensätze.
 
-Die Kategorien helfen dabei, Rezepte schnell nach Typ zu filtern, zum Beispiel Vegan, Dessert, Pasta oder Hauptgericht.
+Durch diese Architektur bleibt die Anwendung modular aufgebaut und kann zukünftig erweitert oder angepasst werden.
 
-Die Startseite dient damit als zentrale Uebersicht der App. Von dort aus gelangt der Nutzer direkt zu den Rezeptdetails oder kann ueber die Suche gezielter nach passenden Rezepten suchen.
+### 1. Verwendete Technologien
 
-### Suche
+Für die Entwicklung wurden verschiedene Frameworks, Bibliotheken und Werkzeuge eingesetzt. Die folgende Tabelle enthält die im Projekt deklarierten Versionen aus `package.json`.
 
-| Route | Beschreibung |
-| --- | --- |
-| `http://localhost:8100/search` | Suche nach Rezepten, Beschreibungen und Zutaten |
+| Technologie / Bibliothek | Version | Zweck |
+|:---|:---:|:---|
+| Ionic React | 8.0.0 | Entwicklung der mobilen Benutzeroberfläche |
+| Ionic React Router | 8.0.0 | Integration des Routings in Ionic React |
+| React | 18.2.0 | Komponentenbasierte Entwicklung der Benutzeroberfläche |
+| React DOM | 18.2.0 | Darstellung der React-Komponenten im Browser |
+| TypeScript | 5.4.0 | Typsichere Entwicklung der Anwendung |
+| Vite | 5.0.0 | Entwicklungsserver und Build-System |
+| React Router DOM | 5.3.4 | Navigation zwischen den einzelnen Seiten |
+| Supabase JavaScript SDK | 2.108.1 | Kommunikation mit Authentifizierung, Datenbank und Storage |
+| Capacitor Core | 6.2.1 | Verbindung zwischen Webanwendung und nativer Plattform |
+| Capacitor Android | 6.2.1 | Bereitstellung der Android-Anwendung |
+| Capacitor CLI | 6.2.1 | Verwaltung und Synchronisation des nativen Projekts |
+| Capacitor App | 6.0.0 | Zugriff auf App-Lebenszyklusereignisse |
+| Capacitor Keyboard | 6.0.0 | Steuerung der Bildschirmtastatur auf mobilen Geräten |
+| Capacitor Haptics | 6.0.0 | Haptisches Feedback auf mobilen Endgeräten |
+| Capacitor Status Bar | 6.0.0 | Verwaltung der nativen Statusleiste |
+| Ionicons | 7.0.0 | Icons innerhalb der Benutzeroberfläche |
+| Swiper | 12.2.0 | Interaktive Slider und Onboarding-Inhalte |
 
-Die Suche unterstuetzt zwei Modi:
+Zusätzlich werden folgende Entwicklungswerkzeuge und Dienste verwendet:
 
-- Suche nach Rezeptnamen oder Beschreibung
-- Suche nach Zutaten
+| Werkzeug / Dienst | Version / Ausführung | Zweck |
+|:---|:---:|:---|
+| Node.js | 20 oder neuer | Ausführung der Entwicklungswerkzeuge |
+| npm | 10 oder neuer | Verwaltung der Projektabhängigkeiten |
+| Git | 2.x | Versionsverwaltung |
+| GitHub | Webdienst | Gemeinsame Verwaltung des Quellcodes |
+| PostgreSQL | über Supabase | Speicherung der Anwendungsdaten |
+| Supabase | Cloud-Service | Authentifizierung, Datenbank, API und Dateispeicherung |
+| Android Studio | aktuelle stabile Version | Build und Ausführung der Android-App |
 
-Zusaetzlich kann die Suche mit Kategorien kombiniert werden.
+> Die durch `package-lock.json` tatsächlich aufgelösten Patch-Versionen können höher sein. Für eine identische Installation wird deshalb `npm ci` empfohlen.
 
-Die Zutatensuche ist besonders nuetzlich, wenn bereits bestimmte Lebensmittel vorhanden sind und passende Rezepte dazu gefunden werden sollen.
+### 2. Einrichtung der Entwicklungsumgebung
 
-### Rezeptdetails
+Dieser Abschnitt beschreibt Schritt für Schritt, wie ein Entwickler das Projekt lokal einrichtet und für die weitere Entwicklung vorbereitet.
 
-| Route | Beschreibung |
-| --- | --- |
-| `http://localhost:8100/recipes/:id` | Detailansicht eines einzelnen Rezepts |
+#### 2.1 Voraussetzungen
 
-Die Rezeptdetailseite zeigt alle wichtigen Informationen:
+Für die lokale Entwicklung werden folgende Programme und Zugänge benötigt:
 
-- Bild, Titel und Beschreibung
-- Kategorie und Zubereitungszeit
-- Durchschnittsbewertung
-- Zutatenliste
-- Zubereitungsschritte
-- Bewertungsbereich
-- Kommentare
+| Voraussetzung | Zweck |
+|:---|:---|
+| Node.js und npm | Ausführung der Entwicklungswerkzeuge und Installation der Abhängigkeiten |
+| Git | Klonen und Verwalten des Repositorys |
+| Supabase-Konto | Zugriff auf Datenbank und Authentifizierungsdienste |
+| Ionic CLI | Optionaler Start über `ionic serve` |
+| Android Studio | Ausführung auf einem Android-Emulator oder Android-Gerät |
+| Java Development Kit | Erforderlich für den nativen Android-Build |
 
-Die Portionsanzahl kann angepasst werden. Die Zutatenmengen werden passend dazu neu berechnet.
+> Für die reine Entwicklung und Ausführung im Browser werden Android Studio und das Java Development Kit nicht benötigt.
+> Diese Komponenten sind nur erforderlich, wenn die Anwendung als Android-App getestet oder gebaut werden soll.
 
-Auf dieser Seite befinden sich auch die interaktiven Funktionen zu einem Rezept. Nutzer koennen eine Bewertung abgeben, Kommentare lesen oder schreiben und den Rezeptlink teilen.
+#### 2.2 Repository klonen
 
-### Rezept erstellen
+Das Repository wird zunächst mit Git auf den lokalen Rechner kopiert:
 
-| Route | Beschreibung |
-| --- | --- |
-| `http://localhost:8100/recipes/new` | Formular zum Erstellen eines neuen Rezepts |
+```bash
+git clone git@github.com:mhdbadr/kochrezepte_app.git
+```
 
-Angemeldete Nutzer koennen eigene Rezepte erstellen. Das Formular speichert Grunddaten, Bild, Zutaten, Mengen, Einheiten und Zubereitungsschritte.
+Anschließend wird in das Projektverzeichnis gewechselt:
 
-Beim Speichern wird das Rezept strukturiert in Supabase abgelegt. Allgemeine Rezeptdaten werden in `recipes` gespeichert, Zutaten in `recipe_ingredients` und Zubereitungsschritte in `recipe_steps`.
+```bash
+cd kochrezepte_app
+```
 
-### Rezept bearbeiten
+#### 2.3 Projektabhängigkeiten installieren
 
-| Route | Beschreibung |
-| --- | --- |
-| `http://localhost:8100/recipes/:id/edit` | Formular zum Bearbeiten eigener Rezepte |
+Alle benötigten Abhängigkeiten sind in `package.json` eingetragen. Für eine reproduzierbare Installation wird der vorhandene Lockfile verwendet:
 
-Nur der Ersteller eines Rezepts darf dieses Rezept bearbeiten oder loeschen. Beispielrezepte und Rezepte anderer Nutzer bleiben geschuetzt.
+```bash
+npm ci
+```
 
-Diese Einschraenkung wird nicht nur in der Benutzeroberflaeche beruecksichtigt, sondern auch ueber Supabase Row Level Security abgesichert.
+Wenn Abhängigkeiten bewusst ergänzt oder aktualisiert werden sollen, kann stattdessen `npm install` verwendet werden.
 
-### Favoriten
+#### 2.4 Ionic CLI installieren
 
-| Route | Beschreibung |
-| --- | --- |
-| `http://localhost:8100/favorites` | Liste gespeicherter Lieblingsrezepte |
-
-Favoriten werden nutzerbezogen gespeichert. Jeder angemeldete Nutzer sieht nur seine eigenen Favoriten.
-
-So kann jeder Nutzer eine eigene Sammlung von Lieblingsrezepten aufbauen, ohne dass diese Daten mit anderen Nutzern vermischt werden.
-
-### Bewertungen
-
-| Route | Beschreibung |
-| --- | --- |
-| `http://localhost:8100/recipes/:id` | Bewertungen werden auf der Rezeptdetailseite abgegeben |
-
-Pro Nutzer und Rezept wird eine Bewertung gespeichert. Die Datenbank fuehrt automatisch zwei Werte am Rezept:
-
-| Feld | Bedeutung |
-| --- | --- |
-| `rating` | Durchschnittliche Bewertung |
-| `rating_count` | Anzahl der Bewertungen |
-
-### Kommentare
-
-| Route | Beschreibung |
-| --- | --- |
-| `http://localhost:8100/recipes/:id` | Kommentare befinden sich auf der Rezeptdetailseite |
-
-Angemeldete Nutzer koennen Kommentare schreiben. Eigene Kommentare koennen wieder geloescht werden.
-
-Technische Fehler werden fuer Nutzer vereinfacht angezeigt. Detaillierte Fehlermeldungen werden nur in der Entwicklerkonsole geloggt.
-
-### Wochenplaner
-
-| Route | Beschreibung |
-| --- | --- |
-| `http://localhost:8100/planner` | Rezepte Wochentagen zuordnen |
-
-Im Wochenplaner werden Rezepte einzelnen Tagen zugeordnet. Diese Daten werden in Supabase gespeichert und gehoeren zum jeweiligen Nutzer.
-
-Der Wochenplaner ist die Grundlage fuer die Einkaufsliste. Nur Rezepte, die im Planer eingetragen sind, werden fuer die Einkaufsliste beruecksichtigt.
-
-### Einkaufsliste
-
-| Route | Beschreibung |
-| --- | --- |
-| `http://localhost:8100/shopping-list` | Einkaufsliste aus geplanten Rezepten |
-
-Die Einkaufsliste wird aus den Zutaten der geplanten Rezepte generiert. Abgehakte Eintraege koennen je nach Einstellung lokal gespeichert werden.
-
-Dadurch kann aus der Wochenplanung direkt eine praktische Liste fuer den Einkauf erstellt werden. Die Zutaten bleiben nachvollziehbar, weil sie aus den geplanten Rezepten stammen.
-
-### Login, Registrierung und Profil
-
-| Route | Beschreibung |
-| --- | --- |
-| `http://localhost:8100/login` | Login, Profil und Logout |
-| `http://localhost:8100/register` | Registrierung |
-
-Die App unterstuetzt Login, Registrierung und Gastzugriff. Der Gastmodus erlaubt das Anzeigen und Suchen von Rezepten, sperrt aber nutzerbezogene Funktionen.
-
-Nach erfolgreichem Login verwendet die App die Supabase-Session, um nutzerbezogene Daten zu laden. Dazu gehoeren Favoriten, Bewertungen, Kommentare und Wochenplaner-Eintraege.
-
-### Einstellungen
-
-| Route | Beschreibung |
-| --- | --- |
-| `http://localhost:8100/settings` | App-Einstellungen |
-
-In den Einstellungen koennen Darstellungs- und Einkaufslistenoptionen angepasst werden.
-
-Die Einstellungen werden lokal gespeichert und beim naechsten Start der App wieder geladen.
-
-## Technologien
-
-| Technologie | Zweck |
-| --- | --- |
-| Ionic React | Mobile UI-Komponenten |
-| React | Komponenten und State Management |
-| TypeScript | Typisierte Entwicklung |
-| Vite | Entwicklungsserver und Build |
-| Capacitor | Android-Integration |
-| Supabase | Datenbank, Authentifizierung und Storage |
-| Swiper | Slider auf der Home-Seite |
-| Cypress | Einfache End-to-End-Tests |
-
-## Projekt starten
-
-### Voraussetzungen
-
-- Node.js und npm
-- Ionic CLI
-- Supabase-Projekt mit URL und Anon Key
-
-Falls die Ionic CLI noch nicht installiert ist, kann sie global installiert werden:
+Dieser Schritt ist nur erforderlich, wenn die Anwendung mit `ionic serve` gestartet werden soll:
 
 ```bash
 npm install -g @ionic/cli
 ```
 
-### Installation
+Für den Start über `npm run dev` ist keine globale Ionic-Installation erforderlich.
+
+#### 2.5 Umgebungsvariablen konfigurieren
+
+Im Hauptverzeichnis muss eine Datei namens `.env` erstellt werden.
+Diese Datei enthält die Supabase-URL und den öffentlichen Anon Key. Die Werte finden sie hier unten.:
+
+```dotenv
+VITE_SUPABASE_URL=https://stdwyicbjnozagmgimpy.supabase.co/
+VITE_SUPABASE_ANON_KEY=sb_publishable_pHyTEUfnNQz4ZsmvTphnVA_Ubm5TNWc
+```
+Diese werte müssen in der Datei `.env` eingetragen werden.
+
+### 3. Projektstruktur
+
+Die Anwendung ist nach fachlichen und technischen Verantwortlichkeiten gegliedert.
+
+<center>
+<img src="docs/images/project-structure.svg" alt="Projektstruktur der Kochrezepte-App" width="800" height="600" />
+
+*Abbildung: Verzeichnis- und Dateistruktur der Kochrezepte-App.*
+</center>
+
+| Verzeichnis | Verantwortung |
+|:---|:---|
+| `components` | Kleine, wiederverwendbare Bestandteile der Benutzeroberfläche |
+| `pages` | Vollständige Anwendungsseiten und deren Interaktion |
+| `hooks` | Wiederverwendbare Zustands- und Datenlogik |
+| `models` | Gemeinsame Typen für Rezepte, Zutaten und Einstellungen |
+| `repositories` | Gekapselte Datenbankoperationen |
+| `mappers` | Abbildung der Datenbankstruktur auf die Anwendungsmodelle |
+| `lib` | Konfiguration gemeinsam verwendeter externer Clients |
+| `utils` | Unabhängige Hilfsfunktionen |
+
+### 4. Projektstandards
+
+Für eine einheitliche und wartbare Codebasis gelten folgende Konventionen:
+
+#### 4.1 Namenskonventionen
+
+| Element | Konvention | Beispiel |
+|:---|:---|:---|
+| React-Komponenten | PascalCase | `RecipeCard.tsx` |
+| Seiten | PascalCase mit Suffix `Page` | `RecipeDetailPage.tsx` |
+| Hooks | camelCase mit Präfix `use` | `useFavorites.ts` |
+| Funktionen und Variablen | camelCase | `getAllRecipes` |
+| Typen und Interfaces | PascalCase | `RecipeIngredient` |
+| Repository-Dateien | camelCase mit Suffix `Repository` | `recipeRepository.ts` |
+
+#### 4.2 Code-Konventionen
+
+- Neue `any`-Typen sollen nach Möglichkeit vermieden werden.
+- Reine Typimporte werden mit `import type` gekennzeichnet.
+- Datenbankzugriffe werden ausschließlich in Repository-Dateien implementiert.
+- Datenbankzeilen werden über Mapper in Anwendungsmodelle umgewandelt.
+- Wiederverwendbare UI-Logik wird in Hooks oder Hilfsfunktionen ausgelagert.
+- Technische Fehler werden in der Entwicklerkonsole protokolliert.
+- Benutzer erhalten verständliche Fehler-, Erfolgs- und Validierungsmeldungen.
+
+#### 4.3 Linter und automatische Prüfungen
+
+Im Projekt wurden keine zusätzlichen Werkzeuge wie ESLint oder Prettier konfiguriert. Die Überprüfung des TypeScript-Codes erfolgt beim Produktions-Build:
 
 ```bash
-npm install
+npm run build
 ```
+Vor einem Merge sollte der Build erfolgreich ausgeführt werden.
 
-Falls Swiper noch nicht installiert ist:
+### 5. Starten der App
 
-```bash
-npm install swiper
-```
+#### 5.1 Start im Browser
 
-### App starten
-
-```bash
-ionic serve
-```
-
-Die App ist danach normalerweise erreichbar unter:
-
-```text
-http://localhost:8100
-```
-
-Alternativ kann der Vite-Dev-Server verwendet werden:
+Die Anwendung wird über den Vite-Entwicklungsserver gestartet:
 
 ```bash
 npm run dev
 ```
 
-Fuer die normale Entwicklung und Vorfuehrung reicht `ionic serve`, weil die App damit direkt im Browser gestartet wird.
-
-## Supabase einrichten
-
-Lokal muss eine `.env` Datei mit den Supabase-Zugangsdaten angelegt werden:
+Die Anwendung ist anschließend standardmäßig unter folgender Adresse erreichbar:
 
 ```text
-VITE_SUPABASE_URL=https://stdwyicbjnozagmgimpy.supabase.co/
-VITE_SUPABASE_ANON_KEY=sb_publishable_pHyTEUfnNQz4ZsmvTphnVA_Ubm5TNWc
+http://localhost:5173
 ```
 
-## Android starten
+Alternativ kann die Anwendung mit Ionic gestartet werden:
 
-Web-Build erstellen:
+```bash
+ionic serve
+```
+
+#### 5.2 Start als Android-App
+
+Beim erstmaligen Erstellen des nativen Android-Projekts werden folgende Befehle ausgeführt:
 
 ```bash
 npm run build
-```
-
-Capacitor synchronisieren:
-
-```bash
-npx cap sync android
-```
-
-Android Studio oeffnen:
-
-```bash
+npx cap add android
 npx cap open android
 ```
 
-Danach kann die App in Android Studio auf einem Emulator oder echten Geraet gestartet werden.
+Nach Änderungen am Web-Code muss das Android-Projekt erneut synchronisiert werden:
 
-Wenn sich der Web-Code aendert, muss vor einem erneuten Android-Test wieder ein Build erstellt und Capacitor synchronisiert werden.
-
-## Projektstruktur
-
-```text
-src/
-  assets/          Bilder und statische Dateien
-  components/      Wiederverwendbare UI-Komponenten
-  hooks/           React Hooks
-  lib/             Supabase Client
-  mappers/         Mapping zwischen Datenbank und App
-  models/          TypeScript Modelle
-  pages/           App-Seiten
-  repositories/    Datenzugriff auf Supabase
-  theme/           Globale Styles
-  utils/           Hilfsfunktionen
-  App.tsx          Routing, Navigation und Auth-Zugriff
-  main.tsx         Einstiegspunkt
-
-supabase/
-  schema.sql       Datenbankschema
-  rls.sql          Sicherheitsregeln
-  seed.sql         Beispielrezepte
-
-android/           Capacitor Android-Projekt
-cypress/           Cypress Tests
+```bash
+npm run build
+npx cap sync android
+npx cap open android
 ```
 
-## Datenbank
+Anschließend kann die App in Android Studio auf einem Emulator oder einem angeschlossenen Android-Gerät gestartet werden.
 
-Die wichtigsten Tabellen:
+## Systemarchitektur
 
-| Tabelle | Zweck |
-| --- | --- |
-| `profiles` | Nutzerprofile |
-| `recipe_categories` | Kategorien |
-| `recipes` | Hauptdaten der Rezepte |
-| `recipe_ingredients` | Zutaten |
-| `recipe_steps` | Zubereitungsschritte |
-| `favorites` | Favoriten pro Nutzer |
-| `ratings` | Bewertungen |
-| `comments` | Kommentare |
-| `weekly_planner` | Wochenplaner-Eintraege |
+Die Kochrezepte-App verwendet eine clientzentrierte Architektur. Der Ionic-React-Client übernimmt die Darstellung, Navigation und Verarbeitung von Benutzereingaben. Datenbankzugriffe werden über Repository-Funktionen und einen zentralen Supabase Client ausgeführt.
 
-Der Datenzugriff ist in Repository-Dateien gekapselt:
+Supabase stellt die Authentifizierung, die PostgreSQL-Datenbank, die REST-Schnittstelle und den Storage für Profilbilder bereit. Lokale Einstellungen werden direkt auf dem Endgerät im Browser Local Storage gespeichert.
 
-```text
-src/repositories/recipeRepository.ts
-src/repositories/favoriteRepository.ts
-src/repositories/ratingRepository.ts
-src/repositories/commentRepository.ts
-src/repositories/plannerRepository.ts
-```
 
-Die Seiten greifen dadurch nicht direkt auf Supabase zu. Datenbanklogik, Fehlerbehandlung und Mapping bleiben zentral in den Repository- und Mapper-Dateien organisiert.
+<center>
+<img src="docs/images/system-architecture.svg" alt="Systemarchitektur der Kochrezepte-App" width="800" height="400" />
 
-## Vorhandene Routen
+*Abbildung: Systemarchitektur und Kommunikationswege der Kochrezepte-App.*
+</center>
 
-```text
-/welcome              Welcome-Seite
-/onboarding           Onboarding
-/login                Login und Profil
-/register             Registrierung
-/home                 Startseite
-/search               Suche
-/favorites            Favoriten
-/settings             Einstellungen
-/planner              Wochenplaner
-/shopping-list        Einkaufsliste
-/recipes              Rezeptliste
-/recipes/new          Neues Rezept erstellen
-/recipes/:id          Rezeptdetails
-/recipes/:id/edit     Rezept bearbeiten
-```
+### Beteiligte Systeme
+
+| System             | Verantwortung |
+|:-------------------|:---|
+| Ionic-React-App    | Benutzeroberfläche, Navigation und clientseitige Anwendungslogik |
+| Repository-Schicht | Kapselung aller Datenbankoperationen |
+| Supabase Client    | Technische Kommunikation mit den Supabase-Diensten |
+| Supabase Auth      | Registrierung, Anmeldung und Verwaltung der Benutzer-Session |
+| Supabase Data API  | Bereitstellung der PostgreSQL-Daten über HTTPS und JSON |
+| PostgreSQL         | Dauerhafte Speicherung der Anwendungsdaten |
+| Supabase Storage   | Speicherung und Bereitstellung der Profilbilder |
+| Local Storage      | Lokale Speicherung von Gaststatus, Theme und Einstellungen |
+
+### Kommunikation und Datenfluss
+
+Beim Laden eines Rezepts läuft die Kommunikation in folgenden Schritten ab:
+
+![Kommunikation und Datenfluss](docs/images/recipe-data-flow.svg)
+<center>
+
+*Abbildung: Datenfluss beim Laden und Anzeigen eines Rezepts.*
+</center>
+
+
+### Zentrale Datenbanktabellen
+
+| Tabelle | Inhalt |
+|:---|:---|
+| `profiles` | Ergänzende Profildaten der Benutzer |
+| `recipe_categories` | Verfügbare Rezeptkategorien |
+| `recipes` | Grunddaten der Rezepte |
+| `recipe_ingredients` | Zutaten, Mengen und Einheiten |
+| `recipe_steps` | Geordnete Zubereitungsschritte |
+| `favorites` | Persönliche Favoriten der Benutzer |
+| `ratings` | Bewertungen der Rezepte |
+| `comments` | Kommentare zu Rezepten |
+| `weekly_planner` | Zuordnung von Rezepten zu Wochentagen |
+## Anforderungen
+
+Die Anforderungen wurden aus dem App-Konzept, den darin beschriebenen
+User Stories und den während der Projektplanung festgelegten Funktionen
+abgeleitet.
+
+Die obligatorischen Anforderungen bilden den festgelegten Mindestumfang
+der Kochrezepte-App. Optionale Anforderungen ergänzen die Anwendung um
+zusätzliche Komfort-, Community- und Planungsfunktionen.
+
+### Obligatorische Anforderungen
+
+| Mindestanforderung | Status | Umsetzung |
+|:---|:---:|:---|
+| Rezepte in einer Übersicht anzeigen | Umgesetzt | Startseite mit Rezeptkarten |
+| Rezeptdetails mit Zutaten und Zubereitung anzeigen | Umgesetzt | Rezeptdetailseite |
+| Rezepte anhand des Namens oder der Zutaten suchen | Umgesetzt | Suchseite und Ergebnisliste |
+| Rezepte nach Kategorien filtern | Umgesetzt | Kategorieauswahl und Filterfunktion |
+| Eigene Rezepte erstellen und dauerhaft speichern | Umgesetzt | Rezeptformular und Speicherung in Supabase |
+| Eigene Rezepte bearbeiten | Umgesetzt | Eigentümerabhängige Bearbeitungsfunktion |
+| Eigene Rezepte löschen | Umgesetzt | Eigentümerabhängige Löschfunktion |
+| Zutaten, Zubereitung und weitere Rezeptangaben erfassen | Umgesetzt | Strukturierte Eingabefelder im Rezeptformular |
+| Ein Bild zu einem eigenen Rezept hinzufügen | Umgesetzt | Auswahl einer lokalen Bilddatei oder Angabe einer Bild-URL |
+| Rezepte als persönliche Favoriten speichern | Umgesetzt | Favoritenfunktion und Favoritenseite |
+| Rezepte mit anderen Personen teilen | Umgesetzt | Web Share API und Zwischenablage als Fallback |
+| Anwendungsdaten zentral und dauerhaft speichern | Umgesetzt | PostgreSQL-Datenbank über Supabase |
+| Benutzerbezogene Inhalte vor unberechtigten Änderungen schützen | Umgesetzt | Supabase-Sitzungen und Row-Level Security |
+
+Alle festgelegten obligatorischen Mindestanforderungen wurden umgesetzt.
+
+### Optionale Anforderungen
+
+| Optionale Anforderung                                 | Status | Umsetzung |
+|:------------------------------------------------------|:---:|:---|
+| Registrierung mit E-Mail und Passwort                 | Umgesetzt | Supabase Auth |
+| Anmeldung und Abmeldung                               | Umgesetzt | Supabase Auth und Sitzungsverwaltung |
+| Nutzung öffentlicher Funktionen ohne Benutzerkonto    | Umgesetzt | Gastmodus mit lesendem Zugriff |
+| Zutatenmengen an die gewünschte Portionszahl anpassen | Umgesetzt | Dynamische Berechnung der Zutatenmengen |
+| Rezepte bewerten                                      | Umgesetzt | Sternebewertung |
+|  Rezepte kommentieren                                 | Umgesetzt | Benutzerbezogene Kommentarfunktion |
+| Rezepte in einem Wochenplan organisieren              | Umgesetzt | Zuordnung von Rezepten zu Wochentagen |
+| Eine Einkaufsliste aus dem Wochenplan erzeugen        | Umgesetzt | Automatische Zusammenstellung benötigter Zutaten |
+| Benutzerprofil verwalten                              | Umgesetzt | Bearbeitung von Benutzername und Profilbild |
+| Darstellungsmodus auswählen                           | Umgesetzt | Heller, dunkler oder systemabhängiger Modus |
+
+### Teilweise oder nicht umgesetzte Erweiterungen
+
+| Erweiterung | Status | Aktueller Stand |
+|:---|:---:|:---|
+| Speicherung von Rezeptbildern in Supabase Storage | Teilweise umgesetzt | Rezeptbilder können aus lokalen Dateien ausgewählt werden, werden derzeit jedoch als Data URL gespeichert. Ein eigener Supabase-Storage-Bucket ist noch nicht eingerichtet. |
+| Offline-Modus | Nicht umgesetzt | Rezept- und Benutzerdaten werden direkt aus Supabase geladen. |
+| Push-Benachrichtigungen | Nicht umgesetzt | Die Funktion war nicht Bestandteil des festgelegten Mindestumfangs. |
+| Vollständige automatisierte Testabdeckung | Teilweise umgesetzt | Eine Cypress-Teststruktur ist vorhanden, deckt aber noch nicht alle Funktionen ab. |
+## Zusätzliche Hinweise
+
+Bei zukünftigen Änderungen sollten folgende Projektregeln eingehalten werden:
+
+- Neue Datenbankzugriffe werden in `src/repositories` implementiert.
+- Neue TypeScript-Datentypen gehören in `src/models`.
+- Datenbankzeilen werden über `src/mappers` in App-Modelle umgewandelt.
+- Änderungen an der Datenbank müssen auch in den SQL-Dateien dokumentiert werden.
+- Neue Tabellen benötigen passende Row-Level-Security-Regeln.
+- Wiederverwendbare UI-Elemente gehören in `src/components`.
+- Wiederverwendbare Zustandslogik gehört in `src/hooks`.
+- Vor einem Merge sollte `npm run build` erfolgreich ausgeführt werden.
+
+### Hinweis zu den Abbildungen
+
+Die in dieser Dokumentation verwendeten Architektur-, Datenfluss-, Funktions- und Projektstrukturdiagramme wurden mithilfe
+generativer KI erstellt. Die dargestellten Inhalte, Bezeichnungen und Zusammenhänge wurden anschließend geprüft und an die
+tatsächliche Umsetzung der Kochrezepte-App angepasst.
