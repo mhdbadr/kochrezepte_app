@@ -83,6 +83,7 @@ function BottomTabBar({ isAppAccessAllowed }: { isAppAccessAllowed: boolean }) {
                        !location.pathname.endsWith('/new') && 
                        !location.pathname.includes('/edit')||
                        location.pathname === '/shopping-list'||
+                       location.pathname === '/popular'||
                       location.pathname === '/welcome' ||
                       location.pathname === '/login' ||
                       location.pathname === '/register' ||
