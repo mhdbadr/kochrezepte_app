@@ -43,7 +43,6 @@ export function useFeedbackToast() {
   }
 
   return {
-    showFeedbackToast,
     showValidationToast: (message: string) => showFeedbackToast(message, "validation"),
     showErrorToast: (message: string) => showFeedbackToast(message, "error"),
     showSuccessToast: (message: string) => showFeedbackToast(message, "success"),

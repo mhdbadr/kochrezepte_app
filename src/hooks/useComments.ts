@@ -38,7 +38,7 @@ export function useComments(recipeId: string) {
       }
     }
 
-    loadComments();
+    void loadComments();
   }, [recipeId]);
 
   // Adds a new comment for the current recipe and updates the local state.

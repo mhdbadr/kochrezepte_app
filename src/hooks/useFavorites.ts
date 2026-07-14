@@ -30,7 +30,7 @@ export function useFavorites() {
       }
     }
 
-    loadFavorites();
+    void loadFavorites();
   }, []);
 
   // Toggles a recipe's favorite status and updates both Supabase and local state.

@@ -25,7 +25,7 @@ export function useRatings() {
       }
     }
 
-    loadRatings();
+    void loadRatings();
   }, []);
 
 
