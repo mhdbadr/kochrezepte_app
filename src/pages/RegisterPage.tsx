@@ -31,6 +31,7 @@ export default function RegisterPage({setIsLoggedIn,setAppUserRole,}: RegisterPa
             usernameInputRef.current?.setFocus();
         }, 300);
     }, []);
+    
     const register = async () => {
         if (!username || !email || !password || !confirmPassword) {
             showValidationToast('Bitte alle Felder ausfuellen');

@@ -1,5 +1,6 @@
 import { IonButton, IonIcon } from '@ionic/react';
 import { shareOutline } from 'ionicons/icons';
+import { Share } from '@capacitor/share';
 
 interface ShareButtonProps {
   recipeTitle: string;
@@ -8,36 +9,24 @@ interface ShareButtonProps {
 
 /**
  * ShareButton Component
- * Uses the native Web Share API to share a recipe link on mobile devices.
- * If the browser doesn't support native sharing, it falls back to copying
- * the link to the clipboard and shows an elegant toast notification.
+ * Uses the Capacitor Share plugin to share a recipe link on mobile devices.
  */
 export default function ShareButton({ recipeTitle, recipeId }: ShareButtonProps) {
   const handleShare = async () => {
     const shareUrl = `${window.location.origin}/recipes/${recipeId}`;
-    const shareText = `Schau dir dieses leckere Rezept für "${recipeTitle}" an!\n${shareUrl}`;
-
-    // Try using the device's native sharing sheet (Mobile Safari/Chrome)
-    if (navigator.share) {
-      try {
-        await navigator.share({
+   
+       try {
+        await Share.share({
           title: recipeTitle,
-          text: shareText,
+          text: `Schau dir dieses leckere Rezept für "${recipeTitle}" an!`,
+          url: shareUrl,
+         dialogTitle: 'Rezept mit Freunden teilen',
         });
       } catch (error) {
         console.log('Teilen fehlgeschlagen:', error);
       }
 
       return;
-    }
-    
-    // Fallback: Copy to clipboard if native sharing is unavailable
-    try {
-      await navigator.clipboard.writeText(shareText);
-      alert('Teilen-Link wurde in die Zwischenablage kopiert!');
-    } catch (error) {
-      console.error('Fehler beim Kopieren des Links:', error);
-    }
   };
 
   return (
