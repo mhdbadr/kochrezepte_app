@@ -5,15 +5,39 @@
 }
 
 .popular-recipes-hero {
+  margin-bottom: 24px;
   padding: 28px;
-  border: 1px solid var(--app-border);
-  border-radius: 24px;
-  color: var(--app-text);
-  background: linear-gradient(135deg, var(--app-surface), var(--app-surface-muted));
-  box-shadow: 0 10px 30px var(--app-shadow);
+  border-radius: 20px;
+  color: white;
+  background:
+    linear-gradient(135deg, rgba(36, 48, 37, 0.92), rgba(107, 142, 98, 0.78)),
+    url("https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200");
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 12px 28px var(--app-shadow);
 }
 
-.popular-recipes-hero p,
+.popular-recipes-hero p {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.popular-recipes-hero h1 {
+  max-width: 720px;
+  margin: 8px 0;
+  font-size: clamp(1.9rem, 4vw, 3rem);
+}
+
+.popular-recipes-hero span {
+  display: block;
+  max-width: 620px;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.5;
+}
+
 .popular-recipes-results__heading p {
   margin: 0;
   color: var(--app-primary);
@@ -21,16 +45,6 @@
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-}
-
-.popular-recipes-hero h1 {
-  margin: 8px 0;
-  font-size: clamp(1.7rem, 5vw, 2.5rem);
-}
-
-.popular-recipes-hero span {
-  color: var(--app-muted);
-  line-height: 1.5;
 }
 
 .popular-period-selector {
