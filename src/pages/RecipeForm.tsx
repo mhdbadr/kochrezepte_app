@@ -21,6 +21,13 @@ export default function RecipeForm() {
   const [difficulty, setDifficulty] = useState<RecipeDifficulty>("Einfach");
   const [preparationTime, setPreparationTime] = useState("");
   const [servings, setServings] = useState("4");
+
+
+  const [calories, setCalories] = useState(0);
+  const [protein, setProtein] = useState(0);
+  const [carbs, setCarbs] = useState(0);
+  const [fat, setFat] = useState(0);
+
   const [imageUrl, setImageUrl] = useState("");
   const [imageInputMode, setImageInputMode] = useState<ImageInputMode>("upload");
 
@@ -105,6 +112,11 @@ export default function RecipeForm() {
       return;
     }
 
+    if (calories < 0 || protein < 0 || carbs < 0 || fat < 0) {
+      showValidationToast("Nährwerte dürfen nicht negativ sein.");
+      return;
+    }
+
     if (!description.trim()) {
       showValidationToast("Bitte gib eine Beschreibung ein.");
       return;
@@ -146,6 +158,12 @@ export default function RecipeForm() {
       imageUrl: finalImageUrl,
       preparationTime: preparationTimeInMinutes,
       servings: servingsCount,
+
+      calories,
+      protein,
+      carbs,
+      fat,
+
       createdAt: new Date().toISOString(),
       isEditable: true,
     };
@@ -265,6 +283,61 @@ export default function RecipeForm() {
                 />
               </label>
             </fieldset>
+
+            <fieldset className="recipe-form-card">
+              <legend>Nährwerte</legend>
+
+              <div className="recipe-form-grid">
+                <label className="recipe-form-field" htmlFor="calories">
+                  <span>Kalorien gesamt</span>
+                  <input
+                      id="calories"
+                      type="number"
+                      min="0"
+                      value={calories}
+                      onChange={(event) => setCalories(Number(event.target.value))}
+                      placeholder="z. B. 520"
+                  />
+                </label>
+
+                <label className="recipe-form-field" htmlFor="protein">
+                  <span>Protein gesamt in g</span>
+                  <input
+                      id="protein"
+                      type="number"
+                      min="0"
+                      value={protein}
+                      onChange={(event) => setProtein(Number(event.target.value))}
+                      placeholder="z. B. 32"
+                  />
+                </label>
+
+                <label className="recipe-form-field" htmlFor="carbs">
+                  <span>Kohlenhydrate gesamt in g</span>
+                  <input
+                      id="carbs"
+                      type="number"
+                      min="0"
+                      value={carbs}
+                      onChange={(event) => setCarbs(Number(event.target.value))}
+                      placeholder="z. B. 18"
+                  />
+                </label>
+
+                <label className="recipe-form-field" htmlFor="fat">
+                  <span>Fett gesamt in g</span>
+                  <input
+                      id="fat"
+                      type="number"
+                      min="0"
+                      value={fat}
+                      onChange={(event) => setFat(Number(event.target.value))}
+                      placeholder="z. B. 36"
+                  />
+                </label>
+              </div>
+            </fieldset>
+
 
             {/* Users can either upload a local image or paste an image URL for preview. */}
             <fieldset className="recipe-form-card">

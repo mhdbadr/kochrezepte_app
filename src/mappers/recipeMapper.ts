@@ -54,17 +54,23 @@ export function mapSupabaseRecipeToRecipe(recipe: SupabaseRecipeRow): Recipe {
     imageUrl: recipe.image_url ?? undefined,
     preparationTime: recipe.preparation_time,
     servings: recipe.servings && recipe.servings > 0 ? recipe.servings : 4,
+
+    calories: Number(recipe.calories ?? 0),
+    protein: Number(recipe.protein ?? 0),
+    carbs: Number(recipe.carbs ?? 0),
+    fat: Number(recipe.fat ?? 0),
+
     rating: recipe.rating ?? 0,
     ingredients: [...recipe.recipe_ingredients]
-      .sort((a, b) => a.sort_order - b.sort_order)
-      .map((ingredient) => ({
-        amount: ingredient.amount, 
-        unit: ingredient.unit,     
-        name: ingredient.name,     
-      })),
+        .sort((a, b) => a.sort_order - b.sort_order)
+        .map((ingredient) => ({
+          amount: ingredient.amount,
+          unit: ingredient.unit,
+          name: ingredient.name,
+        })),
     instructions: [...recipe.recipe_steps]
-      .sort((a, b) => a.sort_order - b.sort_order)
-      .map((step) => step.instruction),
+        .sort((a, b) => a.sort_order - b.sort_order)
+        .map((step) => step.instruction),
     createdAt: recipe.created_at ?? undefined,
     createdBy: recipe.created_by ?? undefined,
     isEditable: false,
