@@ -382,15 +382,16 @@ Der Großteil der obligatorischen Anforderungen wurde umgesetzt. Nicht enthalten
 
 ### Optionale Anforderungen
 
-| Optionale Anforderung                                |  Status   | Umsetzung                                                                             |
-|:-----------------------------------------------------|:---------:|:--------------------------------------------------------------------------------------|
-| Gastmodus                                            | Umgesetzt | Öffentliche Rezepte können ohne Benutzerkonto angesehen und durchsucht werden         |
-| Dynamische Portionsanpassung                         | Umgesetzt | Zutatenmengen werden entsprechend der ausgewählten Portionszahl berechnet             |
-| Profilverwaltung                                     | Umgesetzt | Benutzername und Profilbild können bearbeitet werden                                  |
-| Designauswahl                                        | Umgesetzt | Heller, dunkler oder systemabhängiger Darstellungsmodus                               |
-| Speicherung des Einkaufsstatus                       | Umgesetzt | Abgehakte Zutaten können im Local Storage gespeichert werden                          |
-| Sortierung erledigter Zutaten                        | Umgesetzt | Erledigte Einträge können automatisch an das Ende der Einkaufsliste verschoben werden |
-| Schutz eigener Inhalte                               | Umgesetzt | Zugriffsprüfung über Eigentümerzuordnung und Supabase Row-Level Security              |
+| Optionale Anforderung                                            |  Status   | Umsetzung                                                                                           |
+|:-----------------------------------------------------------------|:---------:|:----------------------------------------------------------------------------------------------------|
+| Einführung und Onboarding der App                                | Umgesetzt | Mehrstufiges Onboarding mit Bildern, Video und dauerhaft gespeichertem Abschlussstatus              |
+| Gastmodus                                                        | Umgesetzt | Öffentliche Rezepte können ohne Benutzerkonto angesehen und durchsucht werden                       |
+| Dynamische Portionsanpassung                                     | Umgesetzt | Zutatenmengen werden entsprechend der ausgewählten Portionszahl berechnet                           |
+| Profilverwaltung                                                 | Umgesetzt | Benutzername und Profilbild können bearbeitet werden                                                |
+| Designauswahl                                                    | Umgesetzt | Heller, dunkler oder systemabhängiger Darstellungsmodus                                             |
+| Speicherung des Einkaufsstatus                                   | Umgesetzt | Abgehakte Zutaten können im Local Storage gespeichert werden                                        |
+| Sortierung erledigter Zutaten                                    | Umgesetzt | Erledigte Einträge können automatisch an das Ende der Einkaufsliste verschoben werden               |
+| Schutz eigener Inhalte                                           | Umgesetzt | Zugriffsprüfung über Eigentümerzuordnung und Supabase Row-Level Security                            |
 ### Ausblick und mögliche Erweiterungen
 
 Die folgenden Funktionen gehörten nicht zum obligatorischen Projektumfang
