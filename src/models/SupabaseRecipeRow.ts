@@ -25,4 +25,8 @@ export interface SupabaseRecipeRow {
     instruction: string;
     sort_order: number;
   }>;
+  calories: number | null;
+  protein: number | null;
+  carbs: number | null;
+  fat: number | null;
 }
