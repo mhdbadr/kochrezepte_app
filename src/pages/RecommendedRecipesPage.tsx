@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonIcon, IonPage, useIonViewWillEnter } from '@ionic/react';
-import { leafOutline, settingsOutline, sparklesOutline } from 'ionicons/icons';
+import { leafOutline, settingsOutline } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import PageHeader from '../components/PageHeader';
 import RecipeCard from '../components/RecipeCard';

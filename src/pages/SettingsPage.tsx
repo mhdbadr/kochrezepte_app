@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IonContent,  IonItem, IonLabel,  IonList,  IonPage,  IonSelect,
     IonSelectOption,  IonToggle, } from '@ionic/react';
-import BackLink from '../components/BackLink';
 import PageHeader from '../components/PageHeader';
 import { applyTheme, loadAppSettings, saveAppSettings, } from '../utils/appSettings';
 import { type AppSettings, type DietaryPreference, type ThemeMode } from '../models/AppSettings';

@@ -1,7 +1,6 @@
 import { IonContent, IonPage } from "@ionic/react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import BackLink from "../components/BackLink";
 import PageHeader from "../components/PageHeader";
 import type { Recipe, RecipeDifficulty, RecipeIngredient } from "../models/Recipe";
 import type { RecipeCategory } from "../models/RecipeCategory";
