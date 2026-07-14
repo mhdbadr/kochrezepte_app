@@ -33,6 +33,12 @@ export default function EditRecipePage() {
   const [difficulty, setDifficulty] = useState<RecipeDifficulty>("Einfach");
   const [preparationTime, setPreparationTime] = useState("");
   const [servings, setServings] = useState("1");
+
+  const [calories, setCalories] = useState("");
+  const [protein, setProtein] = useState("");
+  const [carbs, setCarbs] = useState("");
+  const [fat, setFat] = useState("");
+
   const [imageUrl, setImageUrl] = useState("");
   const [imageInputMode, setImageInputMode] = useState<ImageInputMode>("upload");
   const [ingredients, setIngredients] = useState<RecipeIngredient[]>([
@@ -65,6 +71,10 @@ export default function EditRecipePage() {
             setDifficulty(loadedRecipe.difficulty);
             setPreparationTime(String(loadedRecipe.preparationTime || ""));
             setServings(String(loadedRecipe.servings || 4));
+            setCalories(String(loadedRecipe.calories ?? 0));
+            setProtein(String(loadedRecipe.protein ?? 0));
+            setCarbs(String(loadedRecipe.carbs ?? 0));
+            setFat(String(loadedRecipe.fat ?? 0));
             setImageUrl(loadedRecipe.imageUrl ?? "");
             setIngredients(
               loadedRecipe.ingredients.length
@@ -168,6 +178,21 @@ export default function EditRecipePage() {
 
     const servingsCount = Number(servings);
 
+    const caloriesValue = Number(calories || 0);
+    const proteinValue = Number(protein || 0);
+    const carbsValue = Number(carbs || 0);
+    const fatValue = Number(fat || 0);
+
+    if (
+        caloriesValue < 0 ||
+        proteinValue < 0 ||
+        carbsValue < 0 ||
+        fatValue < 0
+    ) {
+      setErrorMessage("Nährwerte dürfen nicht negativ sein.");
+      return;
+    }
+
     if (!Number.isInteger(servingsCount) || servingsCount < 1) {
       setErrorMessage("Bitte gib an, für wie viele Personen das Rezept gedacht ist.");
       return;
@@ -185,6 +210,10 @@ export default function EditRecipePage() {
       imageUrl: imageUrl || undefined,
       preparationTime: preparationTimeInMinutes,
       servings: servingsCount,
+      calories: caloriesValue,
+      protein: proteinValue,
+      carbs: carbsValue,
+      fat: fatValue,
     };
 
     try {
@@ -199,6 +228,9 @@ export default function EditRecipePage() {
     } finally {
       setIsSaving(false);
     }
+
+
+
   }
 
   if (isLoading) {
@@ -347,6 +379,62 @@ export default function EditRecipePage() {
                   placeholder="Beschreibung des Rezepts"
                 />
               </label>
+            </fieldset>
+
+            <fieldset className="recipe-form-card">
+              <legend>
+                Nährwerte für {servings || 1} {Number(servings) === 1 ? "Person" : "Personen"}
+              </legend>
+
+              <div className="recipe-form-grid">
+                <label className="recipe-form-field" htmlFor="calories">
+                  <span>Kalorien gesamt</span>
+                  <input
+                      id="calories"
+                      type="number"
+                      min="0"
+                      value={calories}
+                      onChange={(event) => setCalories(event.target.value)}
+                      placeholder="z.B. 520"
+                  />
+                </label>
+
+                <label className="recipe-form-field" htmlFor="protein">
+                  <span>Protein gesamt in g</span>
+                  <input
+                      id="protein"
+                      type="number"
+                      min="0"
+                      value={protein}
+                      onChange={(event) => setProtein(event.target.value)}
+                      placeholder="z.B. 32"
+                  />
+                </label>
+
+                <label className="recipe-form-field" htmlFor="carbs">
+                  <span>Kohlenhydrate gesamt in g</span>
+                  <input
+                      id="carbs"
+                      type="number"
+                      min="0"
+                      value={carbs}
+                      onChange={(event) => setCarbs(event.target.value)}
+                      placeholder="z.B. 18"
+                  />
+                </label>
+
+                <label className="recipe-form-field" htmlFor="fat">
+                  <span>Fett gesamt in g</span>
+                  <input
+                      id="fat"
+                      type="number"
+                      min="0"
+                      value={fat}
+                      onChange={(event) => setFat(event.target.value)}
+                      placeholder="z.B. 36"
+                  />
+                </label>
+              </div>
             </fieldset>
 
             {/* Users can either upload a local image or paste an image URL for preview. */}

@@ -12,7 +12,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { calendarOutline, closeOutline, createOutline, heart, heartOutline, trashOutline } from "ionicons/icons";
+import { calendarOutline, closeOutline, createOutline, heart, heartOutline, trashOutline, nutritionOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import BackLink from "../components/BackLink";
@@ -65,6 +65,8 @@ export default function RecipeDetailPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isAddingToPlanner, setIsAddingToPlanner] = useState(false);
   const [portions, setPortions] = useState<number>(4);
+  // Modal window open/cloed
+  const [showNutritionModal, setShowNutritionModal] = useState(false);
 
   // Read the recipe ID from the current URL.
   const { id } = useParams<RecipeDetailRouteParams>();
@@ -109,6 +111,22 @@ export default function RecipeDetailPage() {
   const canRateRecipe = !canModifyRecipe;
   const isRecipeFavorite = recipe ? isFavorite(recipe.id) : false;
 
+
+  /**
+   * Calculates the nutrition value for the currently selected number of portions.
+   *
+   * Example:
+   * The recipe has 1200 kcal for 4 portions.
+   * If the user selects 2 portions:
+   * 1200 / 4 * 2 = 600 kcal
+   */
+  const getForSelectedPortions = (value: number, originalServings: number, selectedPortions: number) => {
+    if (!originalServings || originalServings <= 0) {
+      return 0;
+    }
+
+    return Math.round((value / originalServings) * selectedPortions);
+  };
 
   /**
     * Handles the toggling of the favorite status for the current recipe.
@@ -254,6 +272,18 @@ export default function RecipeDetailPage() {
                   +
                 </button>
               </div>
+              {/*Modal Button*/}
+              <div className="recipe-detail-nutrition-action">
+                <IonButton
+                    className="recipe-detail-nutrition-button"
+                    size="small"
+                    onClick={() => setShowNutritionModal(true)}
+                >
+                  <IonIcon icon={nutritionOutline} slot="start" />
+                  Naehrwerte
+                </IonButton>
+              </div>
+
             </div>
           </section>
 
@@ -396,6 +426,77 @@ export default function RecipeDetailPage() {
                     </IonItem>
                   ))}
                 </IonList>
+              </div>
+            </IonContent>
+          </IonModal>
+
+          <IonModal
+              isOpen={showNutritionModal}
+              onDidDismiss={() => setShowNutritionModal(false)}
+              initialBreakpoint={0.6}
+              breakpoints={[0, 0.6, 0.9]}
+          >
+            <IonHeader>
+              <IonToolbar>
+                <IonTitle>Nährwerte</IonTitle>
+
+                <IonButton
+                    slot="end"
+                    fill="clear"
+                    onClick={() => setShowNutritionModal(false)}
+                >
+                  <IonIcon icon={closeOutline} />
+                </IonButton>
+              </IonToolbar>
+            </IonHeader>
+
+            <IonContent className="ion-padding">
+              <div className="nutrition-modal">
+                <p className="nutrition-modal__subtitle">
+                  Angaben für das Rezept und pro Portion
+                </p>
+
+                <div className="nutrition-grid">
+                  <div className="nutrition-item">
+                    <strong>{recipe.calories ?? 0}</strong>
+                    <span>kcal gesamt</span>
+                  </div>
+
+                  <div className="nutrition-item">
+                    <strong>{getForSelectedPortions(recipe.calories ?? 0, recipe.servings ?? 1, portions)}</strong>
+                    <span>kcal für {portions} {portions === 1 ? "Person" : "Personen"}</span>
+                  </div>
+
+                  <div className="nutrition-item">
+                    <strong>{recipe.protein ?? 0} g</strong>
+                    <span>Protein gesamt</span>
+                  </div>
+
+                  <div className="nutrition-item">
+                    <strong>{getForSelectedPortions(recipe.protein ?? 0, recipe.servings ?? 1, portions)} g</strong>
+                    <span>Protein für {portions} {portions === 1 ? "Person" : "Personen"}</span>
+                  </div>
+
+                  <div className="nutrition-item">
+                    <strong>{recipe.carbs ?? 0} g</strong>
+                    <span>Kohlenhydrate gesamt</span>
+                  </div>
+
+                  <div className="nutrition-item">
+                    <strong>{getForSelectedPortions(recipe.carbs ?? 0, recipe.servings ?? 1, portions)} g</strong>
+                    <span>Kohlenhydrate für {portions} {portions === 1 ? "Person" : "Personen"}</span>
+                  </div>
+
+                  <div className="nutrition-item">
+                    <strong>{recipe.fat ?? 0} g</strong>
+                    <span>Fett gesamt</span>
+                  </div>
+
+                  <div className="nutrition-item">
+                    <strong>{getForSelectedPortions(recipe.fat ?? 0, recipe.servings ?? 1, portions)} g</strong>
+                    <span>Fett für {portions} {portions === 1 ? "Person" : "Personen"}</span>
+                  </div>
+                </div>
               </div>
             </IonContent>
           </IonModal>

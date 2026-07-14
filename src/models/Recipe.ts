@@ -34,4 +34,8 @@ export interface Recipe {
   createdBy?: string; // User ID of the recipe creator, used for permission checks.
   isEditable?: boolean; // Indicates whether the current user can edit this recipe, based on ownership.
   ingredients: RecipeIngredient[];
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
 }

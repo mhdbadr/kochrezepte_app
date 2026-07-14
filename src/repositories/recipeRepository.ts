@@ -65,16 +65,20 @@ export async function createRecipe(recipe: Recipe): Promise<Recipe> {
 
   const { data: insertedRecipe, error: recipeError } = await supabase
     .from("recipes")
-    .insert({
-      title: recipe.title,
-      description: recipe.description,
-      category_id: categoryId,
-      image_url: recipe.imageUrl ?? null,
-      preparation_time: recipe.preparationTime,
-      difficulty: recipe.difficulty,
-      servings: recipe.servings,
-      created_by: userId,
-    })
+      .insert({
+        title: recipe.title,
+        description: recipe.description,
+        category_id: categoryId,
+        image_url: recipe.imageUrl ?? null,
+        preparation_time: recipe.preparationTime,
+        difficulty: recipe.difficulty,
+        servings: recipe.servings,
+        calories: recipe.calories ?? 0,
+        protein: recipe.protein ?? 0,
+        carbs: recipe.carbs ?? 0,
+        fat: recipe.fat ?? 0,
+        created_by: userId,
+      })
     .select("id")
     .single();
 
@@ -141,15 +145,19 @@ export async function updateRecipe(recipe: Recipe): Promise<Recipe> {
   // Update the main recipe details in the "recipes" table.
   const { error: recipeError } = await supabase
     .from("recipes")
-    .update({
-      title: recipe.title,
-      description: recipe.description,
-      category_id: categoryId,
-      image_url: recipe.imageUrl ?? null,
-      preparation_time: recipe.preparationTime,
-      difficulty: recipe.difficulty,
-      servings: recipe.servings,
-    })
+      .update({
+        title: recipe.title,
+        description: recipe.description,
+        category_id: categoryId,
+        image_url: recipe.imageUrl ?? null,
+        preparation_time: recipe.preparationTime,
+        difficulty: recipe.difficulty,
+        servings: recipe.servings,
+        calories: recipe.calories ?? 0,
+        protein: recipe.protein ?? 0,
+        carbs: recipe.carbs ?? 0,
+        fat: recipe.fat ?? 0,
+      })
     .eq("id", recipe.id)
     .eq("created_by", userId);
 
