@@ -116,7 +116,7 @@ Für die Entwicklung wurden verschiedene Frameworks, Bibliotheken und Werkzeuge 
 | React | 18.2.0 | Komponentenbasierte Entwicklung der Benutzeroberfläche |
 | React DOM | 18.2.0 | Darstellung der React-Komponenten im Browser |
 | TypeScript | 5.4.0 | Typsichere Entwicklung der Anwendung |
-| Vite | 5.0.0 | Entwicklungsserver und Build-System |
+| Vite | 5.4.21 | Entwicklungsserver und Build-System |
 | React Router DOM | 5.3.4 | Navigation zwischen den einzelnen Seiten |
 | Supabase JavaScript SDK | 2.108.1 | Kommunikation mit Authentifizierung, Datenbank und Storage |
 | Capacitor Core | 6.2.1 | Verbindung zwischen Webanwendung und nativer Plattform |
@@ -125,6 +125,7 @@ Für die Entwicklung wurden verschiedene Frameworks, Bibliotheken und Werkzeuge 
 | Capacitor App | 6.0.0 | Zugriff auf App-Lebenszyklusereignisse |
 | Capacitor Keyboard | 6.0.0 | Steuerung der Bildschirmtastatur auf mobilen Geräten |
 | Capacitor Haptics | 6.0.0 | Haptisches Feedback auf mobilen Endgeräten |
+| Capacitor Share | 6.0.0 | Öffnen des nativen Teilen-Dialogs |
 | Capacitor Status Bar | 6.0.0 | Verwaltung der nativen Statusleiste |
 | Ionicons | 7.0.0 | Icons innerhalb der Benutzeroberfläche |
 | Swiper | 12.2.0 | Interaktive Slider und Onboarding-Inhalte |
