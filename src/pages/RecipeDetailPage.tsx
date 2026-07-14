@@ -340,16 +340,16 @@ export default function RecipeDetailPage() {
           {/* Confirm destructive actions before removing a recipe. */}
           <IonAlert
             isOpen={isDeleteAlertOpen}
-            header="Delete recipe"
-            message={`Do you really want to delete "${recipe.title}"?`}
+            header="Rezept löschen"
+            message={`Möchtest du das Rezept „${recipe.title}“ wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`}
             buttons={[
               {
-                text: "Cancel",
+                text: "Abbrechen",
                 role: "cancel",
                 handler: () => setIsDeleteAlertOpen(false),
               },
               {
-                text: "Delete",
+                text: "Löschen",
                 role: "destructive",
                 handler: () => {
                   void handleDeleteRecipe();
