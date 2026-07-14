@@ -1,4 +1,5 @@
-import { IonContent, IonPage,IonSearchbar } from '@ionic/react';
+import { IonContent, IonIcon, IonPage,IonSearchbar } from '@ionic/react';
+import { sparkles } from 'ionicons/icons';
 
 
 import { useEffect, useState } from 'react';
@@ -18,6 +19,7 @@ import 'swiper/css/pagination';
 const categories: Array<{ label: string; value: Recipe['category']; icon: string }> = [
     { label: 'Vegan', value: 'Vegan', icon: '🌿' },
     { label: 'Vegetarisch', value: 'Vegetarisch', icon: '🥬' },
+    { label: 'Pescetarisch', value: 'Pescetarisch', icon: '🐟' },
     { label: 'Dessert', value: 'Dessert', icon: '🧁' },
     { label: 'Schnell', value: 'Schnell', icon: '⚡' },
     { label: 'Pasta', value: 'Pasta', icon: '🍕' },
@@ -57,7 +59,7 @@ export default function HomePage() {
             }
         }
 
-        loadRecipes();
+        void loadRecipes();
 
         return () => {
             isPageActive = false;
@@ -138,6 +140,7 @@ export default function HomePage() {
                 <div className="category-grid">
                     {categories.map((category) => (
                         <button
+                            type="button"
                             key={category.value}
                             className={
                                 selectedCategory === category.value
@@ -152,6 +155,7 @@ export default function HomePage() {
                     ))}
 
                     <button
+                        type="button"
                         className={
                             selectedCategory === null
                                 ? 'category-item category-item--selected'
@@ -161,6 +165,17 @@ export default function HomePage() {
                     >
                         <div className="category-icon">🍽️</div>
                         <span>Alle</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        className="category-item category-item--for-you"
+                        onClick={() => history.push('/for-you')}
+                    >
+                        <div className="category-icon">
+                            <IonIcon icon={sparkles} />
+                        </div>
+                        <span>Für dich</span>
                     </button>
                 </div>
 

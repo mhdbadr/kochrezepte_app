@@ -2,6 +2,7 @@
 export type RecipeCategory =
     | 'Vegan'
     | 'Vegetarisch'
+    | 'Pescetarisch'
     | 'Dessert'
     | 'Schnell'
     | 'Pasta'

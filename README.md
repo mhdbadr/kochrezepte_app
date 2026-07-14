@@ -56,6 +56,8 @@ Die Anwendung stellt unterschiedliche Funktionen für Gäste und registrierte Be
 | Kategorien | Filterung der Rezepte nach Kategorien wie Vegan, Pasta oder Dessert |
 | Rezeptdetails | Anzeige von Zutaten, Zubereitungsschritten, Dauer, Schwierigkeit und Portionsanzahl |
 | Portionsanpassung | Automatische Anpassung der Zutatenmengen an die ausgewählte Personenzahl |
+| Beliebte Rezepte | Rangliste nach Bewertungen für die letzte Woche, den letzten Monat, das letzte Jahr oder den gesamten Zeitraum |
+| Persönliche Empfehlungen | Anzeige der neuesten Rezepte anderer Benutzer passend zur gewählten veganen, vegetarischen oder pescetarischen Ernährungspräferenz |
 | Gastmodus | Nutzung der öffentlichen Bereiche ohne Benutzerkonto |
 | Registrierung | Erstellung eines persönlichen Benutzerkontos |
 | Anmeldung | Anmeldung mit E-Mail-Adresse und Passwort |
@@ -355,57 +357,53 @@ Beim Laden eines Rezepts läuft die Kommunikation in folgenden Schritten ab:
 | `weekly_planner` | Zuordnung von Rezepten zu Wochentagen |
 ## Anforderungen
 
-Die Anforderungen wurden aus dem App-Konzept, den darin beschriebenen
-User Stories und den während der Projektplanung festgelegten Funktionen
-abgeleitet.
-
-Die obligatorischen Anforderungen bilden den festgelegten Mindestumfang
-der Kochrezepte-App. Optionale Anforderungen ergänzen die Anwendung um
-zusätzliche Komfort-, Community- und Planungsfunktionen.
+Die folgenden obligatorischen Anforderungen wurden aus der offiziellen
+Aufgabenstellung übernommen. Der Status beschreibt den aktuellen Stand
+der Kochrezepte-App.
 
 ### Obligatorische Anforderungen
 
-| Mindestanforderung | Status | Umsetzung |
-|:---|:---:|:---|
-| Rezepte in einer Übersicht anzeigen | Umgesetzt | Startseite mit Rezeptkarten |
-| Rezeptdetails mit Zutaten und Zubereitung anzeigen | Umgesetzt | Rezeptdetailseite |
-| Rezepte anhand des Namens oder der Zutaten suchen | Umgesetzt | Suchseite und Ergebnisliste |
-| Rezepte nach Kategorien filtern | Umgesetzt | Kategorieauswahl und Filterfunktion |
-| Eigene Rezepte erstellen und dauerhaft speichern | Umgesetzt | Rezeptformular und Speicherung in Supabase |
-| Eigene Rezepte bearbeiten | Umgesetzt | Eigentümerabhängige Bearbeitungsfunktion |
-| Eigene Rezepte löschen | Umgesetzt | Eigentümerabhängige Löschfunktion |
-| Zutaten, Zubereitung und weitere Rezeptangaben erfassen | Umgesetzt | Strukturierte Eingabefelder im Rezeptformular |
-| Ein Bild zu einem eigenen Rezept hinzufügen | Umgesetzt | Auswahl einer lokalen Bilddatei oder Angabe einer Bild-URL |
-| Rezepte als persönliche Favoriten speichern | Umgesetzt | Favoritenfunktion und Favoritenseite |
-| Rezepte mit anderen Personen teilen | Umgesetzt | Web Share API und Zwischenablage als Fallback |
-| Anwendungsdaten zentral und dauerhaft speichern | Umgesetzt | PostgreSQL-Datenbank über Supabase |
-| Benutzerbezogene Inhalte vor unberechtigten Änderungen schützen | Umgesetzt | Supabase-Sitzungen und Row-Level Security |
+| Anforderung                                                                                                             |       Status        | Umsetzung                                                                                                                                                              |
+|:------------------------------------------------------------------------------------------------------------------------|:-------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Eigene Kochrezepte erstellen, anzeigen, bearbeiten und löschen                                                          |      Umgesetzt      | Vollständige CRUD-Rezeptverwaltung mit Eigentümerprüfung                                                                                                               |
+| Speicherung von Rezeptname, Bild, Zubereitungszeit, Schwierigkeit, Zutatenliste, Portionen und Zubereitungsbeschreibung |      Umgesetzt      | Alle geforderten Angaben sind Bestandteil des Rezeptformulars                                                                                                          |
+| Verschlagwortung von Rezepten zur Kategorisierung und erweiterten Suche                                                 | Teilweise umgesetzt | Rezepte können einer Kategorie zugeordnet und danach gefiltert werden. Ein zusätzliches flexibles Tag-System wurde nicht umgesetzt.                                    |
+| Nährwertansicht pro Rezept und Portion                                                                                  |      Umgesetzt      | Kalorien, Eiweiß, Kohlenhydrate und Fett werden pro Rezept erfasst und entsprechend der ausgewählten Portionszahl berechnet.                                           |
+| Rezeptsuche beziehungsweise Rezeptvorschläge über Suchtext und Zutaten                                                  |      Umgesetzt      | Suche nach Titel, Beschreibung, Zutaten und bekannten Synonymen                                                                                                        |
+| Bewertung mit einer Sterneskala von 1 bis 5 Sternen und optionalem Kommentar                                            |      Umgesetzt      | Sternebewertungen und Kommentare sind für angemeldete Benutzer verfügbar                                                                                               |
+| Teilen von Rezepten per E-Mail oder Messenger-Dienst                                                                    |      Umgesetzt      | Teilen über die Web Share API; alternativ wird der Rezeptlink in die Zwischenablage kopiert                                                                            |
+| Merkzettel für Rezepte                                                                                                  |      Umgesetzt      | Persönliche Favoritenliste für angemeldete Benutzer                                                                                                                    |
+| Ansicht der neuesten Rezepte anderer Benutzer unter Berücksichtigung persönlicher Ernährungspräferenzen                 |      Umgesetzt      | Neueste öffentliche Rezepte anderer Benutzer werden passend zur in den Einstellungen gewählten Präferenz „Alle“, „Vegan“, „Vegetarisch“ oder „Pescetarisch“ gefiltert. |
+| Ansicht der beliebtesten Rezepte mit auswählbarem Zeitfenster                                                           |      Umgesetzt      | Rezepte werden anhand ihrer Bewertungen für die letzte Woche, den letzten Monat, das letzte Jahr oder den gesamten Zeitraum sortiert.                                  |
+| Benutzerregistrierung, Anmeldung und Speicherung der Kontodaten auf einem Backend                                       |      Umgesetzt      | Supabase Auth, Profiltabelle und PostgreSQL-Datenbank                                                                                                                  |
+| Wochenplan und Einkaufsliste                                                                                            |      Umgesetzt      | Rezepte können Wochentagen zugeordnet werden; daraus wird automatisch eine Einkaufsliste erzeugt                                                                       |
 
-Alle festgelegten obligatorischen Mindestanforderungen wurden umgesetzt.
+Der Großteil der obligatorischen Anforderungen wurde umgesetzt. Nicht enthalten ist derzeit ein zusätzliches flexibles Tag-System.
 
 ### Optionale Anforderungen
 
-| Optionale Anforderung                                 | Status | Umsetzung |
-|:------------------------------------------------------|:---:|:---|
-| Registrierung mit E-Mail und Passwort                 | Umgesetzt | Supabase Auth |
-| Anmeldung und Abmeldung                               | Umgesetzt | Supabase Auth und Sitzungsverwaltung |
-| Nutzung öffentlicher Funktionen ohne Benutzerkonto    | Umgesetzt | Gastmodus mit lesendem Zugriff |
-| Zutatenmengen an die gewünschte Portionszahl anpassen | Umgesetzt | Dynamische Berechnung der Zutatenmengen |
-| Rezepte bewerten                                      | Umgesetzt | Sternebewertung |
-|  Rezepte kommentieren                                 | Umgesetzt | Benutzerbezogene Kommentarfunktion |
-| Rezepte in einem Wochenplan organisieren              | Umgesetzt | Zuordnung von Rezepten zu Wochentagen |
-| Eine Einkaufsliste aus dem Wochenplan erzeugen        | Umgesetzt | Automatische Zusammenstellung benötigter Zutaten |
-| Benutzerprofil verwalten                              | Umgesetzt | Bearbeitung von Benutzername und Profilbild |
-| Darstellungsmodus auswählen                           | Umgesetzt | Heller, dunkler oder systemabhängiger Modus |
+| Optionale Anforderung                                            |  Status   | Umsetzung                                                                                           |
+|:-----------------------------------------------------------------|:---------:|:----------------------------------------------------------------------------------------------------|
+| Einführung und Onboarding der App                                | Umgesetzt | Mehrstufiges Onboarding mit Bildern, Video und dauerhaft gespeichertem Abschlussstatus              |
+| Gastmodus                                                        | Umgesetzt | Öffentliche Rezepte können ohne Benutzerkonto angesehen und durchsucht werden                       |
+| Dynamische Portionsanpassung                                     | Umgesetzt | Zutatenmengen werden entsprechend der ausgewählten Portionszahl berechnet                           |
+| Profilverwaltung                                                 | Umgesetzt | Benutzername und Profilbild können bearbeitet werden                                                |
+| Designauswahl                                                    | Umgesetzt | Heller, dunkler oder systemabhängiger Darstellungsmodus                                             |
+| Speicherung des Einkaufsstatus                                   | Umgesetzt | Abgehakte Zutaten können im Local Storage gespeichert werden                                        |
+| Sortierung erledigter Zutaten                                    | Umgesetzt | Erledigte Einträge können automatisch an das Ende der Einkaufsliste verschoben werden               |
+| Schutz eigener Inhalte                                           | Umgesetzt | Zugriffsprüfung über Eigentümerzuordnung und Supabase Row-Level Security                            |
+### Ausblick und mögliche Erweiterungen
 
-### Teilweise oder nicht umgesetzte Erweiterungen
+Die folgenden Funktionen gehörten nicht zum obligatorischen Projektumfang
+und können in einer zukünftigen Version ergänzt oder weiterentwickelt werden.
 
-| Erweiterung | Status | Aktueller Stand |
+| Erweiterung | Aktueller Stand | Mögliche Weiterentwicklung |
 |:---|:---:|:---|
-| Speicherung von Rezeptbildern in Supabase Storage | Teilweise umgesetzt | Rezeptbilder können aus lokalen Dateien ausgewählt werden, werden derzeit jedoch als Data URL gespeichert. Ein eigener Supabase-Storage-Bucket ist noch nicht eingerichtet. |
-| Offline-Modus | Nicht umgesetzt | Rezept- und Benutzerdaten werden direkt aus Supabase geladen. |
-| Push-Benachrichtigungen | Nicht umgesetzt | Die Funktion war nicht Bestandteil des festgelegten Mindestumfangs. |
-| Vollständige automatisierte Testabdeckung | Teilweise umgesetzt | Eine Cypress-Teststruktur ist vorhanden, deckt aber noch nicht alle Funktionen ab. |
+| Speicherung von Rezeptbildern in Supabase Storage | Teilweise umgesetzt | Rezeptbilder können bereits als lokale Dateien oder über eine URL hinzugefügt werden. Zukünftig könnten größere Bilddateien in einem eigenen Supabase-Storage-Bucket gespeichert werden. |
+| Offline-Modus | Nicht vorgesehen | Ausgewählte Rezepte könnten zukünftig lokal gespeichert und ohne Internetverbindung angezeigt werden. |
+| Push-Benachrichtigungen | Nicht vorgesehen | Erinnerungen für den Wochenplan oder die Einkaufsliste könnten ergänzt werden. |
+| Automatisierte Testabdeckung | Teilweise umgesetzt | Die vorhandene Cypress-Teststruktur könnte um Tests für weitere zentrale Abläufe erweitert werden. |
+
 ## Zusätzliche Hinweise
 
 Bei zukünftigen Änderungen sollten folgende Projektregeln eingehalten werden:
