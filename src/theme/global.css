@@ -8,3 +8,94 @@ body {
   color: var(--app-text);
   background: var(--app-background);
 }
+
+ion-content {
+  --background: var(--app-background);
+  color: var(--app-text);
+}
+
+ion-card {
+  --background: var(--app-surface);
+  --color: var(--app-text);
+  border: 1px solid var(--app-border);
+}
+
+ion-card-title,
+ion-card-subtitle,
+ion-label,
+ion-note {
+  color: var(--app-text);
+}
+
+ion-item {
+  --background: var(--app-surface);
+  --color: var(--app-text);
+  --border-color: var(--app-border);
+}
+
+ion-input,
+ion-textarea,
+ion-select,
+ion-searchbar {
+  --color: var(--app-text);
+  --placeholder-color: var(--app-muted);
+}
+
+ion-toast.feedback-toast {
+  --width: min(440px, calc(100vw - 32px));
+  --border-radius: 18px;
+  --box-shadow: 0 10px 26px rgba(36, 48, 37, 0.1);
+  --color: var(--app-text);
+  --button-color: var(--app-text);
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+ion-toast.feedback-toast::part(container) {
+  border: 1px solid rgba(36, 48, 37, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+ion-toast.feedback-toast--validation {
+  --background: #fff4df;
+  --color: #704a10;
+  --button-color: #704a10;
+  --box-shadow: 0 10px 26px rgba(112, 74, 16, 0.14);
+}
+
+ion-toast.feedback-toast--validation::part(container) {
+  border-color: #dfbd76;
+}
+
+ion-toast.feedback-toast--error {
+  --background: #fff0ee;
+  --color: #81312b;
+  --button-color: #81312b;
+  --box-shadow: 0 10px 26px rgba(129, 49, 43, 0.15);
+}
+
+ion-toast.feedback-toast--error::part(container) {
+  border-color: #dda6a0;
+}
+
+ion-toast.feedback-toast--success {
+  --background: #eef8f1;
+  --color: #255b38;
+  --button-color: #255b38;
+  --box-shadow: 0 10px 26px rgba(37, 91, 56, 0.14);
+}
+
+ion-toast.feedback-toast--success::part(container) {
+  border-color: #a9d3b5;
+}
+
+ion-toast.feedback-toast--info {
+  --background: #eef6fb;
+  --color: #2c526f;
+  --button-color: #2c526f;
+  --box-shadow: 0 10px 26px rgba(44, 82, 111, 0.14);
+}
+
+ion-toast.feedback-toast--info::part(container) {
+  border-color: #afcce0;
+}

@@ -1,0 +1,117 @@
+.app-menu::part(container) {
+  border-radius: 0 28px 28px 0;
+  background: var(--app-background);
+  box-shadow: 18px 0 38px rgba(36, 48, 37, 0.16);
+}
+
+.app-menu__intro {
+  margin: 18px;
+  padding: 20px;
+  border-radius: 22px;
+  color: var(--app-text);
+  background: var(--app-surface);
+  box-shadow: 0 10px 24px rgba(36, 48, 37, 0.08);
+}
+
+.app-menu__intro span {
+  color: var(--app-primary);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.app-menu__intro h2 {
+  margin: 8px 0;
+  font-size: 1.7rem;
+}
+
+.app-menu__intro p {
+  margin: 0;
+  color: var(--app-muted);
+  line-height: 1.45;
+}
+
+.app-menu ion-list {
+  background: transparent;
+  padding: 0 12px;
+}
+
+.app-menu ion-item {
+  --background: transparent;
+  --background-hover: var(--app-surface-muted);
+  --border-radius: 16px;
+  --color: var(--app-text);
+  margin: 6px 0;
+  font-weight: 700;
+}
+
+.app-menu ion-icon {
+  color: var(--app-primary);
+}
+
+
+ion-tab-bar {
+  overflow: visible !important;
+  contain: none !important; 
+}
+
+ion-tab-bar::part(container) {
+  overflow: visible !important;
+  contain: none !important;
+}
+
+.tab-btn-create {
+  background: var(--app-primary, #6b8e62) !important;
+  color: #ffffff !important;
+  border-radius: 50% !important;
+  width: 56px !important;
+  height: 56px !important;
+  min-width: 56px !important;
+  max-width: 56px !important;
+  margin: 0 12px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2) !important;
+  --color-selected: #ffffff !important;
+  
+  transform: translateY(-16px) !important;
+  align-self: center !important;
+}
+
+.tab-btn-create::part(native) {
+  border-radius: 50% !important;
+  contain: none !important;
+  overflow: visible !important;
+}
+
+.tab-btn-create ion-icon {
+  font-size: 32px !important;
+}
+
+ion-tab-button {
+  max-width: 120px; 
+}
+
+ion-tab-bar {
+  justify-content: center !important;
+}
+
+ion-tab-button {
+  max-width: 120px !important;
+  flex: 0 1 120px !important; 
+}
+ion-tab-button.tab-selected {
+  color: var(--app-primary, #6b8e62);
+  background: rgba(107, 142, 98, 0.15); 
+  border-radius: 16px; 
+  margin: 6px 4px;
+  max-height: 48px;
+}
+
+
+ion-tab-button.tab-btn-create.tab-selected {
+  background: var(--app-primary, #6b8e62) !important;
+  color: #ffffff !important;
+  border-radius: 50% !important;
+  margin: 0 12px !important;
+  max-height: 56px !important;
+}

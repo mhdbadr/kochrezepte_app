@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="900" viewBox="0 120 1800 900" role="img" aria-labelledby="title desc">
+  <title id="title">Systemarchitektur der Kochrezepte-App</title>
+  <desc id="desc">Schichten und Systeme der Ionic-React-App mit Benutzeroberfläche, Anwendungslogik, Repository-Schicht, Local Storage und Supabase-Backend.</desc>
+  <defs>
+    <linearGradient id="client" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#718a99"/><stop offset="1" stop-color="#526d7c"/></linearGradient>
+    <linearGradient id="logic" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#859d81"/><stop offset="1" stop-color="#6c876a"/></linearGradient>
+    <linearGradient id="backend" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#789578"/><stop offset="1" stop-color="#5e7e61"/></linearGradient>
+    <linearGradient id="backendDark" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5f8262"/><stop offset="1" stop-color="#456a4a"/></linearGradient>
+    <filter id="shadow" x="-15%" y="-20%" width="130%" height="150%"><feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#21303a" flood-opacity="0.10"/></filter>
+    <style>
+      .t{font-family:Inter,"Segoe UI",Arial,sans-serif}
+      .title{font-size:38px;font-weight:780;fill:#111820}
+      .section{font-size:14px;font-weight:760;letter-spacing:1.25px;fill:#6b747c}
+      .boxTitle{font-size:22px;font-weight:740;fill:#fff}
+      .boxTitleDark{font-size:21px;font-weight:740;fill:#1c262d}
+      .technology{font-size:13px;font-weight:700;fill:#eaf0f3}
+      .technologyDark{font-size:13px;font-weight:700;fill:#647078}
+      .body{font-size:14px;fill:#44515a}
+      .relation{font-size:12.5px;font-weight:700;fill:#56626b}
+      .legend{font-size:13px;fill:#59656e}
+      .boundary{fill:#fbfcfc;stroke:#cbd2d6;stroke-width:2;stroke-dasharray:10 8}
+      .card{fill:#fff;stroke:#d3d9dd;stroke-width:1.6}
+      .internal{fill:none;stroke:#667681;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+      .external{fill:none;stroke:#607f63;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+      .sql{fill:none;stroke:#4f5d65;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+      .internalFlow{marker-end:url(#arrowInternal)}
+      .externalFlow{marker-end:url(#arrowExternal)}
+      .sqlFlow{marker-end:url(#arrowSql)}
+    </style>
+    <marker id="arrowInternal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#667681"/></marker>
+    <marker id="arrowExternal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#607f63"/></marker>
+    <marker id="arrowSql" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4f5d65"/></marker>
+  </defs>
+
+  <rect x="0" y="120" width="1800" height="900" fill="#fff"/>
+
+  <!-- Main system boundaries -->
+  <rect class="boundary" x="350" y="145" width="820" height="835" rx="24"/>
+  <text class="t section" x="382" y="180">CLIENT · KOCHREZEPTE-APP</text>
+  <text class="t" x="1135" y="180" text-anchor="end" font-size="12.5" fill="#7a858c">Browser oder Android-App</text>
+
+  <rect class="boundary" x="1230" y="145" width="520" height="835" rx="24"/>
+  <text class="t section" x="1262" y="180">BACKEND · SUPABASE</text>
+  <text class="t" x="1715" y="180" text-anchor="end" font-size="12.5" fill="#7a858c">Cloud-Service</text>
+
+  <!-- Relationships behind cards -->
+  <path class="internal internalFlow" d="M290 465H330V285H395"/>
+  <rect x="298" y="330" width="70" height="23" rx="6" fill="#fff"/><text class="t relation" x="333" y="346" text-anchor="middle">verwendet</text>
+
+  <path class="internal internalFlow" d="M750 350V385"/>
+  <rect x="770" y="360" width="122" height="23" rx="6" fill="#fff"/><text class="t relation" x="831" y="376" text-anchor="middle">Funktionsaufrufe</text>
+
+  <path class="internal internalFlow" d="M650 555V615"/>
+  <rect x="670" y="579" width="130" height="23" rx="6" fill="#fff"/><text class="t relation" x="735" y="595" text-anchor="middle">Repository-Aufruf</text>
+
+  <path class="internal internalFlow" d="M860 515H920"/>
+  <rect x="861" y="485" width="68" height="23" rx="6" fill="#fff"/>
+  <text class="t" x="895" y="501" text-anchor="middle" font-size="10.5" font-weight="700" fill="#56626b">Browser API</text>
+
+  <!-- External service connections -->
+  <path class="external externalFlow" d="M860 670H1195V270H1270"/>
+  <rect x="930" y="646" width="135" height="42" rx="6" fill="#fff"/>
+  <text class="t relation" x="997" y="663" text-anchor="middle">HTTPS</text><text class="t relation" x="997" y="681" text-anchor="middle">Login / Session</text>
+
+  <path class="external externalFlow" d="M860 715H1180V470H1270"/>
+  <rect x="930" y="691" width="138" height="42" rx="6" fill="#fff"/>
+  <text class="t relation" x="999" y="708" text-anchor="middle">HTTPS / JSON</text><text class="t relation" x="999" y="726" text-anchor="middle">Datenzugriff</text>
+
+  <path class="external externalFlow" d="M860 760H1195V940H1602V915"/>
+  <rect x="930" y="736" width="135" height="42" rx="6" fill="#fff"/>
+  <text class="t relation" x="997" y="753" text-anchor="middle">HTTPS</text><text class="t relation" x="997" y="771" text-anchor="middle">Profilbild-Datei</text>
+
+  <path class="sql sqlFlow" d="M1490 530V700H1385V750"/>
+  <rect x="1410" y="638" width="48" height="23" rx="6" fill="#fff"/><text class="t relation" x="1434" y="654" text-anchor="middle">SQL</text>
+
+  <!-- Person -->
+  <g filter="url(#shadow)">
+    <rect class="card" x="50" y="350" width="240" height="230" rx="18"/>
+    <path d="M50 368a18 18 0 0 1 18-18h204a18 18 0 0 1 18 18v50H50z" fill="url(#client)"/>
+  </g>
+  <text class="t boxTitle" x="170" y="391" text-anchor="middle">Nutzer</text>
+  <circle cx="170" cy="465" r="25" fill="#718a99" opacity=".92"/>
+  <path d="M122 535c8-42 88-42 96 0" fill="#718a99" opacity=".92"/>
+  <text class="t body" x="170" y="562" text-anchor="middle">Gast oder registrierter Benutzer</text>
+
+  <!-- Client: presentation -->
+  <g filter="url(#shadow)">
+    <rect class="card" x="405" y="215" width="690" height="135" rx="12"/>
+    <path d="M405 227a12 12 0 0 1 12-12h666a12 12 0 0 1 12 12v45H405z" fill="url(#client)"/>
+  </g>
+  <text class="t boxTitle" x="430" y="252">Präsentationsschicht</text>
+  <text class="t technology" x="1070" y="252" text-anchor="end">Ionic React · React Router</text>
+  <text class="t body" x="430" y="302">Seiten, Formulare und wiederverwendbare Komponenten</text>
+  <text class="t body" x="430" y="328">Navigation, Benutzerinteraktion und Zugriffskontrolle</text>
+
+  <!-- Client: application logic -->
+  <g filter="url(#shadow)">
+    <rect class="card" x="405" y="395" width="455" height="160" rx="12"/>
+    <path d="M405 407a12 12 0 0 1 12-12h431a12 12 0 0 1 12 12v45H405z" fill="url(#logic)"/>
+  </g>
+  <text class="t boxTitle" x="430" y="432">Anwendungslogik</text>
+  <text class="t technology" x="835" y="432" text-anchor="end">TypeScript</text>
+  <text class="t body" x="430" y="482">Hooks, Hilfsfunktionen und Fachlogik</text>
+  <text class="t body" x="430" y="508">Modelle und Mapper für Anwendungsdaten</text>
+  <text class="t body" x="430" y="534">Validierung und lokale Verarbeitung</text>
+
+  <!-- Client: data access -->
+  <g filter="url(#shadow)">
+    <rect class="card" x="405" y="625" width="455" height="180" rx="12"/>
+    <path d="M405 637a12 12 0 0 1 12-12h431a12 12 0 0 1 12 12v45H405z" fill="url(#backendDark)"/>
+  </g>
+  <text class="t boxTitle" x="430" y="662">Repository-Schicht</text>
+  <text class="t technology" x="835" y="662" text-anchor="end">Supabase JS SDK</text>
+  <text class="t body" x="430" y="712">Kapselt alle Datenbankoperationen</text>
+  <text class="t body" x="430" y="738">Kommuniziert über den zentralen Supabase Client</text>
+  <text class="t body" x="430" y="764">Rezepte · Favoriten · Bewertungen · Planung</text>
+
+  <!-- Client: local storage -->
+  <g filter="url(#shadow)">
+    <rect class="card" x="930" y="395" width="205" height="160" rx="12"/>
+    <path d="M930 407a12 12 0 0 1 12-12h181a12 12 0 0 1 12 12v45H930z" fill="#7c898f"/>
+  </g>
+  <text class="t boxTitle" x="1032" y="432" text-anchor="middle">Local Storage</text>
+  <text class="t body" x="1032" y="482" text-anchor="middle">Gaststatus · Onboarding</text>
+  <text class="t body" x="1032" y="508" text-anchor="middle">Theme · Einstellungen</text>
+  <text class="t body" x="1032" y="534" text-anchor="middle">lokal auf dem Endgerät</text>
+
+  <!-- Supabase Auth -->
+  <g filter="url(#shadow)">
+    <rect class="card" x="1280" y="215" width="420" height="120" rx="12"/>
+    <path d="M1280 227a12 12 0 0 1 12-12h396a12 12 0 0 1 12 12v43h-420z" fill="url(#backend)"/>
+  </g>
+  <text class="t boxTitle" x="1305" y="252">Supabase Auth</text>
+  <text class="t body" x="1305" y="303">Registrierung, Anmeldung und Benutzer-Sessions</text>
+
+  <!-- Supabase Data API -->
+  <g filter="url(#shadow)">
+    <rect class="card" x="1280" y="410" width="420" height="120" rx="12"/>
+    <path d="M1280 422a12 12 0 0 1 12-12h396a12 12 0 0 1 12 12v43h-420z" fill="url(#backend)"/>
+  </g>
+  <text class="t boxTitle" x="1305" y="447">Supabase Data API</text>
+  <text class="t body" x="1305" y="498">Automatisch erzeugte REST-Schnittstelle mit RLS</text>
+
+  <!-- PostgreSQL -->
+  <g filter="url(#shadow)">
+    <rect class="card" x="1280" y="760" width="210" height="145" rx="12"/>
+    <path d="M1280 772a12 12 0 0 1 12-12h186a12 12 0 0 1 12 12v43h-210z" fill="url(#backendDark)"/>
+  </g>
+  <text class="t boxTitle" x="1385" y="797" text-anchor="middle">PostgreSQL</text>
+  <text class="t body" x="1385" y="850" text-anchor="middle">Persistente</text>
+  <text class="t body" x="1385" y="875" text-anchor="middle">Anwendungsdaten</text>
+
+  <!-- Storage -->
+  <g filter="url(#shadow)">
+    <rect class="card" x="1505" y="760" width="195" height="145" rx="12"/>
+    <path d="M1505 772a12 12 0 0 1 12-12h171a12 12 0 0 1 12 12v43h-195z" fill="url(#backend)"/>
+  </g>
+  <text class="t boxTitle" x="1602" y="797" text-anchor="middle">Storage</text>
+  <text class="t body" x="1602" y="850" text-anchor="middle">Bucket „avatars“</text>
+  <text class="t body" x="1602" y="875" text-anchor="middle">für Profilbilder</text>
+
+</svg>

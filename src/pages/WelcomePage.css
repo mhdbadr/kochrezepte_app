@@ -1,0 +1,92 @@
+.welcome-hero {
+    min-height: 100vh;
+    width: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    background: #000;
+}
+
+.welcome-video {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+
+    z-index: 0;
+}
+
+.welcome-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.15) 0%,
+            rgba(0, 0, 0, 0.25) 45%,
+            rgba(0, 0, 0, 0.75) 100%
+    );
+
+    z-index: 1;
+}
+
+.welcome-overlay {
+    position: relative;
+    z-index: 2;
+
+    min-height: 100vh;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    padding: 0 28px 48px;
+    color: white;
+    text-align: center;
+}
+
+.welcome-overlay h1 {
+    font-size: 3rem;
+    font-family: serif;
+    font-weight: 500;
+    margin: 0 0 12px;
+    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.5);
+}
+
+.welcome-overlay h2 {
+    font-size: 1.35rem;
+    font-weight: 400;
+    line-height: 1.4;
+    margin: 0 0 18px;
+    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.5);
+}
+
+.welcome-overlay p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0 0 24px;
+    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.5);
+}
+
+.welcome-overlay ion-button {
+    width: 100%;
+    height: 52px;
+
+    --background: #2f7d32;
+    --background-hover: #27692a;
+    --background-activated: #1f5522;
+    --color: white;
+    --border-radius: 18px;
+
+    font-weight: 700;
+    letter-spacing: 0.3px;
+
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}

@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="460" viewBox="0 0 1800 460" role="img" aria-labelledby="title desc">
+  <title id="title">Vereinfachter Datenfluss beim Laden eines Rezepts</title>
+  <desc id="desc">Sechs Schritte von der React-Seite über Repository, Supabase Client, Supabase, Mapper und React-State bis zur aktualisierten Benutzeroberfläche.</desc>
+  <defs>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#718a99"/><stop offset="1" stop-color="#526d7c"/></linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#789578"/><stop offset="1" stop-color="#5e7e61"/></linearGradient>
+    <linearGradient id="greenDark" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5f8262"/><stop offset="1" stop-color="#456a4a"/></linearGradient>
+    <linearGradient id="neutral" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#85928f"/><stop offset="1" stop-color="#6e7c79"/></linearGradient>
+    <filter id="shadow" x="-18%" y="-25%" width="136%" height="160%"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#21303a" flood-opacity="0.11"/></filter>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#607f63"/></marker>
+    <marker id="arrowGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#667681"/></marker>
+    <style>
+      .t{font-family:Inter,"Segoe UI",Arial,sans-serif}
+      .step{font-size:12px;font-weight:780;letter-spacing:1px;fill:#fff}
+      .cardTitle{font-size:20px;font-weight:740;fill:#fff}
+      .technology{font-size:12px;font-weight:650;fill:#edf2f1}
+      .body{font-size:14px;fill:#44515a}
+      .strong{font-size:13px;font-weight:720;fill:#56636b}
+      .card{fill:#fff;stroke:#d3d9dd;stroke-width:1.6}
+      .sep{stroke:#e0e4e7;stroke-width:1.2}
+      .request{fill:none;stroke:#607f63;stroke-width:3;stroke-linecap:round;marker-end:url(#arrowGreen)}
+      .response{fill:none;stroke:#667681;stroke-width:3;stroke-linecap:round;marker-end:url(#arrowGray)}
+    </style>
+  </defs>
+
+  <rect width="1800" height="460" fill="#fff"/>
+
+  <!-- Connections -->
+  <path class="request" d="M315 210H345"/>
+  <path class="request" d="M600 210H630"/>
+  <path class="request" d="M885 210H915"/>
+  <path class="response" d="M1170 210H1200"/>
+  <path class="response" d="M1455 210H1485"/>
+
+  <!-- 01 React page -->
+  <g filter="url(#shadow)">
+    <rect class="card" x="60" y="70" width="255" height="320" rx="14"/>
+    <path d="M60 84a14 14 0 0 1 14-14h227a14 14 0 0 1 14 14v70H60z" fill="url(#blue)"/>
+  </g>
+  <circle cx="88" cy="99" r="17" fill="#fff" opacity=".22"/><text class="t step" x="88" y="104" text-anchor="middle">01</text>
+  <text class="t cardTitle" x="116" y="108">React-Seite</text><text class="t technology" x="116" y="132">Ionic React</text>
+  <line class="sep" x1="60" y1="154" x2="315" y2="154"/>
+  <text class="t body" x="84" y="194">Die Rezeptseite benötigt die</text>
+  <text class="t body" x="84" y="224">Daten eines Rezepts.</text>
+  <text class="t body" x="84" y="254">Dafür ruft sie eine Funktion in</text>
+  <text class="t strong" x="84" y="284">recipeRepository.ts auf.</text>
+  <text class="t body" x="84" y="326">Die Seite kennt dabei keine</text>
+  <text class="t body" x="84" y="353">Datenbankdetails.</text>
+
+  <!-- 02 Repository -->
+  <g filter="url(#shadow)">
+    <rect class="card" x="345" y="70" width="255" height="320" rx="14"/>
+    <path d="M345 84a14 14 0 0 1 14-14h227a14 14 0 0 1 14 14v70H345z" fill="url(#greenDark)"/>
+  </g>
+  <circle cx="373" cy="99" r="17" fill="#fff" opacity=".22"/><text class="t step" x="373" y="104" text-anchor="middle">02</text>
+  <text class="t cardTitle" x="401" y="108">Repository</text><text class="t technology" x="401" y="132">Datenzugriff</text>
+  <line class="sep" x1="345" y1="154" x2="600" y2="154"/>
+  <text class="t body" x="369" y="194">Das Repository ist die zentrale</text>
+  <text class="t body" x="369" y="224">Stelle für Datenbankzugriffe.</text>
+  <text class="t body" x="369" y="254">Es bestimmt benötigte Tabellen,</text>
+  <text class="t body" x="369" y="284">Beziehungen und Filter.</text>
+  <text class="t body" x="369" y="326">Danach verwendet es den</text>
+  <text class="t strong" x="369" y="353">zentralen Supabase Client.</text>
+
+  <!-- 03 Supabase Client -->
+  <g filter="url(#shadow)">
+    <rect class="card" x="630" y="70" width="255" height="320" rx="14"/>
+    <path d="M630 84a14 14 0 0 1 14-14h227a14 14 0 0 1 14 14v70H630z" fill="url(#green)"/>
+  </g>
+  <circle cx="658" cy="99" r="17" fill="#fff" opacity=".22"/><text class="t step" x="658" y="104" text-anchor="middle">03</text>
+  <text class="t cardTitle" x="686" y="108">Supabase Client</text><text class="t technology" x="686" y="132">supabase-js</text>
+  <line class="sep" x1="630" y1="154" x2="885" y2="154"/>
+  <text class="t body" x="654" y="194">Der Client fügt die aktuelle</text>
+  <text class="t body" x="654" y="224">Anmeldung (Session) hinzu.</text>
+  <text class="t body" x="654" y="254">Anschließend sendet er die</text>
+  <text class="t strong" x="654" y="284">verschlüsselte HTTPS-Anfrage</text>
+  <text class="t body" x="654" y="326">an das Supabase Backend.</text>
+
+  <!-- 04 Supabase -->
+  <g filter="url(#shadow)">
+    <rect class="card" x="915" y="55" width="255" height="350" rx="14"/>
+    <path d="M915 69a14 14 0 0 1 14-14h227a14 14 0 0 1 14 14v70H915z" fill="url(#greenDark)"/>
+  </g>
+  <circle cx="943" cy="84" r="17" fill="#fff" opacity=".22"/><text class="t step" x="943" y="89" text-anchor="middle">04</text>
+  <text class="t cardTitle" x="971" y="93">Supabase</text><text class="t technology" x="971" y="117">Auth · Data API · PostgreSQL</text>
+  <line class="sep" x1="915" y1="139" x2="1170" y2="139"/>
+  <rect x="939" y="163" width="207" height="54" rx="8" fill="#f3f6f3"/><text class="t strong" x="953" y="185">1. Session prüfen</text><text class="t body" x="953" y="204">Ist der Nutzer angemeldet?</text>
+  <rect x="939" y="229" width="207" height="65" rx="8" fill="#f3f6f3"/><text class="t strong" x="953" y="251">2. RLS-Regeln prüfen</text><text class="t body" x="953" y="273">Welche Daten darf er sehen?</text>
+  <rect x="939" y="306" width="207" height="70" rx="8" fill="#f3f6f3"/><text class="t strong" x="953" y="328">3. Daten lesen</text><text class="t body" x="953" y="350">Data API liest erlaubte Daten</text><text class="t body" x="953" y="369">aus PostgreSQL.</text>
+
+  <!-- 05 Mapper -->
+  <g filter="url(#shadow)">
+    <rect class="card" x="1200" y="70" width="255" height="320" rx="14"/>
+    <path d="M1200 84a14 14 0 0 1 14-14h227a14 14 0 0 1 14 14v70h-255z" fill="url(#neutral)"/>
+  </g>
+  <circle cx="1228" cy="99" r="17" fill="#fff" opacity=".22"/><text class="t step" x="1228" y="104" text-anchor="middle">05</text>
+  <text class="t cardTitle" x="1256" y="108">Mapper</text><text class="t technology" x="1256" y="132">Datenumwandlung</text>
+  <line class="sep" x1="1200" y1="154" x2="1455" y2="154"/>
+  <text class="t body" x="1224" y="194">Der Mapper ist ein Übersetzer</text>
+  <text class="t body" x="1224" y="224">zwischen Datenbank und App.</text>
+  <text class="t body" x="1224" y="254">Er wandelt Datenbankfelder in</text>
+  <text class="t body" x="1224" y="284">das TypeScript-Modell</text>
+  <text class="t strong" x="1224" y="314">Recipe um.</text>
+
+  <!-- 06 UI -->
+  <g filter="url(#shadow)">
+    <rect class="card" x="1485" y="70" width="255" height="320" rx="14"/>
+    <path d="M1485 84a14 14 0 0 1 14-14h227a14 14 0 0 1 14 14v70h-255z" fill="url(#blue)"/>
+  </g>
+  <circle cx="1513" cy="99" r="17" fill="#fff" opacity=".22"/><text class="t step" x="1513" y="104" text-anchor="middle">06</text>
+  <text class="t cardTitle" x="1541" y="108">React-State &amp; UI</text><text class="t technology" x="1541" y="132">Darstellung</text>
+  <line class="sep" x1="1485" y1="154" x2="1740" y2="154"/>
+  <text class="t body" x="1509" y="194">Die Seite speichert das Recipe</text>
+  <text class="t body" x="1509" y="224">im React-State – dem aktuellen</text>
+  <text class="t body" x="1509" y="254">Zustand der geöffneten Seite.</text>
+  <text class="t body" x="1509" y="296">React rendert die Seite neu und</text>
+  <text class="t strong" x="1509" y="326">zeigt das Rezept an.</text>
+</svg>
