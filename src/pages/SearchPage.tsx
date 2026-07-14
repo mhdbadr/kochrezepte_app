@@ -133,6 +133,7 @@ export default function SearchPage() {
   const categories: Array<{ label: string; value: Recipe['category']; icon: string }> = [
     { label: 'Vegan', value: 'Vegan', icon: '🌿' },
     { label: 'Vegetarisch', value: 'Vegetarisch', icon: '🥬' },
+    { label: 'Pescetarisch', value: 'Pescetarisch', icon: '🐟' },
     { label: 'Dessert', value: 'Dessert', icon: '🧁' },
     { label: 'Schnell', value: 'Schnell', icon: '⚡' },
     { label: 'Pasta', value: 'Pasta', icon: '🍕' },

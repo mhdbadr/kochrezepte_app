@@ -206,6 +206,7 @@ export default function RecipeForm() {
                   >
                     <option value="Vegan">Vegan</option>
                     <option value="Vegetarisch">Vegetarisch</option>
+                    <option value="Pescetarisch">Pescetarisch</option>
                     <option value="Dessert">Dessert</option>
                     <option value="Schnell">Schnell</option>
                     <option value="Pasta">Pasta</option>

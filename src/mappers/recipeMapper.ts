@@ -23,6 +23,7 @@ function toRecipeCategory(categoryName: string | undefined): RecipeCategory {
   const allowedCategories: RecipeCategory[] = [
     "Vegan",
     "Vegetarisch",
+    "Pescetarisch",
     "Dessert",
     "Schnell",
     "Pasta",
