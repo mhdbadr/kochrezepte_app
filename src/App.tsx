@@ -28,6 +28,7 @@ import {
   addOutline,
   searchOutline,
   settingsOutline,
+  trophyOutline,
 } from 'ionicons/icons';
 
 import EditRecipePage from './pages/EditRecipePage';
@@ -44,6 +45,7 @@ import Wochenplaner from './pages/Wochenplaner';
 import ShoppingListPage from './pages/ShoppingListPage';
 import SettingsPage from './pages/SettingsPage';
 import ProfilePage from './pages/ProfilePage';
+import PopularRecipesPage from './pages/PopularRecipesPage';
 
 import { supabase } from './lib/supabaseClient';
 import { applyTheme, loadAppSettings } from './utils/appSettings';
@@ -230,6 +232,13 @@ export default function App() {
               <IonList lines="none">
 
                 <IonMenuToggle autoHide={true}>
+                  <IonItem routerLink="/popular" button>
+                    <IonIcon icon={trophyOutline} slot="start" />
+                    <IonLabel>Beliebte Rezepte</IonLabel>
+                  </IonItem>
+                </IonMenuToggle>
+
+                <IonMenuToggle autoHide={true}>
                   <IonItem routerLink="/shopping-list" button>
                     <IonIcon icon={cartOutline} slot="start" />
                     <IonLabel>Einkaufsliste</IonLabel>
@@ -296,6 +305,10 @@ export default function App() {
 
                         <Route exact path="/favorites">
                             {protectedPage(<FavoritesPage />)}
+                        </Route>
+
+                        <Route exact path="/popular">
+                            {protectedPage(<PopularRecipesPage />)}
                         </Route>
 
                         <Route exact path="/shopping-list">
