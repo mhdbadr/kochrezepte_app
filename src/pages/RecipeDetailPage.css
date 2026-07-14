@@ -353,7 +353,7 @@
 
 .recipe-detail-ingredient {
   display: grid;
-  grid-template-columns: 92px minmax(0, 1fr);
+  grid-template-columns: 112px minmax(0, 1fr);
   align-items: stretch;
   overflow: hidden;
   border: 1px solid var(--app-border);
@@ -375,13 +375,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 10px;
+  padding: 12px 6px;
   color: var(--app-primary);
   background: var(--app-surface-muted);
   border-right: 1px solid var(--app-border);
   font-size: 0.88rem;
   font-weight: 800;
   text-align: center;
+  white-space: nowrap;
   white-space: nowrap;
 }
 
@@ -447,7 +448,7 @@
   }
 
   .recipe-detail-ingredient {
-    grid-template-columns: 78px minmax(0, 1fr);
+    grid-template-columns: 104px minmax(0, 1fr);
   }
 
   .recipe-detail-steps li {
@@ -455,7 +456,7 @@
   }
 
   .recipe-detail-ingredient__amount {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
   }
 
   .recipe-detail-steps li::before {
