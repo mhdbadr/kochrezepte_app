@@ -368,7 +368,7 @@ der Kochrezepte-App.
 | Eigene Kochrezepte erstellen, anzeigen, bearbeiten und löschen                                                          |      Umgesetzt      | Vollständige CRUD-Rezeptverwaltung mit Eigentümerprüfung                                                                                                               |
 | Speicherung von Rezeptname, Bild, Zubereitungszeit, Schwierigkeit, Zutatenliste, Portionen und Zubereitungsbeschreibung |      Umgesetzt      | Alle geforderten Angaben sind Bestandteil des Rezeptformulars                                                                                                          |
 | Verschlagwortung von Rezepten zur Kategorisierung und erweiterten Suche                                                 | Teilweise umgesetzt | Rezepte können einer Kategorie zugeordnet und danach gefiltert werden. Ein zusätzliches flexibles Tag-System wurde nicht umgesetzt.                                    |
-| Nährwertansicht pro Rezept und Portion                                                                                  |   Nicht umgesetzt   | Nährwertdaten werden in der aktuellen Version nicht erfasst oder berechnet.                                                                                            |
+| Nährwertansicht pro Rezept und Portion                                                                                  |      Umgesetzt      | Kalorien, Eiweiß, Kohlenhydrate und Fett werden pro Rezept erfasst und entsprechend der ausgewählten Portionszahl berechnet.                                           |
 | Rezeptsuche beziehungsweise Rezeptvorschläge über Suchtext und Zutaten                                                  |      Umgesetzt      | Suche nach Titel, Beschreibung, Zutaten und bekannten Synonymen                                                                                                        |
 | Bewertung mit einer Sterneskala von 1 bis 5 Sternen und optionalem Kommentar                                            |      Umgesetzt      | Sternebewertungen und Kommentare sind für angemeldete Benutzer verfügbar                                                                                               |
 | Teilen von Rezepten per E-Mail oder Messenger-Dienst                                                                    |      Umgesetzt      | Teilen über die Web Share API; alternativ wird der Rezeptlink in die Zwischenablage kopiert                                                                            |
@@ -378,7 +378,7 @@ der Kochrezepte-App.
 | Benutzerregistrierung, Anmeldung und Speicherung der Kontodaten auf einem Backend                                       |      Umgesetzt      | Supabase Auth, Profiltabelle und PostgreSQL-Datenbank                                                                                                                  |
 | Wochenplan und Einkaufsliste                                                                                            |      Umgesetzt      | Rezepte können Wochentagen zugeordnet werden; daraus wird automatisch eine Einkaufsliste erzeugt                                                                       |
 
-Der Großteil der obligatorischen Anforderungen wurde umgesetzt. Nicht enthalten sind derzeit eine Nährwertansicht sowie ein zusätzliches flexibles Tag-System.
+Der Großteil der obligatorischen Anforderungen wurde umgesetzt. Nicht enthalten ist derzeit ein zusätzliches flexibles Tag-System.
 
 ### Optionale Anforderungen
 
