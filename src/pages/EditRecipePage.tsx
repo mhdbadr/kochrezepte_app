@@ -381,7 +381,9 @@ export default function EditRecipePage() {
             </fieldset>
 
             <fieldset className="recipe-form-card">
-              <legend>Nährwerte</legend>
+              <legend>
+                Nährwerte für {servings || 1} {Number(servings) === 1 ? "Person" : "Personen"}
+              </legend>
 
               <div className="recipe-form-grid">
                 <label className="recipe-form-field" htmlFor="calories">

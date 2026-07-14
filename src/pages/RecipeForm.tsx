@@ -111,9 +111,9 @@ export default function RecipeForm() {
       showValidationToast("Bitte gib die Anzahl der Personen ein.");
       return;
     }
-
+    // for negativ values
     if (calories < 0 || protein < 0 || carbs < 0 || fat < 0) {
-      showValidationToast("Nährwerte dürfen nicht negativ sein.");
+      showValidationToast("Naehrwerte dürfen nicht negativ sein.");
       return;
     }
 
@@ -158,7 +158,6 @@ export default function RecipeForm() {
       imageUrl: finalImageUrl,
       preparationTime: preparationTimeInMinutes,
       servings: servingsCount,
-
       calories,
       protein,
       carbs,
@@ -284,8 +283,11 @@ export default function RecipeForm() {
               </label>
             </fieldset>
 
+             { /*Nährungswerte*/}
             <fieldset className="recipe-form-card">
-              <legend>Nährwerte</legend>
+              <legend>
+                Nährwerte für {servings || 1} {Number(servings) === 1 ? "Person" : "Personen"}
+              </legend>
 
               <div className="recipe-form-grid">
                 <label className="recipe-form-field" htmlFor="calories">

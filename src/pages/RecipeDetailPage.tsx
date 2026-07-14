@@ -113,16 +113,13 @@ export default function RecipeDetailPage() {
 
 
   /**
+   * Calculates the nutrition value for the currently selected number of portions.
    *
+   * Example:
+   * The recipe has 1200 kcal for 4 portions.
+   * If the user selects 2 portions:
+   * 1200 / 4 * 2 = 600 kcal
    */
-  const getPerServing = (value: number, servings: number) => {
-    if (!servings || servings <= 0) {
-      return 0;
-    }
-
-    return Math.round(value / servings);
-  };
-
   const getForSelectedPortions = (value: number, originalServings: number, selectedPortions: number) => {
     if (!originalServings || originalServings <= 0) {
       return 0;
@@ -275,7 +272,7 @@ export default function RecipeDetailPage() {
                   +
                 </button>
               </div>
-
+              {/*Modal Button*/}
               <div className="recipe-detail-nutrition-action">
                 <IonButton
                     className="recipe-detail-nutrition-button"
@@ -283,7 +280,7 @@ export default function RecipeDetailPage() {
                     onClick={() => setShowNutritionModal(true)}
                 >
                   <IonIcon icon={nutritionOutline} slot="start" />
-                  Nährwerte
+                  Naehrwerte
                 </IonButton>
               </div>
 
