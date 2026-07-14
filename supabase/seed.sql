@@ -11,6 +11,7 @@
 insert into public.recipe_categories (name) values
                                                 ('Vegan'),
                                                 ('Vegetarisch'),
+                                                ('Pescetarisch'),
                                                 ('Dessert'),
                                                 ('Schnell'),
                                                 ('Pasta'),

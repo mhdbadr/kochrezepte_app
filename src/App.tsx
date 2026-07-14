@@ -28,6 +28,8 @@ import {
   addOutline,
   searchOutline,
   settingsOutline,
+  trophyOutline,
+  leafOutline,
 } from 'ionicons/icons';
 
 import EditRecipePage from './pages/EditRecipePage';
@@ -44,6 +46,8 @@ import Wochenplaner from './pages/Wochenplaner';
 import ShoppingListPage from './pages/ShoppingListPage';
 import SettingsPage from './pages/SettingsPage';
 import ProfilePage from './pages/ProfilePage';
+import PopularRecipesPage from './pages/PopularRecipesPage';
+import RecommendedRecipesPage from './pages/RecommendedRecipesPage';
 
 import { supabase } from './lib/supabaseClient';
 import { applyTheme, loadAppSettings } from './utils/appSettings';
@@ -81,6 +85,8 @@ function BottomTabBar({ isAppAccessAllowed }: { isAppAccessAllowed: boolean }) {
                        !location.pathname.endsWith('/new') && 
                        !location.pathname.includes('/edit')||
                        location.pathname === '/shopping-list'||
+                       location.pathname === '/popular'||
+                       location.pathname === '/for-you'||
                       location.pathname === '/welcome' ||
                       location.pathname === '/login' ||
                       location.pathname === '/register' ||
@@ -230,6 +236,20 @@ export default function App() {
               <IonList lines="none">
 
                 <IonMenuToggle autoHide={true}>
+                  <IonItem routerLink="/for-you" button>
+                    <IonIcon icon={leafOutline} slot="start" />
+                    <IonLabel>Für dich</IonLabel>
+                  </IonItem>
+                </IonMenuToggle>
+
+                <IonMenuToggle autoHide={true}>
+                  <IonItem routerLink="/popular" button>
+                    <IonIcon icon={trophyOutline} slot="start" />
+                    <IonLabel>Beliebte Rezepte</IonLabel>
+                  </IonItem>
+                </IonMenuToggle>
+
+                <IonMenuToggle autoHide={true}>
                   <IonItem routerLink="/shopping-list" button>
                     <IonIcon icon={cartOutline} slot="start" />
                     <IonLabel>Einkaufsliste</IonLabel>
@@ -296,6 +316,14 @@ export default function App() {
 
                         <Route exact path="/favorites">
                             {protectedPage(<FavoritesPage />)}
+                        </Route>
+
+                        <Route exact path="/popular">
+                            {protectedPage(<PopularRecipesPage />)}
+                        </Route>
+
+                        <Route exact path="/for-you">
+                            {protectedPage(<RecommendedRecipesPage />)}
                         </Route>
 
                         <Route exact path="/shopping-list">

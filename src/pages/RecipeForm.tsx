@@ -1,7 +1,6 @@
 import { IonContent, IonPage } from "@ionic/react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import BackLink from "../components/BackLink";
 import PageHeader from "../components/PageHeader";
 import type { Recipe, RecipeDifficulty, RecipeIngredient } from "../models/Recipe";
 import type { RecipeCategory } from "../models/RecipeCategory";
@@ -206,6 +205,7 @@ export default function RecipeForm() {
                   >
                     <option value="Vegan">Vegan</option>
                     <option value="Vegetarisch">Vegetarisch</option>
+                    <option value="Pescetarisch">Pescetarisch</option>
                     <option value="Dessert">Dessert</option>
                     <option value="Schnell">Schnell</option>
                     <option value="Pasta">Pasta</option>

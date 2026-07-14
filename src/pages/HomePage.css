@@ -106,6 +106,41 @@ h2 {
   background-color: var(--app-surface);
 }
 
+.category-item--for-you {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  text-align: center;
+}
+
+.category-item--for-you .category-icon {
+  width: 90px;
+  height: 60px;
+  margin: 0 auto 10px;
+  border: 1px solid var(--app-border);
+  border-radius: 16px;
+  background: var(--app-surface);
+  box-shadow: none;
+  color: var(--app-primary);
+  font-size: 24px;
+}
+
+.category-item--for-you span {
+  display: block;
+  margin-top: 0;
+  color: var(--app-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.category-item--for-you:hover {
+  background: transparent;
+}
+
+.category-item--for-you:hover .category-icon {
+  background: var(--app-surface);
+}
+
 
 .ingredient-grid {
   display: flex;
