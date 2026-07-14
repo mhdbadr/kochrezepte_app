@@ -9,6 +9,7 @@ export const defaultAppSettings: AppSettings = {
   moveCheckedItemsDown: true,
   saveCheckedItems: true,
   themeMode: 'system',
+  dietaryPreference: 'all',
 };
 
 /**

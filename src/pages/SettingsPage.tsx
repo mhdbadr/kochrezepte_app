@@ -4,7 +4,7 @@ import { IonContent,  IonItem, IonLabel,  IonList,  IonPage,  IonSelect,
 import BackLink from '../components/BackLink';
 import PageHeader from '../components/PageHeader';
 import { applyTheme, loadAppSettings, saveAppSettings, } from '../utils/appSettings';
-import { type AppSettings, type ThemeMode } from '../models/AppSettings';
+import { type AppSettings, type DietaryPreference, type ThemeMode } from '../models/AppSettings';
 import './RecipeForm.css';
 
 const SettingsPage: React.FC = () => {
@@ -38,6 +38,31 @@ const SettingsPage: React.FC = () => {
           </section>
 
           <div className="recipe-form">
+            <fieldset className="recipe-form-card">
+              <legend>Ernährung</legend>
+
+              <IonList lines="full">
+                <IonItem>
+                  <IonLabel>
+                    <h3>Ernährungspräferenz</h3>
+                    <p>Personalisiert deine neuesten Rezeptvorschläge.</p>
+                  </IonLabel>
+                  <IonSelect
+                    value={settings.dietaryPreference}
+                    interface="popover"
+                    onIonChange={(event) =>
+                      updateSettings({ dietaryPreference: event.detail.value as DietaryPreference })
+                    }
+                  >
+                    <IonSelectOption value="all">Alle</IonSelectOption>
+                    <IonSelectOption value="Vegan">Vegan</IonSelectOption>
+                    <IonSelectOption value="Vegetarisch">Vegetarisch</IonSelectOption>
+                    <IonSelectOption value="Pescetarisch">Pescetarisch</IonSelectOption>
+                  </IonSelect>
+                </IonItem>
+              </IonList>
+            </fieldset>
+
             <fieldset className="recipe-form-card">
               <legend>Einkaufsliste</legend>
 
